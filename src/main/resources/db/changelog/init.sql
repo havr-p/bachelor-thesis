@@ -1,0 +1,1 @@
+ALTER TABLE test_table ADD username varchar(255);
