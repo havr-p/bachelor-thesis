@@ -1,0 +1,279 @@
+[DOCUMENT]
+TITLE: Using strictDoc PoC
+OPTIONS:
+  AUTO_LEVELS: Off
+
+[SECTION]
+LEVEL: 1
+TITLE: Business requirements
+
+[REQUIREMENT]
+UID: BUS-PROVIDE-QUALITY-EDUCATION-SOFTWARE-DESIGN
+LEVEL: BUSINESS
+STATUS: Active
+STATEMENT: >>>
+To provide the students with quality education on the principles of software design.
+<<<
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 2
+TITLE: Stakeholder requirements
+
+[REQUIREMENT]
+UID: STAKE-PROVIDE-QUALITY-EDUCATION-SOFTWARE-ANALYSIS
+LEVEL: STAKEHOLDER
+STATUS: Active
+STATEMENT: >>>
+Teacher / To provide the students with quality education on software analysis.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: BUS-PROVIDE-QUALITY-EDUCATION-SOFTWARE-DESIGN
+
+[REQUIREMENT]
+UID: STAKE-PROVIDE-QUALITY-EDUCATION-TRACEABILITY
+LEVEL: STAKEHOLDER
+STATEMENT: >>>
+Teacher / To provide the students with common real-world examples of requirements traceability in a visual way.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STAKE-PROVIDE-QUALITY-EDUCATION-SOFTWARE-ANALYSIS
+
+[REQUIREMENT]
+UID: STAKE-EMPLOY-EASY-VISUAL-TOOL
+LEVEL: STAKEHOLDER
+STATUS: Active
+STATEMENT: >>>
+Teacher / To employ an easy-to-use SW tool that shows basic principles of requirements traceability for common real-world examples in a visual way.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STAKE-PROVIDE-QUALITY-EDUCATION-TRACEABILITY
+
+[/SECTION]
+
+[SECTION]
+LEVEL: 3
+TITLE: Solution requirements
+
+[REQUIREMENT]
+UID: SOL-SUPPORT-MODELS-METHODOLOGIES
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall support common models and methodologies of SW development.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STAKE-EMPLOY-EASY-VISUAL-TOOL
+
+[REQUIREMENT]
+UID: SOL-SUPPORT-WATERFALL-IIM-AGILE
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall support waterfall model, iterative-incremental model of SW development and agile methodologies.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-SUPPORT-MODELS-METHODOLOGIES
+
+[REQUIREMENT]
+UID: SOL-CUSTOM-ITEM-TYPES
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall allow the user to define their own item types.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-SUPPORT-WATERFALL-IIM-AGILE
+
+[REQUIREMENT]
+UID: SOL-CUSTOM-USER-LEVEL
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall allow the user to define their own user levels.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-SUPPORT-WATERFALL-IIM-AGILE
+
+[REQUIREMENT]
+UID: SOL-REQUIRED-FIELDS-FOR-LEVEL-DEFINITION
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall require the user to define color, name and order for each user level.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-CUSTOM-USER-LEVEL
+
+[REQUIREMENT]
+UID: SOL-VIS-MANAGEMENT-TRACEABILITY-HIERARCHY
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall enable visual management of traceability hierarchy.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STAKE-EMPLOY-EASY-VISUAL-TOOL
+
+[REQUIREMENT]
+UID: SOL-EDITING-PROPERTIES
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall support adding editing/removing attributes and properties of hierarchy items and relationships.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-VIS-MANAGEMENT-TRACEABILITY-HIERARCHY
+
+[REQUIREMENT]
+UID: SOL-VISUAL-EDITING-PROPERTIES
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall support visual adding / editing / removing hierarchy items and their relationships.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-VIS-MANAGEMENT-TRACEABILITY-HIERARCHY
+
+[REQUIREMENT]
+UID: SOL-SPLITTING-TO-INTERNAL-LEVELS
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall support adding hierarchy items and their relationships in such a way that a user level may consist of one or more internal levels.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-VISUAL-EDITING-PROPERTIES
+
+[REQUIREMENT]
+UID: SOL-ITEM-TYPE-UNIQUENESS
+LEVEL: SOLUTION
+STATEMENT: >>>
+The system shall require the user to choose exactly one item type for each hierarchy item added (either predefined item type or user defined item type).
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-VISUAL-EDITING-PROPERTIES
+
+[REQUIREMENT]
+UID: SOL-ITEM-LEVEL-UNIQUENESS
+LEVEL: SOLUTION
+STATEMENT: >>>
+The system shall require the user to choose exactly one user level for each requirement added.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-VISUAL-EDITING-PROPERTIES
+
+[REQUIREMENT]
+UID: SOL-VISUAL-DISPLAY-TRACEABILITY-HIERARCHY
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall display visually the traceability hierarchy.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STAKE-EMPLOY-EASY-VISUAL-TOOL
+
+[REQUIREMENT]
+UID: SOL-VISUAL-LINEAGE
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall display visually backward / forward / overall linage of a single hierarchy item.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STAKE-EMPLOY-EASY-VISUAL-TOOL
+
+[REQUIREMENT]
+UID: SOL-VISUAL-HIERARCHY-VERSIONING
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall display different versions of traceability hierarchy.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STAKE-EMPLOY-EASY-VISUAL-TOOL
+
+[REQUIREMENT]
+UID: SOL-INFORM-TRACEABILITY-ISSUES
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall inform the user about traceability issues within the traceability hierarchy.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: STAKE-EMPLOY-EASY-VISUAL-TOOL
+
+[REQUIREMENT]
+UID: SOL-ERROR-PARENT-REQUIREMENT-ABSENCE
+LEVEL: SOLUTION
+STATEMENT: >>>
+The system shall communicate traceability error if a requirement does not have a parent requirement and its user level is not the top user level.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-INFORM-TRACEABILITY-ISSUES
+
+[REQUIREMENT]
+UID: SOL-DISPLAY-USER-LEVEL-COLOR
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall display a requirement in the color of its user level.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-VISUAL-DISPLAY-TRACEABILITY-HIERARCHY
+
+[REQUIREMENT]
+UID: SOL-VISUAL-DISPLAY-LEVELS-HIERARCHY
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall display user levels hierarchically based on their order.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-VISUAL-DISPLAY-TRACEABILITY-HIERARCHY
+
+[REQUIREMENT]
+UID: SOL-DISPLAY-INTERNAL-LEVELS
+LEVEL: SOLUTION
+TITLE: todo: ask what that mean
+STATEMENT: >>>
+The system shall display internal levels of a user level hierarchically based on the relationships between the requirements in given user level.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-VISUAL-DISPLAY-LEVELS-HIERARCHY
+
+[REQUIREMENT]
+UID: SOL-VISUAL-DISPLAY-IMPLEMENTATION-HIERARCHY
+LEVEL: SOLUTION
+STATUS: Active
+STATEMENT: >>>
+The system shall enable to display implementation hierarchy items and their relationship to requirements automatically.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SOL-VISUAL-DISPLAY-TRACEABILITY-HIERARCHY
+
+[/SECTION]
