@@ -6,8 +6,7 @@ features = [
 #  # Stable features.
 #  "TABLE_SCREEN",
 #  "TRACEABILITY_SCREEN",
-#  "DEEP_TRACEABILITY_SCREEN",
-#  "SEARCH",
+#  "DEEP_TRACEABILITY_SCREEN",#  "SEARCH",
 #
 #  # Stable features but not used by StrictDoc.
 #  # "MATHJAX"
