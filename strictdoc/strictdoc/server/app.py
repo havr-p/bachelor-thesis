@@ -1,4 +1,5 @@
 import os
+import tempfile
 import time
 
 from fastapi import FastAPI
@@ -9,12 +10,13 @@ from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.pickle import pickle_load
 from strictdoc.server.config import SDocServerEnvVariable
+from strictdoc.server.routers.traceability_tutor_router import create_traceability_tutor_router
 from strictdoc.server.routers.main_router import create_main_router
 from strictdoc.server.routers.other_router import create_other_router
 
 
 def create_app(
-    *, server_config: ServerCommandConfig, project_config: ProjectConfig
+        *, server_config: ServerCommandConfig, project_config: ProjectConfig
 ):
     app = FastAPI()
 
@@ -27,7 +29,7 @@ def create_app(
     # Uncomment this to enable performance measurements.
     @app.middleware("http")
     async def add_process_time_header(  # pylint: disable=unused-variable
-        request: Request, call_next
+            request: Request, call_next
     ):
         start_time = time.time()
         response = await call_next(request)
@@ -51,6 +53,7 @@ def create_app(
     )
 
     app.include_router(create_other_router(project_config=project_config))
+    app.include_router(create_traceability_tutor_router(project_config=project_config))
     app.include_router(
         create_main_router(
             server_config=server_config, project_config=project_config

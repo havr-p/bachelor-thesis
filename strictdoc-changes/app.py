@@ -52,7 +52,7 @@ def create_app(
     )
 
     app.include_router(create_other_router(project_config=project_config))
-    app.include_router(create_traceability_tutor_router(project_config=project_config, server_config=server_config))
+    app.include_router(create_traceability_tutor_router(project_config=project_config))
     app.include_router(
         create_main_router(
             server_config=server_config, project_config=project_config
