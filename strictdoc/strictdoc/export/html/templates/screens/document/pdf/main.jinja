@@ -1,0 +1,49 @@
+{% assert view_object.custom_html2pdf_template is defined %}
+
+<div
+  html2pdf-preloader
+  class="main"
+>
+      <div
+        html2pdf
+        class="content"
+      >
+        {#-
+          These go to the Front page templates:
+          {% include "components/document_title/index.jinja" %}
+          {% include "components/meta/index.jinja" %}
+        -#}
+
+        {% include "screens/document/pdf/toc.jinja" %}
+        {% include "components/abstract/pdf.jinja" %}
+
+        {#-
+          To make the abstract and TOC appear on different pages,
+          it should be set in the config like this:
+
+          data-forced-page-break-selector='.free_text'
+        -#}
+
+        {%- for section_or_requirement in view_object.document_content_iterator() %}
+
+        {%- if section_or_requirement.is_requirement %}
+          {%- set requirement = section_or_requirement %}
+          {% include "components/requirement/pdf.jinja" %}
+
+        {%- elif section_or_requirement.is_section %}
+          {%- set section = section_or_requirement %}
+          {% include "components/section/pdf.jinja" %}
+        {%- endif %}
+
+        {%- endfor %}
+
+      </div>
+</div>
+
+{% if view_object.custom_html2pdf_template is none %}
+{%- include "screens/document/pdf/template/frontpage.jinja" -%}
+{%- include "screens/document/pdf/template/header.jinja" -%}
+{%- include "screens/document/pdf/template/footer.jinja" -%}
+{% else %}
+  {{ view_object.custom_html2pdf_template.render() }}
+{% endif %}

@@ -1,0 +1,129 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "strictdoc/__init__.py"
+
+[tool.hatch.build]
+exclude = [
+  "/.*",
+  "/developer",
+  "/docs",
+  "/tests",
+]
+
+#[tool.hatch.build.targets.sdist]
+#include = [
+#    "/uvicorn",
+#]
+
+[project]
+name = "strictdoc"
+dynamic = ["version"]
+description = "StrictDoc is open-source software for technical documentation and requirements management."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.7"
+authors = [
+    { name = "Stanislav Pankevich", email = "s.pankevich@gmail.com" },
+    { name = "Maryna Balioura", email = "mettta@gmail.com" },
+]
+classifiers = [
+    # "Development Status :: 4 - Beta",
+    # "Environment :: Web Environment",
+    # "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    # "Topic :: Internet :: WWW/HTTP",
+]
+
+# @sdoc[SDOC-SRS-89]
+dependencies = [
+    "textx >= 3.0.0, == 3.*",
+    "jinja2 >= 2.11.2",
+    "graphviz >= 0.20.1",
+    # Reading project config from strictdoc.toml file.
+    "toml",
+
+    # Parsing and rendering RST.
+    "docutils >= 0.16, == 0.*",
+
+    # Requirements-to-source traceability. Colored syntax for source files.
+    "pygments >= 2.10.0, == 2.*",
+
+    # TODO: Only used by reqif. Remove.
+    "lxml >= 4.6.2, == 4.*",
+
+    # Static HTML export with embedded assets.
+    "beautifulsoup4 >= 4.12.0, == 4.*",
+    "html5lib>=1.1",  # Used by beautifulsoup4 as an optional plugin.
+    "python-datauri >= 0.2.9, == 0.*",
+
+    # Excel
+    "XlsxWriter >= 1.3.7, == 1.*",
+    "xlrd >= 2.0.1, == 2.*",
+
+    # ReqIF
+    "reqif >= 0.0.39, == 0.*",
+
+    # SPDX
+    "spdx-tools",
+
+    # Bibtex
+    "pybtex >= 0.23.0, == 0.*",
+    # Bibtex fails with:
+    # ModuleNotFoundError: No module named 'pkg_resources'
+    # because pkg_resources has been deprecated.
+    # Installing setuptools fixes the issue for now, see
+    # https://bitbucket.org/pybtex-devs/pybtex/issues/169
+    "setuptools",
+
+    # Web server dependencies
+    "fastapi >= 0.83.0",
+    # FastAPI: To receive uploaded files and/or form data, first install python-multipart.
+    "python-multipart",
+    "uvicorn[standard] >= 0.14.0",
+    "WebSockets",
+
+    # HTML2PDF dependencies
+    "selenium",
+    "webdriver-manager",
+]
+# @sdoc[/SDOC-SRS-89]
+
+[project.optional-dependencies]
+development = [
+    # Development tasks
+    "invoke>=1.4.1",
+    "tox>=4.4.8",
+]
+nuitka = [
+    # Nuitka:WARNING: Using very slow fallback for ordered sets, please install
+    # 'ordered-set' PyPI package for best Python compile time performance.
+    "nuitka",
+    "ordered-set",
+]
+
+[project.scripts]
+strictdoc = "strictdoc.cli.main:main"
+
+[project.urls]
+Changelog = "https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md"
+# Funding = "https://..."
+Homepage = "https://strictdoc.readthedocs.io/en/stable/"
+Source = "https://github.com/strictdoc-project/strictdoc"
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib"
+pythonpath = [
+  "."
+]

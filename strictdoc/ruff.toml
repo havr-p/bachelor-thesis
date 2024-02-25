@@ -1,0 +1,94 @@
+target-version = "py37"
+line-length = 80
+
+select = [
+  "A",
+  "ARG",
+  "B",
+  # "BLE",
+  "C",
+  "C4",
+  # "C90"  mccabe
+
+  # Not clear if this check is useful. Too many commas everywhere.
+  # "COM",
+
+  # "D",
+  # "DTZ",
+  # "E",
+  "EXE",
+  "ERA",
+  "F",
+  # "FBT",
+  "G",
+  "I",
+  "ISC",
+  "ICN",
+  # "N",
+  "PGH",
+  # "PIE",
+  "PL",  # Pylint
+  # "PT",  # pytest
+  # "PTH",
+  "Q",  # Quotes
+  # "RET",
+  # "RUF",
+  # "S",
+  # "SIM",
+  # "SLF",
+ "T20",
+  # "TCH",
+  # "TRY",
+  "UP",
+  "W",
+  "YTT",
+]
+
+
+ignore = [
+    # TBD: Unnecessary `list` comprehension (rewrite using `list()`)
+    "C416",
+    # TBD: Unnecessary `map` usage (rewrite using a `list` comprehension)
+    "C417",
+
+    # X is too complex
+    "C901",
+
+    "E501",  # (line length violations).
+
+    # A warning by ruff format:
+    # warning: The following rules may cause conflicts when used with the formatter: `ISC001`.
+    "ISC001",
+
+    # Too many return statements
+    "PLR0911",
+
+    # Too many branches
+    "PLR0912",
+
+    # Too many arguments in function definition
+    "PLR0913",
+
+    # Too many statements
+    "PLR0915",
+
+    # TBD: Enable: Use `sys.exit()` instead of `exit`
+    "PLR1722",
+
+    # Magic value used in comparison
+    "PLR2004",
+
+    # Use `elif` instead of `else` then `if`, to reduce indentation
+    "PLR5501",
+
+    "UP035", # [*] Import from `collections.abc` instead: `Iterator`
+    "UP038", # [*] Use `X | Y` in `isinstance` call instead of `(X, Y)` (conflict with Pylint)
+]
+
+# Avoid trying to fix flake8-bugbear (`B`) violations.
+unfixable = ["B"]
+
+[per-file-ignores]
+# B008 Do not perform function calls in argument defaults.
+# The call is performed only once at function definition time.
+"strictdoc/server/routers/main_router.py" = ["B008"]

@@ -1,0 +1,53 @@
+*.idea
+**/build/
+*.egg-info/
+*.eggs
+*.pyc
+*.script
+*.venv
+.venv*
+dist
+.sandbox
+.output/
+output.zip
+.output
+*.sketch
+.DS_Store
+.vscode
+.tox/
+
+### StrictDoc's local config file
+*.local.toml
+
+### StrictDoc's default export path
+output/**
+developer/**/output/**
+tests/unit_server/**/output/**
+
+### LIT/FileCheck integration tests' artifacts. ###
+tests/integration/**/Output/**
+tests/integration/**/output/**
+tests/integration/**/sandbox/
+.lit_test_times.txt
+
+### Coverage ###
+.coverage
+coverage.xml
+htmlcov/
+
+### PyInstaller ###
+strictdoc.spec
+
+### SeleniumBase ###
+latest_logs/
+# Files downloaded during tests are stored here.
+downloaded_files/
+
+### StrictDoc's documentation ###
+strictdoc-project.github.io/
+
+### StrictDoc's developer test ###
+__*.sdoc
+
+### webdriver_manager: cache with downloaded Chrome Driver binaries ###
+strictdoc/export/html2pdf/.wdm

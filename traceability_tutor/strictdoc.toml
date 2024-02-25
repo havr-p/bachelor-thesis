@@ -25,7 +25,7 @@ features = [
 include_doc_paths = [
   "docs/**",
   "docs_extra/**",
-  'C:/Users/Consultis/PycharmProjects/bachelor-thesis/traceability_tutor',
+  '**/bachelor-thesis/traceability_tutor/**',
 ]
 
 exclude_doc_paths = [
