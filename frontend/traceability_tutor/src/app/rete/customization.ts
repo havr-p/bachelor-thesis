@@ -10,7 +10,7 @@ import {
   AngularPlugin,
   AngularArea2D,
   Presets as AngularPresets,
-} from 'rete-angular-plugin/16';
+} from 'rete-angular-plugin/17';
 
 import { CustomSocketComponent } from '../customization/custom-socket/custom-socket.component';
 import { CustomNodeComponent } from '../customization/custom-node/custom-node.component';

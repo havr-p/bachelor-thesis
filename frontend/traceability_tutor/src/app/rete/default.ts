@@ -6,7 +6,7 @@ import {
   AngularPlugin,
   AngularArea2D,
   Presets as AngularPresets,
-} from 'rete-angular-plugin/16';
+} from 'rete-angular-plugin/17';
 
 import { DataflowEngine, DataflowNode } from 'rete-engine';
 import {

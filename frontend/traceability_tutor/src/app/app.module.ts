@@ -6,7 +6,7 @@ import { CustomSocketComponent } from './customization/custom-socket/custom-sock
 import { CustomNodeComponent } from './customization/custom-node/custom-node.component';
 import { CustomConnectionComponent } from './customization/custom-connection/custom-connection.component';
 
-import { ReteModule } from 'rete-angular-plugin/16';
+import { ReteModule } from 'rete-angular-plugin/17';
 
 @NgModule({
   declarations: [
