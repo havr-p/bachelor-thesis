@@ -1,3 +1,4 @@
 *strictdoc\build
 *.idea
 /traceability_tutor/output/*
+/node_modules/
