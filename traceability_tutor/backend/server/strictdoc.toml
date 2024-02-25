@@ -20,7 +20,7 @@ features = [
 #  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
 #  "HTML2PDF",
 #  "DIFF",
-  "ALL_FEATURES"
+  "ALL_FEATURES",
 ]
 
 include_doc_paths = [
@@ -28,7 +28,6 @@ include_doc_paths = [
   "docs_extra/**",
   '**/bachelor-thesis/traceability_tutor/**',
   '**/bachelor-thesis/**',
-  "C:/Users/Consultis/PycharmProjects/bachelor-thesis/traceability_tutor/docs/strictdoc-PoC.sdoc"
 ]
 
 exclude_doc_paths = [
