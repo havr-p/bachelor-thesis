@@ -1,0 +1,12 @@
+[project]
+
+features = [
+  "TRACEABILITY_MATRIX_SCREEN",
+]
+
+traceability_matrix_relation_columns = [
+  "Parent",
+  "Parent[Refines]",
+  "Parent[REQUIREMENT_FOR]",
+  "File",
+]

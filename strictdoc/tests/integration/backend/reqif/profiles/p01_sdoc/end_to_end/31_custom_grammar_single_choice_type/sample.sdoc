@@ -1,0 +1,19 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: CHOICE_FIELD
+    TYPE: SingleChoice(A, B, C, D)
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
+[REQUIREMENT]
+CHOICE_FIELD: A

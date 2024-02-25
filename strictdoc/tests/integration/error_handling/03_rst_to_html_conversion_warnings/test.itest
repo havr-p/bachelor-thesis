@@ -1,0 +1,13 @@
+RUN: %expect_exit 1 %strictdoc export %S | filecheck %s --dump-input=fail
+CHECK: error: problems when converting RST to HTML:
+CHECK: RST markup syntax error on line 2: Bullet list ends without a blank line; unexpected unindent.
+CHECK: RST fragment: >>>
+CHECK: - item 1
+CHECK: adsfasdfasdf
+CHECK: - item 2
+CHECK-EMPTY:
+CHECK: - item 1
+CHECK: adsfasdfasdf
+CHECK: - item 2
+CHECK: <<<
+CHECK: error: Parallelizer: One of the child processes has exited prematurely.

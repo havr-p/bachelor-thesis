@@ -1,0 +1,13 @@
+RUN: %strictdoc export %S --formats=spdx --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Step 'Export SDoc' took:
+
+RUN: cat %S/Output/spdx/output.spdx | filecheck %s --check-prefix=CHECK-SPDX
+
+CHECK-SPDX: ## SPDX Document
+
+CHECK-SPDX: Untitled Project
+CHECK-SPDX: Dummy high-level requirement #1
+CHECK-SPDX: Dummy low-level requirement #1
+
+RUN: cp strictdoc.toml %S/Output/spdx/
+RUN: %strictdoc export %S/Output/spdx/output.spdx.sdoc --formats=html --output-dir Output | filecheck %s --dump-input=fail

@@ -1,0 +1,45 @@
+[project]
+title = "StrictDoc Documentation"
+html_assets_strictdoc_dir = "assets"
+
+features = [
+  # Stable features.
+  "TABLE_SCREEN",
+  "TRACEABILITY_SCREEN",
+  "DEEP_TRACEABILITY_SCREEN",
+  "SEARCH",
+
+  # Stable features but not used by StrictDoc.
+  # "MATHJAX"
+
+  # Experimental features.
+  "PROJECT_STATISTICS_SCREEN",
+  # "REQIF",
+  # "STANDALONE_DOCUMENT_SCREEN",
+  "TRACEABILITY_MATRIX_SCREEN",
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+  "HTML2PDF",
+  "DIFF",
+]
+
+include_doc_paths = [
+  "docs/**",
+  "docs_extra/**",
+]
+
+exclude_doc_paths = [
+  "tests/**"
+]
+
+include_source_paths = [
+  "pyproject.toml",
+  "tasks.py",
+  "strictdoc/**",
+  "tests/**"
+]
+
+exclude_source_paths = [
+  # StrictDoc (almost never) uses __init__ files.
+  # The used files will be whitelisted include_source_paths.
+  "**__init__.py"
+]

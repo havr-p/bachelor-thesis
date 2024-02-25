@@ -1,0 +1,5 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+
+# Expecting an error because the test3.py is filtered out by the
+# "exclude_source_paths" option.
+CHECK: error: Requirement REQ-003 references a file that does not exist: src3/test3.py
