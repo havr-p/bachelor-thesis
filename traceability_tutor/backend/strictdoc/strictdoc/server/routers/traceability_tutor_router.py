@@ -48,7 +48,7 @@ def create_traceability_tutor_router(
         traceability_index: TraceabilityIndex = export_action.traceability_index
         print(traceability_index)
         print('hi')
-        titles = [SDocDocument.get_title(doc) for doc in traceability_index.document_tree.document_list]
+        requirements = [SDocDocument.get_title(doc) for doc in traceability_index.document_tree]
         return JSONResponse(
             content=titles
         )
