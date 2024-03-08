@@ -47,4 +47,4 @@ exclude_source_paths = [
   "**__init__.py"
 ]
 [server]
-server_host = "0.0.0.0"
+host = "0.0.0.0"
