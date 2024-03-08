@@ -24,6 +24,7 @@ def create_app(
         "http://localhost",
         "http://localhost:8081",
         "http://localhost:3000",
+        "http://localhost:4200"
     ]
 
     # Uncomment this to enable performance measurements.

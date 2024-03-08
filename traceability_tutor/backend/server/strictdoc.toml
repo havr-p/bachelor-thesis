@@ -1,6 +1,7 @@
 [project]
 title = "StrictDoc Documentation"
 html_assets_strictdoc_dir = "assets"
+server_host = "0.0.0.0"
 
 features = [
 #  # Stable features.
