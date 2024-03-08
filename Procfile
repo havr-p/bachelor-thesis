@@ -1,1 +1,1 @@
-web: cd traceability_tutor/backend/strictdoc/strictdoc/cli && python main.py server --config="../../../server/strictdoc.toml" --no-reload --port=$PORT ../../../server/docs/strictdoc-PoC.sdoc
+web: cd traceability_tutor/backend/strictdoc/strictdoc/cli && python main.py server --config="../../../server/strictdoc.toml" --no-reload --port=${PORT} ../../../server/docs/strictdoc-PoC.sdoc
