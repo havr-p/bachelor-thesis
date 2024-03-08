@@ -43,6 +43,8 @@ def run_strictdoc_server(
         tmp_config_file.flush()
 
         os.environ[SDocServerEnvVariable.PATH_TO_CONFIG] = tmp_config_file.name
+        print(project_config.server_host)
+        print(project_config.server_port)
 
         uvicorn.run(
             "strictdoc.server.app:strictdoc_production_app",

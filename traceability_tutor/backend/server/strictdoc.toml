@@ -1,7 +1,7 @@
 [project]
-title = "StrictDoc Documentation"
+title = "traceability tutor"
 html_assets_strictdoc_dir = "assets"
-server_host = "0.0.0.0"
+
 
 features = [
 #  # Stable features.
@@ -46,3 +46,5 @@ exclude_source_paths = [
   # The used files will be whitelisted include_source_paths.
   "**__init__.py"
 ]
+[server]
+server_host = "0.0.0.0"
