@@ -21,6 +21,7 @@
     "@angular/router": "^17.2.2",
     "@types/three": "^0.156.0",
     "elkjs": "^0.8.2",
+    "primeng": "^17.9.0",
     "rete": "^2.0.3",
     "rete-angular-plugin": "^2.1.1",
     "rete-area-3d-plugin": "^2.0.4",
