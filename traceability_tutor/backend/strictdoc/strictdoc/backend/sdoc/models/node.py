@@ -622,6 +622,13 @@ class SDocNode(SDocObject):
                 has_meta = True
         self.has_meta = has_meta
 
+    def to_dict(self):
+        return {
+            'reserved_uid': self.reserved_uid,
+            'requirement_type': self.requirement_type,
+            'reserved_title': self.reserved_title,
+        }
+
 
 @auto_described
 class CompositeRequirement(SDocNode):

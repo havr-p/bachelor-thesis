@@ -9,6 +9,7 @@ from starlette.responses import JSONResponse, Response
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
@@ -41,7 +42,7 @@ def create_traceability_tutor_router(
     parallelizer = NullParallelizer()
     router = APIRouter()
 
-    @router.get("/json_all", response_class=Response)
+    @router.get("/requirements/all", response_class=Response)
     def get_json_all_requirements():
         export_action = ExportAction(
             project_config=project_config,
@@ -58,14 +59,11 @@ def create_traceability_tutor_router(
             )
             for node in document_iterator.all_content():
                 if isinstance(node, SDocNode):
-                    requirement = assert_cast(node, SDocNode)
-                    requirement_field_: SDocNodeField
-                    fields = []
-                    for requirement_field_tuple in requirement.enumerate_all_fields():
-                        requirement_field_, requirement_field_.field_name, meta_field_value = requirement_field_tuple
-                        if requirement_field_.field_value is not None:
-                            fields.append(requirement_field_.field_value)
-                    requirements.append(fields)
+                    requirement: SDocNode = assert_cast(node, SDocNode)
+                    assert requirement.reserved_uid is not None
+                    requirement_parents = [(ref.ref_uid, ref.role) for ref in requirement.get_requirement_references(ReferenceType.PARENT)]
+                    requirements.append((requirement.reserved_uid, requirement.requirement_type,
+                                         requirement.reserved_title, requirement_parents))
 
         return JSONResponse(
             content=requirements

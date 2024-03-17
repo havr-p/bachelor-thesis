@@ -16,6 +16,13 @@ class Reference:
         self.ref_type = ref_type
         self.role: Optional[str] = None
 
+    def to_dict(self):
+        return {
+            "parent": self.parent,
+            "ref_type": self.ref_type,
+            "role": self.role,
+        }
+
 
 @auto_described
 class FileReference(Reference):
