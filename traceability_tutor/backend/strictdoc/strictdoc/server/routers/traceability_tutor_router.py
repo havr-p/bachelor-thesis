@@ -50,8 +50,6 @@ def create_traceability_tutor_router(
         )
         export_action.build_index()
         traceability_index: TraceabilityIndex = export_action.traceability_index
-        print(traceability_index)
-        print('hi')
         requirements = []
         for document_ in traceability_index.document_tree.document_list:
             document_iterator: DocumentCachingIterator = (
@@ -72,5 +70,8 @@ def create_traceability_tutor_router(
     @router.post("/create_new_project", response_class=Response)
     def create_new_project(file: UploadFile = File(...)):
         pass
+    #if new greenfield project - create new directory where the project requirements will be stored.
+    #each requirement will be stored in a separate file with the requirement UID as the file name.
+    #
 
     return router

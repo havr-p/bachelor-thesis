@@ -9,7 +9,6 @@ import { createEditor } from './rete'
 })
 export class AppComponent implements AfterViewInit {
   title = 'angular'
-  titld = 'test'
   @ViewChild('rete') container!: ElementRef<HTMLElement>
 
   constructor(private injector: Injector) { }

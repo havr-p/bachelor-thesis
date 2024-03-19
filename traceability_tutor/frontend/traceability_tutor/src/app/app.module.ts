@@ -6,12 +6,13 @@ import { CustomSocketComponent } from './customization/custom-socket/custom-sock
 import { CustomNodeComponent } from './customization/custom-node/custom-node.component';
 import { CustomConnectionComponent } from './customization/custom-connection/custom-connection.component';
 
-import { ReteModule } from 'rete-angular-plugin/17';
 import { DockComponent } from './dock/dock.component';
 import {MenubarModule} from "primeng/menubar";
 import {DialogModule} from "primeng/dialog";
 import {FileUploadModule} from "primeng/fileupload";
 import {FormsModule} from "@angular/forms";
+import { RequirementNodeComponent } from './nodes/requirement/requirement-node/requirement-node.component';
+import {KeyValuePipe, NgForOf} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -19,9 +20,11 @@ import {FormsModule} from "@angular/forms";
     CustomSocketComponent,
     CustomNodeComponent,
     CustomConnectionComponent,
-    DockComponent,
+    DockComponent
   ],
-    imports: [BrowserModule, ReteModule, MenubarModule, DialogModule, FileUploadModule, FormsModule],
+  imports: [BrowserModule, MenubarModule, DialogModule, FileUploadModule, FormsModule, KeyValuePipe,
+    NgForOf,
+     RequirementNodeComponent],
   providers: [],
   bootstrap: [AppComponent],
 })

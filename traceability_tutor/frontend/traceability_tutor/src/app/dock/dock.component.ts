@@ -32,6 +32,13 @@ export class DockComponent implements OnInit {
                }
              ]
            },
+        {
+                 label: 'Demo',
+                 icon: 'pi pi-fw pi-video',
+                 command: () => {
+                    this.loadAll();
+                }
+                },
            // {
            //   label: 'Delete',
            //   icon: 'pi pi-fw pi-trash'

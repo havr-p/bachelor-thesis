@@ -18,6 +18,7 @@ from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
 class DocumentFinder:
+    #fixme here i tested diff feature yesterday, continue
     @staticmethod
     @timing_decorator("Find and read SDoc files")
     def find_sdoc_content(project_config: ProjectConfig, parallelizer):
