@@ -126,7 +126,7 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
   editor.use(dataflow);
 
   const a = new NumberNode(1, process);
-  const b = new NumberNode(1, process);
+  const b = new NumberNode(45, process);
   const add = new AddNode();
 
   await editor.addNode(a);
