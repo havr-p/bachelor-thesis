@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { CustomSocketComponent } from './customization/custom-socket/custom-socket.component';
-import { CustomNodeComponent } from './customization/custom-node/custom-node.component';
+
 import { CustomConnectionComponent } from './customization/custom-connection/custom-connection.component';
 
 import { DockComponent } from './dock/dock.component';
@@ -11,20 +11,24 @@ import {MenubarModule} from "primeng/menubar";
 import {DialogModule} from "primeng/dialog";
 import {FileUploadModule} from "primeng/fileupload";
 import {FormsModule} from "@angular/forms";
-import { RequirementNodeComponent } from './nodes/requirement/requirement-node/requirement-node.component';
-import {KeyValuePipe, NgForOf} from "@angular/common";
+import {KeyValuePipe, NgForOf, NgOptimizedImage} from "@angular/common";
+
+import {SharedModule} from "./shared/shared.module";
+import {ReteModule} from "rete-angular-plugin/17";
+import { TraceabilityEditorComponent } from './ui/traceability-editor/traceability-editor.component';
+import {RequirementNodeComponent} from "./customization/requirement-node/requirement-node.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     CustomSocketComponent,
-    CustomNodeComponent,
     CustomConnectionComponent,
-    DockComponent
+    DockComponent,
+    RequirementNodeComponent,
+    TraceabilityEditorComponent,
   ],
-  imports: [BrowserModule, MenubarModule, DialogModule, FileUploadModule, FormsModule, KeyValuePipe,
-    NgForOf,
-     RequirementNodeComponent],
+    imports: [BrowserModule, MenubarModule, DialogModule, FileUploadModule, FormsModule, KeyValuePipe,
+        NgForOf, SharedModule, ReteModule, NgOptimizedImage],
   providers: [],
   bootstrap: [AppComponent],
 })
