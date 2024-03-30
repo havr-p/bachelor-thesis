@@ -42,15 +42,15 @@ import { CustomConnectionComponent } from '../../customization/custom-connection
 import { addCustomBackground } from '../../customization/custom-background';
 import { EventService } from '../../../services/event.service';
 import { Requirement } from '../../models/requirement';
-import { RequirementNodeComponent } from '../../customization/requirement-node/requirement-node.component';
-import { RequirementNode } from '../../nodes/requirement.node';
+import { RequirementItemComponent } from '../../customization/requirement-node/requirement-item.component';
+import { RequirementItem } from '../../nodes/requirementItem';
 
-class Connection<N extends RequirementNode> extends ClassicPreset.Connection<
+class Connection<N extends RequirementItem> extends ClassicPreset.Connection<
   N,
   N
 > {}
 
-type Schemes = GetSchemes<RequirementNode, Connection<RequirementNode>>;
+type Schemes = GetSchemes<RequirementItem, Connection<RequirementItem>>;
 type AreaExtra =
   | Area2D<Schemes>
   | AngularArea2D<Schemes>
@@ -75,7 +75,7 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
     AngularPresets.classic.setup({
       customize: {
         node() {
-          return RequirementNodeComponent;
+          return RequirementItemComponent;
         },
         connection() {
           return CustomConnectionComponent;
@@ -190,7 +190,7 @@ export class TraceabilityEditorComponent
           let data = eventData.data;
           for (let req of eventData.data) {
             //console.log(JSON.stringify(req));
-            let requirement = new RequirementNode(req);
+            let requirement = new RequirementItem(req);
             requirement.addOutput(
               requirement.id,
               new ClassicPreset.Output(socket),
@@ -211,7 +211,7 @@ export class TraceabilityEditorComponent
 
           for (let node of this.editor.getNodes()) {
             //console.log(node);
-            if (node instanceof RequirementNode) {
+            if (node instanceof RequirementItem) {
               for (const requirementReferences of data.find(
                 (r) => r.id === node.id,
               )!.references) {
@@ -248,7 +248,7 @@ export class TraceabilityEditorComponent
           });
         } else if (eventData.type === 'add') {
           console.log('catched');
-          let node = new RequirementNode(eventData.data[0]);
+          let node = new RequirementItem(eventData.data[0]);
           // @ts-ignore
           node.addInput(
             'text',
