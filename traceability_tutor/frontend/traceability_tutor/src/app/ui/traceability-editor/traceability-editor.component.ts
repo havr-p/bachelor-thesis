@@ -245,14 +245,17 @@ import { Requirement } from '../../models/requirement';
 import { RequirementNodeComponent } from '../../customization/requirement-node/requirement-node.component';
 import { RequirementNode } from '../../nodes/requirement.node';
 import { isArray } from '../../utils';
-import { Events } from '../../types';
+import { Events, NodeProps } from '../../types';
+import { structures } from 'rete-structures';
+import { log } from 'three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements';
+import { SourceNode } from '../../nodes/SourceNode';
 
-class Connection<N extends RequirementNode> extends ClassicPreset.Connection<
+class Connection<N extends ClassicPreset.Node> extends ClassicPreset.Connection<
   N,
   N
 > {}
 
-type Schemes = GetSchemes<RequirementNode, Connection<RequirementNode>>;
+type Schemes = GetSchemes<NodeProps, Connection<RequirementNode>>;
 type AreaExtra =
   | Area2D<Schemes>
   | AngularArea2D<Schemes>
@@ -266,6 +269,66 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
   const area = new AreaPlugin<Schemes, AreaExtra>(container);
   const connection = new ConnectionPlugin<Schemes, AreaExtra>();
   const minimap = new MinimapPlugin<Schemes>();
+  const contextMenu = new ContextMenuPlugin<Schemes>({
+    items(context, plugin) {
+      console.log('contextMenu works');
+      const graph = structures(editor);
+      console.log(context);
+      if (context instanceof RequirementNode) {
+        return {
+          searchBar: false,
+          list: [
+            {
+              label: 'Show lineage',
+              key: '1',
+              handler: () => {
+                structures(editor)
+                  .predecessors(context.id)
+                  .connections()
+                  .forEach((connection) => {});
+              },
+            },
+            {
+              label: 'Delete',
+              key: '2',
+              handler: () => {},
+            },
+            // {
+            //   label: 'Collection', key: '1', handler: () => null,
+            //   subitems: [
+            //     { label: 'Subitem', key: '1', handler: () => console.log('Subitem') }
+            //   ]
+            // }
+          ],
+        };
+      }
+      return {
+        searchBar: false,
+        list: [
+          {
+            label: 'Now hello',
+            key: '2',
+            handler: () => {},
+          },
+        ],
+      };
+    },
+    // items: ContextMenuPresets.classic.setup([
+    //   ['Source', () => new SourceNode()],
+    //   [
+    //     'Requirement',
+    //     () =>
+    //       new RequirementNode({
+    //         id: '1',
+    //         name: 'Test',
+    //         statement: 'Test',
+    //         references: [],
+    //         status: 'Test',
+    //         level: 'Test',
+    //       }),
+    //   ],
+    // ]),
+  });
 
   const angularRender = new AngularPlugin<Schemes, AreaExtra>({ injector });
 
@@ -289,6 +352,7 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
     }),
   );
   angularRender.addPreset(AngularPresets.minimap.setup());
+  angularRender.addPreset(AngularPresets.contextMenu.setup());
 
   connection.addPreset(ConnectionPresets.classic.setup());
 
@@ -299,6 +363,7 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
 
   area.use(angularRender);
   area.use(minimap);
+  area.use(contextMenu);
 
   AreaExtensions.simpleNodesOrder(area);
 
