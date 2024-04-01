@@ -2,10 +2,9 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Injector,
-  OnDestroy,
-  OnInit,
   ViewChild,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 
 // import {ClassicPreset, ClassicPreset as Classic, GetSchemes, NodeEditor} from 'rete';
@@ -16,14 +15,215 @@ import {
 //   AngularArea2D,
 //   Presets as AngularPresets,
 // } from 'rete-angular-plugin/17';
+
+import { DataflowEngine, DataflowNode } from 'rete-engine';
 import {
   AutoArrangePlugin,
   Presets as ArrangePresets,
 } from 'rete-auto-arrange-plugin';
-import { ContextMenuExtra } from 'rete-context-menu-plugin';
+import { ReadonlyPlugin } from 'rete-readonly-plugin';
+import {
+  ContextMenuPlugin,
+  ContextMenuExtra,
+  Presets as ContextMenuPresets,
+} from 'rete-context-menu-plugin';
 import { MinimapExtra, MinimapPlugin } from 'rete-minimap-plugin';
+// import {addCustomBackground} from "../../customization/custom-background";
+// import {RequirementNode} from "../../nodes/requirement.node";
+// import {CustomConnectionComponent} from "../../customization/custom-connection/custom-connection.component";
+// import {CustomSocketComponent} from "../../customization/custom-socket/custom-socket.component";
+// import {EventService} from "../../../services/event.service";
+// import {Requirement} from "../../models/requirement";
+// import {RequirementNodeComponent} from "../requirement-node/requirement-node.component";
+// import {
+//   ConnectionPlugin,
+//   Presets as ConnectionPresets
+// } from "rete-connection-plugin";
+// import { Schemes } from 'src/app/types';
+// import {TextSocket} from "../../sockets";
+// import {CustomNodeComponent} from "../../customization/custom-node/custom-node.component";
 
-import { ClassicPreset, GetSchemes, NodeEditor } from 'rete';
+// class NumberNode extends Classic.Node implements DataflowNode {
+//   width = 180;
+//   height = 120;
+//
+//   constructor(initial: number, change?: (value: number) => void) {
+//     super('Number');
+//
+//     this.addOutput('value', new Classic.Output(socket, 'Number'));
+//     this.addControl(
+//       'value',
+//       new Classic.InputControl('number', { initial, change })
+//     );
+//   }
+//   data() {
+//     const value = (this.controls['value'] as Classic.InputControl<'number'>)
+//       .value;
+//
+//     return {
+//       value,
+//     };
+//   }
+// }
+//
+// class AddNode extends Classic.Node implements DataflowNode {
+//   width = 180;
+//   height = 195;
+//
+//   constructor() {
+//     super('Add');
+//
+//     this.addInput('a', new Classic.Input(socket, 'A'));
+//     this.addInput('b', new Classic.Input(socket, 'B'));
+//     this.addOutput('value', new Classic.Output(socket, 'Number'));
+//     this.addControl(
+//       'result',
+//       new Classic.InputControl('number', { initial: 0, readonly: true })
+//     );
+//   }
+//   data(inputs: { a?: number[]; b?: number[] }) {
+//     const { a = [], b = [] } = inputs;
+//     const sum = (a[0] || 0) + (b[0] || 0);
+//
+//     (this.controls['result'] as Classic.InputControl<'number'>).setValue(sum);
+//
+//     return {
+//       value: sum,
+//     };
+//   }
+// }
+//
+// type AreaExtra =
+//   | Area2D<Schemes>
+//   | AngularArea2D<Schemes>
+//   | ContextMenuExtra
+//   | MinimapExtra;
+//
+// const socket = new Classic.Socket('socket');
+//
+// export async function createEditor(container: HTMLElement, injector: Injector) {
+//   const editor = new NodeEditor<Schemes>();
+//   const area = new AreaPlugin<Schemes, AreaExtra>(container);
+//
+//   const angularRender = new AngularPlugin<Schemes, AreaExtra>({ injector });
+//
+//   const readonly = new ReadonlyPlugin<Schemes>();
+//   const contextMenu = new ContextMenuPlugin<Schemes>({
+//     items: ContextMenuPresets.classic.setup([
+//      // ['Number', () => new NumberNode(1, process)],
+//      // ['Add', () => new AddNode()],
+//     ]),
+//   });
+//   const minimap = new MinimapPlugin<Schemes>();
+//   const connection = new ConnectionPlugin<Schemes, AreaExtra>();
+//
+//   editor.use(readonly.root);
+//   addCustomBackground(area);
+//   editor.use(area);
+//   area.use(readonly.area);
+//
+//   area.use(angularRender);
+//
+//   area.use(contextMenu);
+//   area.use(minimap);
+//   area.area.setZoomHandler(null);
+//
+//   angularRender.addPreset(
+//     AngularPresets.classic.setup({
+//       customize: {
+//         node() {
+//           return CustomNodeComponent;
+//         },
+//         connection() {
+//           return CustomConnectionComponent;
+//         },
+//         socket() {
+//           return CustomSocketComponent;
+//         },
+//       },
+//     })
+//   );
+//
+//   angularRender.addPreset(AngularPresets.contextMenu.setup());
+//   angularRender.addPreset(AngularPresets.minimap.setup());
+//   connection.addPreset(ConnectionPresets.classic.setup());
+//
+//   const dataflow = new DataflowEngine<Schemes>();
+//
+//   editor.use(dataflow);
+//
+//    //const a = new RequirementNode(process);
+//   // const b = new RequirementNode(process);
+//    //const add = new AddNode();
+//
+//   // await editor.addNode(a);
+//   // await editor.addNode(b);
+//    //await editor.addNode(add);
+//
+//   // await editor.addConnection(new Connection(a, 'value', add, 'a'));
+//  //  await editor.addConnection(new Connection(b, 'value', add, 'b'));
+//
+//   const arrange = new AutoArrangePlugin<Schemes>();
+//
+//   arrange.addPreset(ArrangePresets.classic.setup());
+//   //arrange.addPreset(ArrangePresets.classic.setup());
+//
+//   area.use(arrange);
+//
+//   await arrange.layout();
+//
+//   AreaExtensions.zoomAt(area, editor.getNodes());
+//
+//
+//   AreaExtensions.simpleNodesOrder(area);
+//
+//   const selector = AreaExtensions.selector();
+//   const accumulating = AreaExtensions.accumulateOnCtrl();
+//
+//   AreaExtensions.selectableNodes(area, selector, { accumulating });
+//
+//   async function process() {
+//     dataflow.reset();
+//
+//     editor
+//       .getNodes()
+//       .filter((node) => node instanceof RequirementNode)
+//       .forEach(async (node) => {
+//         const info = await dataflow.fetch(node.id);
+//
+//         console.log(node.id, 'contains', info);
+//
+//         // area.update(
+//         //   'control',
+//         //   (node.controls['result'] as Classic.InputControl<'number'>).id
+//         // );
+//       });
+//   }
+//
+//   editor.addPipe((context) => {
+//     if (
+//       context.type === 'connectioncreated' ||
+//       context.type === 'connectionremoved'
+//     ) {
+//       process();
+//     }
+//     return context;
+//   });
+//
+//   process();
+//
+// //  readonly.enable();
+//
+//   return {
+//     destroy: () => area.destroy(),
+//     editor: editor,
+//     area: area,
+//     arrange: arrange,
+//   };
+// }
+
+import { NodeEditor, GetSchemes, ClassicPreset } from 'rete';
+import { Injector } from '@angular/core';
 import { Area2D, AreaExtensions, AreaPlugin } from 'rete-area-plugin';
 import {
   ConnectionPlugin,
@@ -31,8 +231,8 @@ import {
 } from 'rete-connection-plugin';
 
 import {
-  AngularArea2D,
   AngularPlugin,
+  AngularArea2D,
   Presets as AngularPresets,
 } from 'rete-angular-plugin/17';
 
@@ -42,15 +242,17 @@ import { CustomConnectionComponent } from '../../customization/custom-connection
 import { addCustomBackground } from '../../customization/custom-background';
 import { EventService } from '../../../services/event.service';
 import { Requirement } from '../../models/requirement';
-import { RequirementItemComponent } from '../../customization/requirement-node/requirement-item.component';
-import { RequirementItem } from '../../nodes/requirementItem';
+import { RequirementNodeComponent } from '../../customization/requirement-node/requirement-node.component';
+import { RequirementNode } from '../../nodes/requirement.node';
+import { isArray } from '../../utils';
+import { Events } from '../../types';
 
-class Connection<N extends RequirementItem> extends ClassicPreset.Connection<
+class Connection<N extends RequirementNode> extends ClassicPreset.Connection<
   N,
   N
 > {}
 
-type Schemes = GetSchemes<RequirementItem, Connection<RequirementItem>>;
+type Schemes = GetSchemes<RequirementNode, Connection<RequirementNode>>;
 type AreaExtra =
   | Area2D<Schemes>
   | AngularArea2D<Schemes>
@@ -75,7 +277,7 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
     AngularPresets.classic.setup({
       customize: {
         node() {
-          return RequirementItemComponent;
+          return RequirementNodeComponent;
         },
         connection() {
           return CustomConnectionComponent;
@@ -185,86 +387,69 @@ export class TraceabilityEditorComponent
 
   ngOnInit(): void {
     this.eventService.event$.subscribe(
-      async (eventData: { type: string; data: Requirement[] }) => {
-        if (eventData.type === 'demo') {
-          let data = eventData.data;
-          for (let req of eventData.data) {
-            //console.log(JSON.stringify(req));
-            let requirement = new RequirementItem(req);
-            requirement.addOutput(
-              requirement.id,
-              new ClassicPreset.Output(socket),
-            );
-            requirement.addInput(
-              requirement.id,
-              new ClassicPreset.Input(socket),
-            );
-            await this.editor.addNode(requirement);
-          }
-          //console.log(this.editor.getNodes())
-
-          //const arrange = new AutoArrangePlugin<Schemes>();
-
-          this.arrange.addPreset(ArrangePresets.classic.setup());
-
-          this.area.use(this.arrange);
-
-          for (let node of this.editor.getNodes()) {
-            //console.log(node);
-            if (node instanceof RequirementItem) {
-              for (const requirementReferences of data.find(
-                (r) => r.id === node.id,
-              )!.references) {
-                const parent = this.editor.getNode(
-                  requirementReferences.parentId,
-                );
-                if (parent) {
-                  await this.editor.addConnection(
-                    new ClassicPreset.Connection(
-                      parent,
-                      parent.id,
-                      node,
-                      node.id,
-                    ),
-                  );
-                }
-              }
-            }
-          }
-          await this.arrange.layout({
-            options: {
-              'elk.spacing.nodeNode': 300,
-              'elk.layered.spacing.nodeNodeBetweenLayers': 400,
-              'elk.alignment': 'RIGHT',
-              'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //also LINEAR_SEGMENTS
-              //'elk.graphviz.concentrate': true,
-              'elk.direction': 'RIGHT', //we want DOWN but need to configure sockets,
-              'elk.edge.type': 'DIRECTED',
-              //'elk.layered.wrapping.strategy': 'MULTI_EDGE',
-              //'elk.layered.crossingMinimization.hierarchicalSweepiness': -1,
-              'elk.radial.centerOnRoot': true,
-              'elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
-            },
-          });
-        } else if (eventData.type === 'add') {
-          console.log('catched');
-          let node = new RequirementItem(eventData.data[0]);
-          // @ts-ignore
-          node.addInput(
-            'text',
-            new ClassicPreset.Input(new TextSocket(), 'Text'),
-          );
-          // @ts-ignore
-          node.addOutput(
-            'text',
-            new ClassicPreset.Output(new TextSocket(), 'Text'),
-          );
-          await this.editor.addNode(node);
+      async (event: { type: string; data: any }) => {
+        switch (event.type) {
+          case Events.DEMO:
+            await this.processDemoEvent(event.data);
+            break;
+          case Events.ADD:
+            await this.addNode(new RequirementNode(event.data));
+            break;
         }
       },
     );
   }
+
+  private async processDemoEvent(data: Requirement[]) {
+    for (let req of data) {
+      //console.log(JSON.stringify(req));
+      let requirement = new RequirementNode(req);
+      requirement.addOutput(requirement.id, new ClassicPreset.Output(socket));
+      requirement.addInput(requirement.id, new ClassicPreset.Input(socket));
+      await this.editor.addNode(requirement);
+    }
+    //console.log(this.editor.getNodes())
+
+    //const arrange = new AutoArrangePlugin<Schemes>();
+
+    this.arrange.addPreset(ArrangePresets.classic.setup());
+
+    this.area.use(this.arrange);
+
+    for (let node of this.editor.getNodes()) {
+      //console.log(node);
+      if (node instanceof RequirementNode) {
+        const parentRefs = node.requirement.references;
+        for (const ref of parentRefs) {
+          const parent = this.editor.getNode(ref.parentId);
+          if (parent) {
+            await this.editor.addConnection(
+              new ClassicPreset.Connection(parent, parent.id, node, node.id),
+            );
+          }
+        }
+      }
+    }
+    await this.arrange.layout({
+      options: {
+        'elk.spacing.nodeNode': 300,
+        'elk.layered.spacing.nodeNodeBetweenLayers': 400,
+        'elk.alignment': 'RIGHT',
+        'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //also LINEAR_SEGMENTS
+        //'elk.graphviz.concentrate': true,
+        'elk.direction': 'RIGHT', //we want DOWN but need to configure sockets,
+        'elk.edge.type': 'DIRECTED',
+        //'elk.layered.wrapping.strategy': 'MULTI_EDGE',
+        //'elk.layered.crossingMinimization.hierarchicalSweepiness': -1,
+        'elk.radial.centerOnRoot': true,
+        'elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
+      },
+    });
+  }
+
   async addNode(node: any) {
+    node.addOutput(node.id, new ClassicPreset.Output(socket));
+    node.addInput(node.id, new ClassicPreset.Input(socket));
     await this.editor.addNode(node);
   }
 
