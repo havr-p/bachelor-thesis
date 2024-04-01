@@ -5,6 +5,8 @@ import {
   ViewChild,
   OnInit,
   OnDestroy,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 
 // import {ClassicPreset, ClassicPreset as Classic, GetSchemes, NodeEditor} from 'rete';
@@ -244,15 +246,15 @@ import { EventService } from '../../../services/event.service';
 import { Requirement } from '../../models/requirement';
 import { RequirementNodeComponent } from '../../customization/requirement-node/requirement-node.component';
 import { RequirementNode } from '../../nodes/requirement.node';
-import { isArray } from '../../utils';
-import { Events } from '../../types';
+import { Events, NodeProps } from '../../types';
+import { structures } from 'rete-structures';
+import { Subject } from 'rxjs';
+import { Connection } from '../../connection';
 
-class Connection<N extends RequirementNode> extends ClassicPreset.Connection<
-  N,
-  N
-> {}
-
-type Schemes = GetSchemes<RequirementNode, Connection<RequirementNode>>;
+type Schemes = GetSchemes<
+  NodeProps,
+  Connection<RequirementNode, RequirementNode>
+>;
 type AreaExtra =
   | Area2D<Schemes>
   | AngularArea2D<Schemes>
@@ -266,6 +268,81 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
   const area = new AreaPlugin<Schemes, AreaExtra>(container);
   const connection = new ConnectionPlugin<Schemes, AreaExtra>();
   const minimap = new MinimapPlugin<Schemes>();
+  const contextMenu = new ContextMenuPlugin<Schemes>({
+    items(context, plugin) {
+      const graph = structures(editor);
+      if (context instanceof RequirementNode) {
+        const selectedNodeId = context.id;
+        return {
+          searchBar: false,
+          list: [
+            {
+              //fixme maybe we can use parent-child relationship to show lineage, also not selecting first incomers
+              handler: () => {
+                graph
+                  .predecessors(selectedNodeId)
+                  // .union(
+                  //   graph.filter(
+                  //     Boolean,
+                  //     ({ source, target }) => target === selectedNodeId,
+                  //   ),
+                  // )
+                  .connections()
+                  .forEach((connection) => {
+                    connection.updateData({
+                      isSelected: true,
+                    });
+                  });
+              },
+              key: '1',
+              label: 'Show lineage',
+            },
+            {
+              label: 'Hide lineage',
+              key: '2',
+              handler: () => {
+                console.log(graph.connections());
+                graph.connections().forEach((connection) => {
+                  connection.updateData({ isSelected: false });
+                });
+              },
+            },
+            // {
+            //   label: 'Collection', key: '1', handler: () => null,
+            //   subitems: [
+            //     { label: 'Subitem', key: '1', handler: () => console.log('Subitem') }
+            //   ]
+            // }
+          ],
+        };
+      }
+      return {
+        searchBar: false,
+        list: [
+          {
+            label: 'Root context menu item',
+            key: '2',
+            handler: () => {},
+          },
+        ],
+      };
+    },
+    // items: ContextMenuPresets.classic.setup([
+    //   ['Source', () => new SourceNode()],
+    //   [
+    //     'Requirement',
+    //     () =>
+    //       new RequirementNode({
+    //         id: '1',
+    //         name: 'Test',
+    //         statement: 'Test',
+    //         references: [],
+    //         status: 'Test',
+    //         level: 'Test',
+    //       }),
+    //   ],
+    // ]),
+  });
 
   const angularRender = new AngularPlugin<Schemes, AreaExtra>({ injector });
 
@@ -289,6 +366,7 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
     }),
   );
   angularRender.addPreset(AngularPresets.minimap.setup());
+  angularRender.addPreset(AngularPresets.contextMenu.setup());
 
   connection.addPreset(ConnectionPresets.classic.setup());
 
@@ -299,6 +377,7 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
 
   area.use(angularRender);
   area.use(minimap);
+  area.use(contextMenu);
 
   AreaExtensions.simpleNodesOrder(area);
 
@@ -381,10 +460,6 @@ export class TraceabilityEditorComponent
     }
   }
 
-  logReq(r: Requirement) {
-    JSON.stringify(r);
-  }
-
   ngOnInit(): void {
     this.eventService.event$.subscribe(
       async (event: { type: string; data: any }) => {
@@ -424,7 +499,7 @@ export class TraceabilityEditorComponent
           const parent = this.editor.getNode(ref.parentId);
           if (parent) {
             await this.editor.addConnection(
-              new ClassicPreset.Connection(parent, parent.id, node, node.id),
+              new Connection(parent, parent.id, node, node.id),
             );
           }
         }
@@ -445,6 +520,7 @@ export class TraceabilityEditorComponent
         'elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
       },
     });
+    await AreaExtensions.zoomAt(this.area, this.editor.getNodes());
   }
 
   async addNode(node: any) {
