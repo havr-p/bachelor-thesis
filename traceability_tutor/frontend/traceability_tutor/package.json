@@ -33,6 +33,7 @@
     "rete-minimap-plugin": "^2.0.2",
     "rete-readonly-plugin": "^2.0.1",
     "rete-render-utils": "^2.0.2",
+    "rete-structures": "^2.0.1",
     "rxjs": "~7.8.0",
     "three": "^0.156.1",
     "tslib": "^2.3.0",
