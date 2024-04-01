@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Requirement} from "../../app/models/requirement";
 
 @Injectable({
@@ -13,7 +13,6 @@ export class RequirementsService {
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
-  const rawData = await response.json();
-  return rawData;
+    return await response.json();
 }
 }
