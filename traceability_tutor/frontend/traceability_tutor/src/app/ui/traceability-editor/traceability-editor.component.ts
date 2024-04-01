@@ -5,6 +5,8 @@ import {
   ViewChild,
   OnInit,
   OnDestroy,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 
 // import {ClassicPreset, ClassicPreset as Classic, GetSchemes, NodeEditor} from 'rete';
@@ -244,18 +246,15 @@ import { EventService } from '../../../services/event.service';
 import { Requirement } from '../../models/requirement';
 import { RequirementNodeComponent } from '../../customization/requirement-node/requirement-node.component';
 import { RequirementNode } from '../../nodes/requirement.node';
-import { isArray } from '../../utils';
 import { Events, NodeProps } from '../../types';
 import { structures } from 'rete-structures';
-import { log } from 'three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements';
-import { SourceNode } from '../../nodes/SourceNode';
+import { Subject } from 'rxjs';
+import { Connection } from '../../connection';
 
-class Connection<N extends ClassicPreset.Node> extends ClassicPreset.Connection<
-  N,
-  N
-> {}
-
-type Schemes = GetSchemes<NodeProps, Connection<RequirementNode>>;
+type Schemes = GetSchemes<
+  NodeProps,
+  Connection<RequirementNode, RequirementNode>
+>;
 type AreaExtra =
   | Area2D<Schemes>
   | AngularArea2D<Schemes>
@@ -271,9 +270,7 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
   const minimap = new MinimapPlugin<Schemes>();
   const contextMenu = new ContextMenuPlugin<Schemes>({
     items(context, plugin) {
-      console.log('contextMenu works');
       const graph = structures(editor);
-      console.log(context);
       if (context instanceof RequirementNode) {
         return {
           searchBar: false,
@@ -285,7 +282,12 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
                 structures(editor)
                   .predecessors(context.id)
                   .connections()
-                  .forEach((connection) => {});
+                  .forEach((connection) => {
+                    connection.updateData({
+                      isSelected: true,
+                      connection: connection,
+                    });
+                  });
               },
             },
             {
@@ -446,10 +448,6 @@ export class TraceabilityEditorComponent
     }
   }
 
-  logReq(r: Requirement) {
-    JSON.stringify(r);
-  }
-
   ngOnInit(): void {
     this.eventService.event$.subscribe(
       async (event: { type: string; data: any }) => {
@@ -489,7 +487,7 @@ export class TraceabilityEditorComponent
           const parent = this.editor.getNode(ref.parentId);
           if (parent) {
             await this.editor.addConnection(
-              new ClassicPreset.Connection(parent, parent.id, node, node.id),
+              new Connection(parent, parent.id, node, node.id),
             );
           }
         }
@@ -510,6 +508,7 @@ export class TraceabilityEditorComponent
         'elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
       },
     });
+    await AreaExtensions.zoomAt(this.area, this.editor.getNodes());
   }
 
   async addNode(node: any) {
