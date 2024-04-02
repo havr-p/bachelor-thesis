@@ -1,6 +1,6 @@
 import { GetSchemes } from 'rete';
 import { Connection } from './connection';
-import { RequirementItem } from './nodes/requirementItem';
+import { RequirementItem } from './items/requirementItem';
 
 export type NodeProps =
   // | DebugChat
@@ -13,3 +13,15 @@ export type ConnProps = Connection<RequirementItem, RequirementItem>;
 // | Connection<OnMessage, MatchMessage>;
 
 export type Schemes = GetSchemes<NodeProps, ConnProps>;
+
+export enum Events {
+  ADD = 'add',
+  REMOVE = 'remove',
+  EDIT = 'edit',
+  SELECT = 'select',
+  LOAD = 'load',
+  DEMO = 'demo',
+  EXPORT = 'export',
+  IMPORT = 'import',
+  CLEAR = 'clear',
+}
