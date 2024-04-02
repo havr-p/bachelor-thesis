@@ -24,7 +24,9 @@ def create_app(
         "http://localhost",
         "http://localhost:8081",
         "http://localhost:3000",
-        "http://localhost:4200"
+        "http://localhost:4200",
+        "https://bachelor-thesis-alpha.vercel.app",
+        "https://traceability-tutor-git-python001-havr-ps-projects.vercel.app",
     ]
 
     # Uncomment this to enable performance measurements.
