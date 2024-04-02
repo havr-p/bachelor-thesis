@@ -11,7 +11,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: False
   - TITLE: LEVEL
-    TYPE: String
+    TYPE: SingleChoice(BUSINESS, STAKEHOLDER, SOLUTION)
     REQUIRED: False
   - TITLE: STATUS
     TYPE: String

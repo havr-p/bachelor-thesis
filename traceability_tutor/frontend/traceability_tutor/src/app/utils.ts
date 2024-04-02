@@ -1,6 +1,6 @@
-import { ClassicPreset, NodeEditor } from "rete";
-import { ActionSocket, TextSocket } from "./sockets";
-import { Schemes } from "./types";
+import { ClassicPreset, NodeEditor } from 'rete';
+import { ActionSocket, TextSocket } from './sockets';
+import { Schemes } from './types';
 
 type Sockets = ActionSocket | TextSocket;
 type Input = ClassicPreset.Input<Sockets>;
@@ -28,17 +28,21 @@ type Output = ClassicPreset.Output<Sockets>;
 export function getColorByLevel(level: string) {
   //console.log("i am here, level is: ", level);
   switch (level.toLowerCase()) {
-    case "business":
-      return "#fcf6bd";
-    case "stakeholder":
-      return "#ff99c8";
-    case "solution":
-      return "#d0f4de";
-    case "4":
-      return "#a9def9";
-    case "5":
-      return "#e4c1f9";
+    case 'business':
+      return '#fcf6bd';
+    case 'stakeholder':
+      return '#ff99c8';
+    case 'solution':
+      return '#d0f4de';
+    case '4':
+      return '#a9def9';
+    case '5':
+      return '#e4c1f9';
     default:
-      return "#000000";
+      return '#000000';
   }
+}
+
+export function isArray(value: any): value is any[] {
+  return Array.isArray(value);
 }
