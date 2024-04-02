@@ -1,18 +1,17 @@
-import {Injectable} from '@angular/core';
-import {Requirement} from "../../app/models/requirement";
+import { Injectable } from '@angular/core';
+import { Requirement } from '../../app/models/requirement';
+import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RequirementsService {
-
-  constructor() { }
-
+  constructor() {}
   async fetchRequirements(): Promise<Requirement[]> {
-   const response = await fetch('http://localhost:5555/requirements/all');
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
+    const response = await fetch(`${environment.apiUrl}/requirements/all`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
     return await response.json();
-}
+  }
 }
