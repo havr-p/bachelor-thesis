@@ -4,3 +4,4 @@
 **/node_modules/
 node_modules/
 /traceability_tutor/backend/server/.venv/
+/traceability_tutor/backend/server/output/
