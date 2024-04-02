@@ -11,7 +11,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: False
   - TITLE: LEVEL
-    TYPE: String
+    TYPE: SingleChoice(BUSINESS, STAKEHOLDER, SOLUTION)
     REQUIRED: False
   - TITLE: STATUS
     TYPE: String
@@ -31,6 +31,7 @@ ELEMENTS:
     ROLE: Satisfies
   - TYPE: Parent
     ROLE: Validates
+  - TYPE: File
 
 [SECTION]
 LEVEL: 1
@@ -313,6 +314,8 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SOL-VISUAL-DISPLAY-TRACEABILITY-HIERARCHY
   ROLE: Derives
+- TYPE: File
+  VALUE: backend/strictdoc/strictdoc/cli/example.py
 
 [REQUIREMENT]
 UID: SOL-VISUAL-DISPLAY-LEVELS-HIERARCHY
@@ -326,6 +329,8 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SOL-VISUAL-DISPLAY-TRACEABILITY-HIERARCHY
   ROLE: Derives
+- TYPE: File
+  VALUE: backend/strictdoc/strictdoc/cli/example.py
 
 [REQUIREMENT]
 UID: SOL-DISPLAY-INTERNAL-LEVELS
@@ -338,6 +343,8 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SOL-VISUAL-DISPLAY-LEVELS-HIERARCHY
   ROLE: Derives
+- TYPE: File
+  VALUE: backend/strictdoc/strictdoc/cli/example.py
 
 [REQUIREMENT]
 UID: SOL-VISUAL-DISPLAY-IMPLEMENTATION-HIERARCHY
@@ -351,5 +358,7 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SOL-VISUAL-DISPLAY-TRACEABILITY-HIERARCHY
   ROLE: Derives
+- TYPE: File
+  VALUE: backend/strictdoc/strictdoc/cli/example.py
 
 [/SECTION]
