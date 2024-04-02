@@ -24,6 +24,9 @@ output/**
 developer/**/output/**
 tests/unit_server/**/output/**
 
+### StrictDoc's custom export path
+**/traceability_tutor/backend/server/output/**
+
 ### LIT/FileCheck integration tests' artifacts. ###
 tests/integration/**/Output/**
 tests/integration/**/output/**
