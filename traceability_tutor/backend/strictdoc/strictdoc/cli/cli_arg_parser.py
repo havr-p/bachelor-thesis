@@ -4,7 +4,7 @@ from typing import List, Optional
 from strictdoc.cli.command_parser_builder import CommandParserBuilder
 from strictdoc.helpers.auto_described import auto_described
 
-
+# @sdoc[SOL-VISUAL-DISPLAY-TRACEABILITY-HIERARCHY]
 class CLIValidationError(Exception):
     pass
 
@@ -68,7 +68,6 @@ class PassthroughCommandConfig:
         self.output_dir: Optional[str] = output_dir
         self.filter_requirements: Optional[str] = filter_requirements
         self.filter_sections: Optional[str] = filter_sections
-
 
 @auto_described
 class ServerCommandConfig:
@@ -308,7 +307,7 @@ class SDocArgsParser:
             output_dir=self.args.output_dir,
         )
 
-
+# @sdoc[SOL-VISUAL-DISPLAY-TRACEABILITY-HIERARCHY]
 def create_sdoc_args_parser(testing_args=None) -> SDocArgsParser:
     args = testing_args
     if not args:
