@@ -5,6 +5,8 @@ import { RequirementsService } from '../../../services/requirements/requirements
 import { EventService } from '../../../services/event.service';
 import { filter } from 'rxjs';
 import { Requirement } from '../../models/requirement';
+import { EventType } from '@angular/router';
+import { Events } from '../../types';
 
 @Component({
   selector: 'app-dock',
@@ -26,7 +28,7 @@ export class DockComponent implements OnInit {
         icon: 'pi pi-fw pi-plus',
         items: [
           {
-            label: 'New',
+            label: 'New...',
             icon: 'pi pi-fw pi-video',
             command: () => {
               this.loadAll();
@@ -39,24 +41,36 @@ export class DockComponent implements OnInit {
         icon: 'pi pi-fw pi-video',
         command: async () => {
           let data = await this.loadAll();
-          this.eventService.publishEditorEvent({ type: 'demo', data: data });
+          this.eventService.publishEditorEvent({
+            type: Events.DEMO,
+            data: data,
+          });
         },
       },
       {
         label: 'Add node',
         icon: 'pi pi-fw pi-trash',
-        command: async () => {
-          console.log('called');
-          let data = [
-            {
-              name: 'New Requirement',
-              description: 'New Requirement Description',
-              id: this.id++,
-              type: 'requirement',
+        items: [
+          {
+            label: 'Requirement',
+            tooltip: 'Use this command to create a new requirement node',
+            tooltipPosition: 'bottom',
+            command: async () => {
+              console.log('called');
+              let data: Requirement = {
+                id: Number(this.id++).toString(),
+                level: 'stakeholder',
+                name: 'New Requirement',
+                statement: 'New Requirement Description',
+                references: [],
+              };
+              this.eventService.publishEditorEvent({
+                type: Events.ADD,
+                data: data,
+              });
             },
-          ];
-          this.eventService.publishEditorEvent({ type: 'add', data: data });
-        },
+          },
+        ],
       },
 
       // {
