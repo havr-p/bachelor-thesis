@@ -17,10 +17,8 @@ import { Subscription } from 'rxjs';
   template: `
     <svg data-testid="connection">
       <path
-        #pathElement
         [attr.d]="path"
-        [attr.stroke]="strokeColor"
-        [attr.stroke-width]="strokeWidth"
+        [ngStyle]="{ stroke: strokeColor, 'stroke-width': strokeWidth }"
       />
     </svg>
   `,
@@ -42,7 +40,6 @@ export class CustomConnectionComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.data.changes$.subscribe({
       next: (data: any) => {
-        console.log(data);
         this.strokeColor = data.isSelected ? 'red' : 'black';
         this.strokeWidth = data.isSelected ? '30px' : '15px';
         this.pathElement.nativeElement.strokeWidth = this.strokeWidth;
