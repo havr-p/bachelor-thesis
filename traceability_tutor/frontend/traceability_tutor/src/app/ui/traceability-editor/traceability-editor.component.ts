@@ -272,28 +272,40 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
     items(context, plugin) {
       const graph = structures(editor);
       if (context instanceof RequirementNode) {
+        const selectedNodeId = context.id;
         return {
           searchBar: false,
           list: [
             {
-              label: 'Show lineage',
-              key: '1',
+              //fixme maybe we can use parent-child relationship to show lineage, also not selecting first incomers
               handler: () => {
-                structures(editor)
-                  .predecessors(context.id)
+                graph
+                  .predecessors(selectedNodeId)
+                  // .union(
+                  //   graph.filter(
+                  //     Boolean,
+                  //     ({ source, target }) => target === selectedNodeId,
+                  //   ),
+                  // )
                   .connections()
                   .forEach((connection) => {
                     connection.updateData({
                       isSelected: true,
-                      connection: connection,
                     });
                   });
               },
+              key: '1',
+              label: 'Show lineage',
             },
             {
-              label: 'Delete',
+              label: 'Hide lineage',
               key: '2',
-              handler: () => {},
+              handler: () => {
+                console.log(graph.connections());
+                graph.connections().forEach((connection) => {
+                  connection.updateData({ isSelected: false });
+                });
+              },
             },
             // {
             //   label: 'Collection', key: '1', handler: () => null,
@@ -308,7 +320,7 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
         searchBar: false,
         list: [
           {
-            label: 'Now hello',
+            label: 'Root context menu item',
             key: '2',
             handler: () => {},
           },
