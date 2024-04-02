@@ -1,6 +1,7 @@
 [project]
 title = "traceability tutor"
 html_assets_strictdoc_dir = "assets"
+source_root_path="../../../../../traceability_tutor/"
 
 
 features = [
@@ -24,10 +25,8 @@ features = [
 ]
 
 include_doc_paths = [
-  "docs/**",
-  "docs_extra/**",
-  '**/bachelor-thesis/traceability_tutor/**',
-  '**/bachelor-thesis/**',
+  '**',
+  #'**/traceability_tutor/backend/server/docs2/**'
 ]
 
 exclude_doc_paths = [
@@ -35,17 +34,20 @@ exclude_doc_paths = [
 ]
 
 include_source_paths = [
-  "pyproject.toml",
-  "tasks.py",
-  "strictdoc/**",
-  "tests/**"
+#  "pyproject.toml",
+#  "tasks.py",
+#  "strictdoc/**",
+#  "tests/**",
+  "backend/**",
+  "frontend/traceability_tutor/src/**",
 ]
 
 exclude_source_paths = [
   # StrictDoc (almost never) uses __init__ files.
   # The used files will be whitelisted include_source_paths.
-  "**__init__.py"
+  "**__init__.py",
+  "backend/strictdoc/tests/**"
 ]
 [server]
-#host = "0.0.0.0"
-host = 'localhost'
+host = "0.0.0.0"
+#host = 'localhost'
