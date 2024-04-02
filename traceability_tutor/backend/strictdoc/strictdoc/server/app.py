@@ -25,7 +25,8 @@ def create_app(
         "http://localhost:8081",
         "http://localhost:3000",
         "http://localhost:4200",
-        "https://bachelor-thesis-alpha.vercel.app",
+            "https://bachelor-thesis-alpha.vercel.app",
+            "https://**.vercel.app",
     ]
 
     # Uncomment this to enable performance measurements.
