@@ -61,9 +61,19 @@ def create_traceability_tutor_router(
                 if isinstance(node, SDocNode):
                     requirement: SDocNode = assert_cast(node, SDocNode)
                     assert requirement.reserved_uid is not None
-                    requirement_parents = [(ref.ref_uid, ref.role) for ref in requirement.get_requirement_references(ReferenceType.PARENT)]
-                    requirements.append((requirement.reserved_uid, requirement.requirement_type,
-                                         requirement.reserved_title, requirement_parents))
+                    requirement_parents = [
+                        {'parentId': ref.ref_uid.lower(), 'parentRole': ref.role}
+                        for ref in requirement.get_requirement_references(ReferenceType.PARENT)
+                    ]
+                    requirement_dict = {
+                        'id': requirement.reserved_uid.lower(),
+                        'level': requirement.get_meta_field_value_by_title('LEVEL'),
+                        'name': requirement.reserved_title,
+                        'statement': requirement.reserved_statement,
+                        'status': requirement.reserved_status,
+                        'references': requirement_parents,
+                    }
+                    requirements.append(requirement_dict)
 
         return JSONResponse(
             content=requirements
