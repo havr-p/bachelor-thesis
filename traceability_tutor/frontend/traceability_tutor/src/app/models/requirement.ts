@@ -8,6 +8,6 @@ export interface Requirement {
   level: string;
   name: string;
   statement: string;
-  status?: string; // Uncomment this line if you have a status value
+  status?: string;
   references: ParentReference[];
 }
