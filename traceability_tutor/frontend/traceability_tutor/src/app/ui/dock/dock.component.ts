@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FileUploadEvent } from 'primeng/fileupload';
-import { InputTextModule } from 'primeng/inputtext';
 import { RequirementsService } from '../../../services/requirements/requirements.service';
 import { EventService } from '../../../services/event.service';
-import { filter } from 'rxjs';
 import { Requirement } from '../../models/requirement';
-import { EventType } from '@angular/router';
-import { Events } from '../../types';
+import { EditorEvent } from '../../types';
 
 @Component({
   selector: 'app-dock',
@@ -41,10 +38,7 @@ export class DockComponent implements OnInit {
         icon: 'pi pi-fw pi-video',
         command: async () => {
           let data = await this.loadAll();
-          this.eventService.publishEditorEvent({
-            type: Events.DEMO,
-            data: data,
-          });
+          this.eventService.publishEditorEvent(EditorEvent.DEMO, data);
         },
       },
       {
@@ -64,10 +58,7 @@ export class DockComponent implements OnInit {
                 statement: 'New Requirement Description',
                 references: [],
               };
-              this.eventService.publishEditorEvent({
-                type: Events.ADD,
-                data: data,
-              });
+              this.eventService.publishEditorEvent(EditorEvent.ADD, data);
             },
           },
         ],
@@ -126,9 +117,5 @@ export class DockComponent implements OnInit {
       console.error('Error fetching requirements:', error);
       return []; // Return an empty array in case of error
     }
-  }
-
-  sendEventToEditor(eventData: any) {
-    this.eventService.publishEditorEvent(eventData);
   }
 }

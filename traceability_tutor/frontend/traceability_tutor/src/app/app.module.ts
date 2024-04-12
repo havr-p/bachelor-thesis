@@ -16,7 +16,12 @@ import { KeyValuePipe, NgForOf, NgOptimizedImage } from '@angular/common';
 import { SharedModule } from './shared/shared.module';
 import { ReteModule } from 'rete-angular-plugin/17';
 import { TraceabilityEditorComponent } from './ui/traceability-editor/traceability-editor.component';
-import { RequirementNodeComponent } from './customization/requirement-node/requirement-node.component';
+import { RequirementNodeComponent } from './ui/nodes/requirement-node/requirement-node.component';
+import { NodeInfoViewComponent } from './ui/node-info-view/node-info-view.component';
+import { PanelModule } from 'primeng/panel';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SidebarModule } from 'primeng/sidebar';
+import { SpeedDialModule } from 'primeng/speeddial';
 
 @NgModule({
   declarations: [
@@ -38,6 +43,11 @@ import { RequirementNodeComponent } from './customization/requirement-node/requi
     SharedModule,
     ReteModule,
     NgOptimizedImage,
+    PanelModule,
+    NodeInfoViewComponent,
+    BrowserAnimationsModule,
+    SidebarModule,
+    SpeedDialModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

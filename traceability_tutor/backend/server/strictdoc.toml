@@ -7,8 +7,8 @@ source_root_path="../../../../../traceability_tutor/"
 features = [
 #  # Stable features.
 #  "TABLE_SCREEN",
-#  "TRACEABILITY_SCREEN",
-#  "DEEP_TRACEABILITY_SCREEN",#  "SEARCH",
+  "TRACEABILITY_SCREEN",
+  "DEEP_TRACEABILITY_SCREEN",#  "SEARCH",
 #
 #  # Stable features but not used by StrictDoc.
 #  # "MATHJAX"
@@ -21,7 +21,7 @@ features = [
 #  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
 #  "HTML2PDF",
 #  "DIFF",
-  "ALL_FEATURES",
+#  "ALL_FEATURES",
 ]
 
 include_doc_paths = [
@@ -49,5 +49,5 @@ exclude_source_paths = [
   "backend/strictdoc/tests/**"
 ]
 [server]
-host = "0.0.0.0"
-#host = 'localhost'
+#host = "0.0.0.0"
+host = 'localhost'
