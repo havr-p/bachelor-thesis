@@ -1,1 +1,28 @@
 <div class="rete" #rete></div>
+<p-sidebar [(visible)]="sidebarVisible"
+           [modal]="false"
+           [closeOnEscape]="true"
+           class="p-sidebar-lg"
+           position="right"
+           styleClass="w-4">
+<!--  <ng-template pTemplate="header">-->
+<!--&lt;!&ndash;    in a more general way&ndash;&gt;-->
+<!--&lt;!&ndash;   {{openedItem.type + ' ' + openedItem.title}}&ndash;&gt;-->
+<!--       {{'Requirement' + ' ' + openedItem.name}}-->
+<!--  </ng-template>-->
+  <ng-template pTemplate="header">
+    <p class="text-2xl"> {{this.openedItem.id + "           "}}         <span class="font-medium">{{openedNodeTitle}}</span></p>
+  </ng-template>
+  <app-node-info-view *ngIf="this.openedItem"  [node]="openedItem"></app-node-info-view>
+
+</p-sidebar>
+<p-button (click)="sidebarVisible = true" icon="pi pi-arrow-right"></p-button>
+
+<p-speedDial
+  [radius]="90"
+  direction="up-right"
+  type="quarter-circle"
+  showIcon="pi pi-ellipsis-h"
+  [buttonStyle]="{width: '45px', height: '45px'}"
+  [model]="nodeActions">
+</p-speedDial>

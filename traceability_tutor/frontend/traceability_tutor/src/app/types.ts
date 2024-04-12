@@ -1,4 +1,4 @@
-import { ClassicPreset, GetSchemes } from 'rete';
+import { GetSchemes } from 'rete';
 import { Connection } from './connection';
 import { RequirementNode } from './nodes/requirement.node';
 import { SourceNode } from './nodes/SourceNode';
@@ -15,7 +15,7 @@ export type ConnProps = Connection<RequirementNode, RequirementNode>;
 
 export type Schemes = GetSchemes<NodeProps, ConnProps>;
 
-export enum Events {
+export enum EditorEvent {
   ADD = 'add',
   REMOVE = 'remove',
   EDIT = 'edit',
@@ -25,4 +25,10 @@ export enum Events {
   EXPORT = 'export',
   IMPORT = 'import',
   CLEAR = 'clear',
+}
+
+export enum NodeType {
+  REQUIREMENT = 'Requirement',
+  SOURCE = 'Source',
+  TEST = 'Test',
 }
