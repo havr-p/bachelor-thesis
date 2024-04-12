@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "rete-structures": "^2.0.1"
+    "rete-structures": "^2.0.1",
+    "xstate": "^5.10.0"
   },
   "devDependencies": {
     "husky": "^9.0.11",
