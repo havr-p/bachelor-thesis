@@ -53,13 +53,18 @@ type AreaExtra =
 
 const socket = new ClassicPreset.Socket('socket');
 
-export async function createEditor(container: HTMLElement, injector: Injector) {
+export async function createEditor(
+  container: HTMLElement,
+  injector: Injector,
+  eventService: EventService,
+) {
   const editor = new NodeEditor<Schemes>();
   const area = new AreaPlugin<Schemes, AreaExtra>(container);
   const connection = new ConnectionPlugin<Schemes, AreaExtra>();
   const minimap = new MinimapPlugin<Schemes>();
   const contextMenu = new ContextMenuPlugin<Schemes>({
-    items(context, plugin) {
+    items: (context, plugin) => {
+      console.log(context);
       const graph = structures(editor);
       if (context instanceof RequirementNode) {
         const selectedNodeId = context.id;
@@ -92,6 +97,32 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
                 graph.connections().forEach((connection) => {
                   connection.updateData({ isSelected: false });
                 });
+              },
+            },
+            {
+              label: 'Edit node',
+              key: '3',
+              handler: () => {
+                eventService.publishEditorEvent(EditorEvent.SELECT, context);
+              },
+            },
+            {
+              label: 'Delete node',
+              key: '4',
+              handler: () => {
+                editor.removeNode(selectedNodeId);
+                const incomingConnections = graph
+                  .connections()
+                  .filter((connection) => connection.target === selectedNodeId);
+                const outgoingConnections = graph
+                  .connections()
+                  .filter((connection) => connection.source === selectedNodeId);
+                incomingConnections.forEach((connection) =>
+                  editor.removeConnection(connection.id),
+                );
+                outgoingConnections.forEach((connection) =>
+                  editor.removeConnection(connection.id),
+                );
               },
             },
             // {
@@ -217,7 +248,34 @@ export class TraceabilityEditorComponent
   editor!: NodeEditor<Schemes>;
   area: any;
   arrange: any;
+  sidebarVisible = false;
+  openedItem: any;
 
+  nodeActions: MenuItem[] = [
+    {
+      label: 'Edit',
+      icon: 'pi pi-fw pi-pencil',
+      command: () => {
+        console.log('Edit');
+      },
+      tooltipOptions: {
+        tooltipLabel: 'Edit node',
+        tooltipPosition: 'bottom',
+      },
+    },
+    {
+      label: 'Delete',
+      icon: 'pi pi-fw pi-trash',
+      command: () => {
+        console.log('Delete');
+      },
+      tooltipOptions: {
+        tooltipLabel: 'Delete node',
+        tooltipPosition: 'bottom',
+      },
+    },
+  ];
+  //todo disable vertical scroll
   constructor(
     private injector: Injector,
     private eventService: EventService,
