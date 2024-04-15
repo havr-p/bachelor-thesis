@@ -2,10 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {FileUploadEvent} from "primeng/fileupload";
 import { InputTextModule } from 'primeng/inputtext';
 import {RequirementsService} from "../../services/requirements/requirements.service";
+import {EventService} from "../../services/event.service";
+import {filter} from "rxjs";
+import {Requirement} from "../models/requirement";
 
-interface RequirementField {
-  field_value: any; // Replace 'any' with a more specific type as needed
-}
+
 @Component({
   selector: 'app-dock',
   templateUrl: './dock.component.html',
@@ -13,8 +14,9 @@ interface RequirementField {
 })
 export class DockComponent implements OnInit {
   menubarItems: any[] | undefined;
+  id = 1;
 
-  constructor(private requirementsService: RequirementsService) {
+  constructor(private requirementsService: RequirementsService, private eventService: EventService) {
   }
    ngOnInit() {
      this.menubarItems = [
@@ -93,15 +95,21 @@ export class DockComponent implements OnInit {
   }
 
 
-  private loadAll() {
-    this.requirementsService.fetchRequirements().then((requirements) => {
+  private async loadAll(): Promise<Requirement[]> {
+  try {
+    // Await the promise from fetchRequirements and return its result directly
+    const requirements = await this.requirementsService.fetchRequirements();
+    // Process requirements if necessary
+    // console.log(requirements);
+    return requirements;
+  } catch (error) {
+    console.error('Error fetching requirements:', error);
+    return []; // Return an empty array in case of error
+  }
+}
 
-
-   // Example of processing the requirements if necessary
-       console.log(requirements);
- }).catch((error) => {
-   console.error('Error fetching requirements:', error);
- });
+  sendEventToEditor(eventData: any) {
+    this.eventService.publishEditorEvent(eventData);
   }
 }
 
