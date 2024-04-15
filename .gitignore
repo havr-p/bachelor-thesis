@@ -2,3 +2,8 @@
 *.idea
 /node_modules/
 /traceability_tutor/frontend/traceability_tutor/node_modules/
+/traceability_tutor/frontend/traceability_tutor/.angular/
+/traceability_tutor/backend/server/output/
+/traceability_tutor/backend/strictdoc/latest_logs/
+/traceability_tutor/backend/strictdoc/build/
+/traceability_tutor/frontend/traceability_tutor/dist/
