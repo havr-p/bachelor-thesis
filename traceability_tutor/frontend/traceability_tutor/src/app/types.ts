@@ -25,3 +25,9 @@ export enum EditorEvent {
   IMPORT = 'import',
   CLEAR = 'clear',
 }
+
+export enum ItemType {
+  REQUIREMENT = 'Requirement',
+  SOURCE = 'Source',
+  TEST = 'Test',
+}
