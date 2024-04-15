@@ -1,7 +1,7 @@
 import { ItemType } from '../types';
 import { Requirement } from '../models/requirement';
 
-export interface Node {
+export interface Item {
   width: number;
   height: number;
   type: ItemType | undefined;

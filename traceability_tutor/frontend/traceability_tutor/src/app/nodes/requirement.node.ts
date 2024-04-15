@@ -1,10 +1,10 @@
 import { Requirement } from '../models/requirement';
 import { getColorByLevel } from '../utils';
-import { Node } from './Node';
+import { Item } from './Item';
 import { ClassicPreset } from 'rete';
 import { ItemType } from '../types';
 
-export class RequirementItem extends ClassicPreset.Node implements Node {
+export class RequirementItem extends ClassicPreset.Node implements Item {
   width = 400;
   height = 200;
   type = ItemType.REQUIREMENT;
