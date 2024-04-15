@@ -4,11 +4,14 @@ from copy import deepcopy
 from datetime import datetime
 from typing import Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile, File
 from starlette.responses import JSONResponse, Response
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.helpers.cast import assert_cast
 
 from strictdoc.helpers.parallelizer import NullParallelizer
 
@@ -48,9 +51,24 @@ def create_traceability_tutor_router(
         traceability_index: TraceabilityIndex = export_action.traceability_index
         print(traceability_index)
         print('hi')
-        requirements = [SDocDocument.get_title(doc) for doc in traceability_index.document_tree]
+        requirements = []
+        for document_ in traceability_index.document_tree.document_list:
+            document_iterator: DocumentCachingIterator = (
+                traceability_index.get_document_iterator(document_)
+            )
+            for node in document_iterator.all_content():
+                if isinstance(node, SDocNode):
+                    requirement = assert_cast(node, SDocNode)
+                    requirement_field_: SDocNodeField
+                    fields = []
+                    for requirement_field_tuple in requirement.enumerate_all_fields():
+                        requirement_field_, requirement_field_.field_name, meta_field_value = requirement_field_tuple
+                        if requirement_field_.field_value is not None:
+                            fields.append(requirement_field_.field_value)
+                    requirements.append(fields)
+
         return JSONResponse(
-            content=titles
+            content=requirements
         )
 
     return router
