@@ -20,6 +20,7 @@ import {
   Presets as ContextMenuPresets,
 } from 'rete-context-menu-plugin';
 import { MinimapExtra, MinimapPlugin } from 'rete-minimap-plugin';
+import {addCustomBackground} from "../customization/custom-background";
 
 type Node = NumberNode | AddNode;
 type Conn =
@@ -107,6 +108,7 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
   const minimap = new MinimapPlugin<Schemes>();
 
   editor.use(readonly.root);
+  addCustomBackground(area);
   editor.use(area);
   area.use(readonly.area);
 

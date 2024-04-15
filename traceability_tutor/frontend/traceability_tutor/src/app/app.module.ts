@@ -7,6 +7,11 @@ import { CustomNodeComponent } from './customization/custom-node/custom-node.com
 import { CustomConnectionComponent } from './customization/custom-connection/custom-connection.component';
 
 import { ReteModule } from 'rete-angular-plugin/17';
+import { DockComponent } from './dock/dock.component';
+import {MenubarModule} from "primeng/menubar";
+import {DialogModule} from "primeng/dialog";
+import {FileUploadModule} from "primeng/fileupload";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -14,8 +19,9 @@ import { ReteModule } from 'rete-angular-plugin/17';
     CustomSocketComponent,
     CustomNodeComponent,
     CustomConnectionComponent,
+    DockComponent,
   ],
-  imports: [BrowserModule, ReteModule],
+    imports: [BrowserModule, ReteModule, MenubarModule, DialogModule, FileUploadModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
