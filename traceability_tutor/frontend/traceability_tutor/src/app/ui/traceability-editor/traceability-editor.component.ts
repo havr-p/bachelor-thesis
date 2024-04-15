@@ -381,7 +381,7 @@ export class TraceabilityEditorComponent
     await this.editor.addNode(node);
   }
 
-  get openedNodeTitle(): string {
+  get openedItemTitle(): string {
     console.log('openedItem', this.openedItem);
     if (this.openedItem) return this.openedItem.requirement.name;
     return 'item not defined';

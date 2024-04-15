@@ -2,12 +2,12 @@ import { Requirement } from '../models/requirement';
 import { getColorByLevel } from '../utils';
 import { Node } from './Node';
 import { ClassicPreset } from 'rete';
-import { NodeType } from '../types';
+import { ItemType } from '../types';
 
 export class RequirementItem extends ClassicPreset.Node implements Node {
   width = 400;
   height = 200;
-  type = NodeType.REQUIREMENT;
+  type = ItemType.REQUIREMENT;
   backgroundColor: string;
   borderStyle: string;
   data: any;
@@ -20,6 +20,4 @@ export class RequirementItem extends ClassicPreset.Node implements Node {
     this.selected = false;
     this.data = requirement;
   }
-
-
 }
