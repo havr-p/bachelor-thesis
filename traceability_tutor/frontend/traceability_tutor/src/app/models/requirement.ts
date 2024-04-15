@@ -1,7 +1,13 @@
+interface ParentReference {
+  parentId: string;
+  parentRole: string;
+}
+
 export interface Requirement {
   id: string;
-  category: string;
-  status?: string; // Marked as optional since some items don't have a status
+  level: string;
   name: string;
-  description: string;
+  statement: string;
+  status?: string; // Uncomment this line if you have a status value
+  references: ParentReference[];
 }
