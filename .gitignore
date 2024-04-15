@@ -1,3 +1,4 @@
 *strictdoc\build
 *.idea
 /node_modules/
+/traceability_tutor/frontend/traceability_tutor/node_modules/
