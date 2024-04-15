@@ -1,7 +1,8 @@
 *strictdoc\build
 *.idea
 */traceability_tutor/output/*
-*/node_modules/
+**/node_modules/
+node_modules/
 /traceability_tutor/backend/server/.venv/
 /node_modules/
 /traceability_tutor/backend/server/output
