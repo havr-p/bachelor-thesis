@@ -34,16 +34,16 @@ import { CustomConnectionComponent } from '../../customization/custom-connection
 import { addCustomBackground } from '../../customization/custom-background';
 import { EventService } from '../../../services/event.service';
 import { Requirement } from '../../models/requirement';
-import { RequirementNodeComponent } from '../nodes/requirement-node/requirement-node.component';
-import { RequirementNode } from '../../nodes/requirement.node';
 import { EditorEvent, NodeProps } from '../../types';
 import { structures } from 'rete-structures';
 import { Connection } from '../../connection';
 import { MenuItem } from 'primeng/api';
+import { RequirementItem } from '../../items/requirementItem';
+import { RequirementItemComponent } from '../nodes/requirement-node/requirement-node.component';
 
 type Schemes = GetSchemes<
   NodeProps,
-  Connection<RequirementNode, RequirementNode>
+  Connection<RequirementItem, RequirementItem>
 >;
 type AreaExtra =
   | Area2D<Schemes>
@@ -66,7 +66,7 @@ export async function createEditor(
     items: (context, plugin) => {
       console.log(context);
       const graph = structures(editor);
-      if (context instanceof RequirementNode) {
+      if (context instanceof RequirementItem) {
         const selectedNodeId = context.id;
         return {
           searchBar: false,
@@ -172,7 +172,7 @@ export async function createEditor(
     AngularPresets.classic.setup({
       customize: {
         node() {
-          return RequirementNodeComponent;
+          return RequirementItemComponent;
         },
         connection() {
           return CustomConnectionComponent;
@@ -315,7 +315,7 @@ export class TraceabilityEditorComponent
             await this.processDemoEvent(event.data);
             break;
           case EditorEvent.ADD:
-            await this.addNode(new RequirementNode(event.data));
+            await this.addNode(new RequirementItem(event.data));
             break;
           case EditorEvent.SELECT:
             console.log('selected', event.data);
@@ -330,7 +330,7 @@ export class TraceabilityEditorComponent
   private async processDemoEvent(data: Requirement[]) {
     for (let req of data) {
       //console.log(JSON.stringify(req));
-      let requirement = new RequirementNode(req);
+      let requirement = new RequirementItem(req);
       requirement.addOutput(requirement.id, new ClassicPreset.Output(socket));
       requirement.addInput(requirement.id, new ClassicPreset.Input(socket));
       await this.editor.addNode(requirement);
@@ -345,7 +345,7 @@ export class TraceabilityEditorComponent
 
     for (let node of this.editor.getNodes()) {
       //console.log(node);
-      if (node instanceof RequirementNode) {
+      if (node instanceof RequirementItem) {
         const parentRefs = node.requirement.references;
         for (const ref of parentRefs) {
           const parent = this.editor.getNode(ref.parentId);
