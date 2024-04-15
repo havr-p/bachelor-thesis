@@ -21,12 +21,12 @@ export class DockComponent implements OnInit {
    ngOnInit() {
      this.menubarItems = [
        {
-             label: 'New',
+             label: 'Project',
              icon: 'pi pi-fw pi-plus',
              items: [
 
                {
-                 label: 'Project',
+                 label: 'New',
                  icon: 'pi pi-fw pi-video',
                  command: () => {
                     this.loadAll();
@@ -37,14 +37,20 @@ export class DockComponent implements OnInit {
         {
                  label: 'Demo',
                  icon: 'pi pi-fw pi-video',
-                 command: () => {
-                    this.loadAll();
-                }
+                 command: async () => {
+                   let data = await this.loadAll();
+                   this.eventService.publishEditorEvent({type: 'demo', data: data})
+                 }
                 },
-           // {
-           //   label: 'Delete',
-           //   icon: 'pi pi-fw pi-trash'
-           // },
+           {
+             label: 'Add node',
+             icon: 'pi pi-fw pi-trash',
+              command: async () => {
+                console.log("called");
+                   let data = [{name: 'New Requirement', description: 'New Requirement Description', id: this.id++, type: 'requirement'}];
+                   this.eventService.publishEditorEvent({type: 'add', data: data})
+                 }
+           },
 
            // {
            //   label: 'Export',
