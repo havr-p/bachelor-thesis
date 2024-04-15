@@ -14,7 +14,7 @@ export type ConnProps = Connection<RequirementItem, RequirementItem>;
 
 export type Schemes = GetSchemes<NodeProps, ConnProps>;
 
-export enum Events {
+export enum EditorEvent {
   ADD = 'add',
   REMOVE = 'remove',
   EDIT = 'edit',
