@@ -8,14 +8,6 @@ import {
   ViewChild,
 } from '@angular/core';
 
-// import {ClassicPreset, ClassicPreset as Classic, GetSchemes, NodeEditor} from 'rete';
-// import { Area2D, AreaExtensions, AreaPlugin } from 'rete-area-plugin';
-//
-// import {
-//   AngularPlugin,
-//   AngularArea2D,
-//   Presets as AngularPresets,
-// } from 'rete-angular-plugin/17';
 import {
   AutoArrangePlugin,
   Presets as ArrangePresets,
@@ -75,17 +67,15 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
           searchBar: false,
           list: [
             {
-              //fixme maybe we can use parent-child relationship to show lineage, also not selecting first incomers
+              //fixme maybe we can use parent-child relationship to show lineage
               handler: () => {
+                const incomingConnections = graph
+                  .connections()
+                  .filter((connection) => connection.target === selectedNodeId);
                 graph
                   .predecessors(selectedNodeId)
-                  // .union(
-                  //   graph.filter(
-                  //     Boolean,
-                  //     ({ source, target }) => target === selectedNodeId,
-                  //   ),
-                  // )
                   .connections()
+                  .concat(incomingConnections)
                   .forEach((connection) => {
                     connection.updateData({
                       isSelected: true,
@@ -99,7 +89,6 @@ export async function createEditor(container: HTMLElement, injector: Injector) {
               label: 'Hide lineage',
               key: '2',
               handler: () => {
-                console.log(graph.connections());
                 graph.connections().forEach((connection) => {
                   connection.updateData({ isSelected: false });
                 });
