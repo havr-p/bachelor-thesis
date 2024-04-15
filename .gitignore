@@ -1,2 +1,3 @@
 *strictdoc\build
 *.idea
+/node_modules/
