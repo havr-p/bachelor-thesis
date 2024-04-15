@@ -292,16 +292,18 @@ export class TraceabilityEditorComponent
     const el = this.container.nativeElement;
 
     if (el) {
-      createEditor(el, this.injector).then(({ destroy, editor, area }) => {
-        this.destroyEditor = destroy;
-        this.editor = editor;
-        this.area = area;
-        this.arrange = new AutoArrangePlugin<Schemes>();
+      createEditor(el, this.injector, this.eventService).then(
+        ({ destroy, editor, area }) => {
+          this.destroyEditor = destroy;
+          this.editor = editor;
+          this.area = area;
+          this.arrange = new AutoArrangePlugin<Schemes>();
 
-        this.arrange.addPreset(ArrangePresets.classic.setup());
+          this.arrange.addPreset(ArrangePresets.classic.setup());
 
-        this.area.use(this.arrange);
-      });
+          this.area.use(this.arrange);
+        },
+      );
     }
   }
 
