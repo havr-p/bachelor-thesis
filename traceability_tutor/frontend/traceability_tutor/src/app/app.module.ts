@@ -44,7 +44,7 @@ import { SpeedDialModule } from 'primeng/speeddial';
     ReteModule,
     NgOptimizedImage,
     PanelModule,
-    NodeInfoViewComponent,
+    ItemInfoViewComponent,
     BrowserAnimationsModule,
     SidebarModule,
     SpeedDialModule,

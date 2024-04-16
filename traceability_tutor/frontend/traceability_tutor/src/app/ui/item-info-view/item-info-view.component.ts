@@ -12,13 +12,13 @@ import {
 } from '@angular/common';
 import { InplaceModule } from 'primeng/inplace';
 import { FormsModule } from '@angular/forms';
-import { Item } from '../../nodes/Item';
+import { Item } from '../../items/Item';
 import { ItemType } from '../../types';
 
 @Component({
-  selector: 'app-node-info-view',
-  templateUrl: './node-info-view.component.html',
-  styleUrl: './node-info-view.component.sass',
+  selector: 'app-item-info-view',
+  templateUrl: './item-info-view.component.html',
+  styleUrl: './item-info-view.component.sass',
   standalone: true,
   // animations: [
   //   trigger('slideInRight', [
@@ -44,7 +44,7 @@ import { ItemType } from '../../types';
     NgForOf,
   ],
 })
-export class NodeInfoViewComponent {
+export class ItemInfoViewComponent {
   @Input() item!: Item;
   requirement: Requirement = {
     id: '1',
@@ -53,8 +53,6 @@ export class NodeInfoViewComponent {
     statement: 'New Requirement Description',
     references: [],
   };
-
-  openReference(reference: any) {}
 
   protected readonly ItemType = ItemType;
 }

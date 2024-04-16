@@ -1,16 +1,16 @@
-<ng-container [ngSwitch]="node.type">
-  <div *ngSwitchCase="NodeType.REQUIREMENT" class="p-fluid">
+<ng-container [ngSwitch]="item.type">
+  <div *ngSwitchCase="ItemType.REQUIREMENT" class="p-fluid">
     <div class="grid p-4 gap-3">
-      <div class="col-12 md:col-6 lg:col-4"><strong>ID:</strong> {{node.data.id}}</div>
-      <div class="col-12 md:col-6 lg:col-4"><strong>Level:</strong> {{node.data.level}}</div>
+      <div class="col-12 md:col-6 lg:col-4"><strong>ID:</strong> {{item.requirement.id}}</div>
+      <div class="col-12 md:col-6 lg:col-4"><strong>Level:</strong> {{item.requirement.level}}</div>
       <div class="col-12 p-field">
         <strong>Name:</strong>
         <p-inplace [closable]="true" closeIcon="pi pi-check">
           <ng-template pTemplate="display">
-            {{node.data.name}}
+            {{item.requirement.name}}
           </ng-template>
           <ng-template pTemplate="content">
-            <input type="text" [(ngModel)]="node.data.name" pInputText autofocus/>
+            <input type="text" [(ngModel)]="item.requirement.name" pInputText autofocus/>
           </ng-template>
         </p-inplace>
       </div>
@@ -18,21 +18,21 @@
         <strong>Statement:</strong>
         <p-inplace [closable]="true" closeIcon="pi pi-check">
           <ng-template pTemplate="display">
-            {{node.data.statement || 'Click to add a statement'}}
+            {{item.requirement.statement || 'Click to add a statement'}}
           </ng-template>
           <ng-template pTemplate="content">
-            <textarea [(ngModel)]="node.data.statement" pInputTextarea rows="3"></textarea>
+            <textarea [(ngModel)]="item.requirement.statement" pInputTextarea rows="3"></textarea>
           </ng-template>
         </p-inplace>
       </div>
       <div class="col-12">
         <strong>Status:</strong>
-        <p-dropdown [options]="['Open', 'Closed', 'TBD']" [(ngModel)]="node.data.status" placeholder="Select a status"></p-dropdown>
+        <p-dropdown [options]="['Open', 'Closed', 'TBD']" [(ngModel)]="item.requirement.status" placeholder="Select a status"></p-dropdown>
       </div>
     </div>
     <div class="col-12 mt-2">
       <strong>References:</strong>
-      <ng-container *ngFor="let ref of node.data.references">
+      <ng-container *ngFor="let ref of item.requirement.references">
         <div class="p-2">{{ref.parentId}}</div>
       </ng-container>
     </div>

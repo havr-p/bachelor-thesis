@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NodeInfoViewComponent } from './node-info-view.component';
+import { ItemInfoViewComponent } from './item-info-view.component';
 
 describe('NodeInfoViewComponent', () => {
-  let component: NodeInfoViewComponent;
-  let fixture: ComponentFixture<NodeInfoViewComponent>;
+  let component: ItemInfoViewComponent;
+  let fixture: ComponentFixture<ItemInfoViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [NodeInfoViewComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(NodeInfoViewComponent);
+      declarations: [ItemInfoViewComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ItemInfoViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
