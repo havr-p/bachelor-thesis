@@ -37,14 +37,11 @@ export class RequirementItemComponent implements OnChanges, OnInit {
     return this.data.selected;
   }
 
-  // @HostListener('click', ['$event']) onClick(btn: any) {
-  //   console.log('clicked', btn);
-  //   this.data.selected = !this.data.selected;
-  //   this.eventService.publishEditorEvent(EditorEvent.SELECT, this.data);
-  // }
-  // @HostListener('hover') onHover() {
-  //   this.displaySpeedDial = true;
-  // }
+  @HostListener('click', ['$event']) onClick(btn: any) {
+    console.log('clicked', btn);
+    this.data.selected = !this.data.selected;
+    this.eventService.publishEditorEvent(EditorEvent.SELECT, this.data);
+  }
 
   @HostBinding('style.background-color') backgroundColor: string = '#fff';
   onMouseEnter() {
