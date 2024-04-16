@@ -34,15 +34,15 @@ import { CustomConnectionComponent } from '../../customization/custom-connection
 import { addCustomBackground } from '../../customization/custom-background';
 import { EventService } from '../../../services/event.service';
 import { Requirement } from '../../models/requirement';
-import { EditorEvent, NodeProps } from '../../types';
+import { EditorEvent, ItemProps } from '../../types';
 import { structures } from 'rete-structures';
 import { Connection } from '../../connection';
 import { MenuItem } from 'primeng/api';
-import { RequirementItem } from '../../items/requirementItem';
-import { RequirementItemComponent } from '../nodes/requirement-node/requirement-node.component';
+import { RequirementItem } from '../../items/requirement-item';
+import { RequirementItemComponent } from '../items/requirement-item/requirement-item.component';
 
 type Schemes = GetSchemes<
-  NodeProps,
+  ItemProps,
   Connection<RequirementItem, RequirementItem>
 >;
 type AreaExtra =
