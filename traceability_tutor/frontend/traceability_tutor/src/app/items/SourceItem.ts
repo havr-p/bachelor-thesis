@@ -1,7 +1,6 @@
 import { ClassicPreset } from 'rete';
-import { getColorByLevel } from '../utils';
 
-export class SourceNode extends ClassicPreset.Node {
+export class SourceItem extends ClassicPreset.Node {
   width = 400;
   height = 200;
   backgroundColor = 'blue';
