@@ -1,5 +1,5 @@
 @use "sass:math"
-@import "../vars"
+@import "../../../customization/vars"
 
 :host
   display: block
@@ -62,3 +62,13 @@
 
 .control
   padding: $socket-margin math.div($socket-size, 2) + $socket-margin
+
+.item-container
+  position: relative
+
+
+p-speedDial
+  position: absolute
+  top: -(math.div($speed-dial-size, 2))
+  right: math.div($speed-dial-size, 2)
+  transform: translate(50%, -50%)

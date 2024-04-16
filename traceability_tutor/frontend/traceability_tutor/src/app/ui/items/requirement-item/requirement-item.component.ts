@@ -2,20 +2,22 @@ import {
   ChangeDetectorRef,
   Component,
   HostBinding,
+  HostListener,
   Input,
   OnChanges,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { RequirementItem } from '../../../items/requirementItem';
 import { EventService } from '../../../../services/event.service';
 import { MenuItem } from 'primeng/api';
+import { RequirementItem } from '../../../items/requirement-item';
+import { EditorEvent } from '../../../types';
 
 @Component({
-  templateUrl: './requirement-node.component.html',
-  styleUrls: ['./requirement-node.component.sass'],
+  templateUrl: './requirement-item.component.html',
+  styleUrls: ['./requirement-item.component.sass'],
   host: {
-    'data-testid': 'node',
+    'data-testid': 'item',
     '(mouseenter)': 'onMouseEnter()',
     '(mouseleave)': 'onMouseLeave()',
   },
@@ -111,7 +113,4 @@ export class RequirementItemComponent implements OnChanges, OnInit {
   }
 
   protected readonly localStorage = localStorage;
-  onSpeedDialClick(event: any) {
-    console.log('onSpeedDialClick');
-  }
 }

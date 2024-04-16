@@ -1,3 +1,4 @@
+<div class="item-container">
 <div class="title" data-testid="title">{{data.label}}</div>
 <div class="output" *ngFor="let output of data.outputs | keyvalue: sortByIndex"
   [attr.data-testid]="'output-'+output.key">
@@ -20,4 +21,15 @@
   <div class="input-control" [style.display]="input.value?.control && input.value?.showControl ? '' : 'none'"
     refComponent [data]="{type: 'control', payload: input.value?.control }" [emit]="emit" data-testid="input-control">
   </div>
+</div>
+<!--  <p-speedDial-->
+<!--  [radius]="120"-->
+<!--  direction="up-right"-->
+<!--  type="quarter-circle"-->
+<!--  showIcon="pi pi-ellipsis-h"-->
+<!--  [buttonStyle]="{width: '45px', height: '45px'}"-->
+<!--  [model]="nodeActions"-->
+<!--  [rotateAnimation]="false"-->
+<!--  (onClick)="onSpeedDialClick($event)">-->
+<!--</p-speedDial>-->
 </div>
