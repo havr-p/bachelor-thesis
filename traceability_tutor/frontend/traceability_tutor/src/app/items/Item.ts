@@ -5,6 +5,6 @@ export interface Item {
   width: number;
   height: number;
   type: ItemType | undefined;
-  data: Requirement;
+  requirement: Requirement;
   // | { commitId: string; commitMessage: string; commitDate: Date };
 }
