@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Connection } from '../../connection';
 import { Subscription } from 'rxjs';
-import { RequirementItem } from '../../items/requirementItem';
+import { RequirementItem } from '../../items/requirement-item';
 
 @Component({
   selector: 'connection',
