@@ -118,8 +118,4 @@ export class DockComponent implements OnInit {
       return []; // Return an empty array in case of error
     }
   }
-
-  sendEventToEditor(eventData: any) {
-    this.eventService.publishEditorEvent(eventData);
-  }
 }
