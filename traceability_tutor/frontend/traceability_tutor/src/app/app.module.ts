@@ -12,16 +12,15 @@ import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FormsModule } from '@angular/forms';
 import { KeyValuePipe, NgForOf, NgOptimizedImage } from '@angular/common';
-
-import { SharedModule } from './shared/shared.module';
-import { ReteModule } from 'rete-angular-plugin/17';
 import { TraceabilityEditorComponent } from './ui/traceability-editor/traceability-editor.component';
-import { RequirementItemComponent } from './ui/nodes/requirement-node/requirement-node.component';
-import { NodeInfoViewComponent } from './ui/node-info-view/node-info-view.component';
+import { RequirementItemComponent } from './ui/items/requirement-item/requirement-item.component';
 import { PanelModule } from 'primeng/panel';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SidebarModule } from 'primeng/sidebar';
 import { SpeedDialModule } from 'primeng/speeddial';
+import { ItemInfoViewComponent } from './ui/item-info-view/item-info-view.component';
+import { SharedModule } from './shared/shared.module';
+import { ReteModule } from 'rete-angular-plugin/17';
 
 @NgModule({
   declarations: [
@@ -29,8 +28,8 @@ import { SpeedDialModule } from 'primeng/speeddial';
     CustomSocketComponent,
     CustomConnectionComponent,
     DockComponent,
-    RequirementItemComponent,
     TraceabilityEditorComponent,
+    RequirementItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,13 +40,13 @@ import { SpeedDialModule } from 'primeng/speeddial';
     KeyValuePipe,
     NgForOf,
     SharedModule,
-    ReteModule,
     NgOptimizedImage,
     PanelModule,
     ItemInfoViewComponent,
     BrowserAnimationsModule,
     SidebarModule,
     SpeedDialModule,
+    ReteModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
