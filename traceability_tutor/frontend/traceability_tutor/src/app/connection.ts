@@ -1,5 +1,5 @@
 import { ClassicPreset } from 'rete';
-import { NodeProps } from './types';
+import { ItemProps } from './types';
 import { Subject } from 'rxjs';
 
 // export class Connection<
@@ -11,8 +11,8 @@ import { Subject } from 'rxjs';
 // }
 
 export class Connection<
-  A extends NodeProps,
-  B extends NodeProps,
+  A extends ItemProps,
+  B extends ItemProps,
 > extends ClassicPreset.Connection<A, B> {
   isSelected?: boolean;
   private changes = new Subject<any>();

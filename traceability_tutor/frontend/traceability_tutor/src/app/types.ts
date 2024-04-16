@@ -1,8 +1,8 @@
 import { GetSchemes } from 'rete';
 import { Connection } from './connection';
-import { RequirementItem } from './items/requirementItem';
+import { RequirementItem } from './items/requirement-item';
 
-export type NodeProps =
+export type ItemProps =
   // | DebugChat
   // | Message
   // | OnMessage
@@ -12,7 +12,7 @@ export type ConnProps = Connection<RequirementItem, RequirementItem>;
 // | Connection<MatchMessage, SendMessage>
 // | Connection<OnMessage, MatchMessage>;
 
-export type Schemes = GetSchemes<NodeProps, ConnProps>;
+export type Schemes = GetSchemes<ItemProps, ConnProps>;
 
 export enum EditorEvent {
   ADD = 'add',
