@@ -10,10 +10,10 @@ import {
   NgSwitchCase,
   NgSwitchDefault,
 } from '@angular/common';
-import { NodeType } from '../../types';
 import { InplaceModule } from 'primeng/inplace';
-import { Node } from '../../nodes/Node';
 import { FormsModule } from '@angular/forms';
+import { Item } from '../../nodes/Item';
+import { ItemType } from '../../types';
 
 @Component({
   selector: 'app-node-info-view',
@@ -45,7 +45,7 @@ import { FormsModule } from '@angular/forms';
   ],
 })
 export class NodeInfoViewComponent {
-  @Input() node!: Node;
+  @Input() item!: Item;
   requirement: Requirement = {
     id: '1',
     level: 'stakeholder',
@@ -56,5 +56,5 @@ export class NodeInfoViewComponent {
 
   openReference(reference: any) {}
 
-  protected readonly NodeType = NodeType;
+  protected readonly ItemType = ItemType;
 }

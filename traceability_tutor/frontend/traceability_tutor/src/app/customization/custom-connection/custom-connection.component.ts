@@ -2,15 +2,14 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  HostBinding,
   Input,
   OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { RequirementNode } from '../../nodes/requirement.node';
 import { Connection } from '../../connection';
 import { Subscription } from 'rxjs';
+import { RequirementItem } from '../../items/requirementItem';
 
 @Component({
   selector: 'connection',
@@ -25,7 +24,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./custom-connection.component.sass'],
 })
 export class CustomConnectionComponent implements OnInit, OnDestroy {
-  @Input() data!: Connection<RequirementNode, RequirementNode>;
+  @Input() data!: Connection<RequirementItem, RequirementItem>;
   @Input() start: any;
   @Input() end: any;
   @Input() path!: string;
