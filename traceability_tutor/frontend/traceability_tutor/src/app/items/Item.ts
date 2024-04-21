@@ -1,10 +1,8 @@
-import { ItemType } from '../types';
-import { Requirement } from '../models/requirement';
+import { ItemDataType, ItemType } from '../types';
 
 export interface Item {
   width: number;
   height: number;
   type: ItemType | undefined;
-  requirement: Requirement;
-  // | { commitId: string; commitMessage: string; commitDate: Date };
+  data: ItemDataType;
 }

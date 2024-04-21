@@ -10,7 +10,7 @@ export class RequirementItem extends ClassicPreset.Node implements Item {
   type = ItemType.REQUIREMENT;
   backgroundColor: string;
   borderStyle: string;
-  requirement: any;
+  data: Requirement;
   constructor(requirement: Requirement) {
     super(requirement.name);
     //console.log(requirement);
@@ -18,6 +18,6 @@ export class RequirementItem extends ClassicPreset.Node implements Item {
     this.borderStyle = '2px solid #000000';
     this.backgroundColor = getColorByLevel(requirement.level);
     this.selected = false;
-    this.requirement = requirement;
+    this.data = requirement;
   }
 }

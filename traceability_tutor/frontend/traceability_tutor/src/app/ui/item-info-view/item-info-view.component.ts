@@ -16,7 +16,10 @@ import { Item } from '../../items/Item';
 import { ItemType } from '../../types';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { EventService } from '../../../services/event/event.service';
+import { EventService } from 'src/app/services/event/event.service';
+import { ValidationService } from '../../services/validation/validation.service';
+import { RequirementItem } from '../../items/requirement-item';
+import { RequirementsService } from '../../services/requirements/requirements.service';
 
 @Component({
   selector: 'app-item-info-view',

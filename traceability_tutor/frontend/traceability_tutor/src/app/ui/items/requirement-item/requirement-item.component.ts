@@ -45,12 +45,12 @@ export class RequirementItemComponent implements OnChanges, OnInit {
 
   @HostBinding('style.background-color') backgroundColor: string = '#fff';
   onMouseEnter() {
-    console.log(this.data.requirement.name);
+    console.log(this.data.data.name);
     this.displaySpeedDial = true;
     console.log('displaySpeedDial', this.displaySpeedDial);
   }
   onMouseLeave() {
-    console.log(this.data.requirement.name);
+    console.log(this.data.data.name);
     this.displaySpeedDial = false;
     console.log('displaySpeedDial', this.displaySpeedDial);
   }
