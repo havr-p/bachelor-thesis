@@ -291,14 +291,7 @@ export class TraceabilityEditorComponent
     private injector: Injector,
     private eventService: EventService,
     private localStorageService: LocalStorageService,
-  ) {
-    //     // @ts-ignore
-    //     this.arrange = new AutoArrangePlugin<Schemes>();
-    //
-    // this.arrange.addPreset(ArrangePresets.classic.setup());
-    //
-    //   this.area.use(this.arrange);
-  }
+  ) {}
 
   async ngAfterViewInit() {
     const el = this.container.nativeElement;
