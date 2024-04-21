@@ -45,6 +45,7 @@ import { Connection } from '../../connection';
 import { MenuItem } from 'primeng/api';
 import { RequirementItem } from '../../items/requirement-item';
 import { RequirementItemComponent } from '../items/requirement-item/requirement-item.component';
+import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
 
 type Schemes = GetSchemes<
   ItemProps,
@@ -289,6 +290,7 @@ export class TraceabilityEditorComponent
   constructor(
     private injector: Injector,
     private eventService: EventService,
+    private localStorageService: LocalStorageService,
   ) {
     //     // @ts-ignore
     //     this.arrange = new AutoArrangePlugin<Schemes>();
@@ -313,6 +315,12 @@ export class TraceabilityEditorComponent
           this.arrange.addPreset(ArrangePresets.classic.setup());
 
           this.area.use(this.arrange);
+
+          let currentProject =
+            this.localStorageService.getData('current-project');
+          if (currentProject) {
+            await this.processDemoEvent(currentProject);
+          }
         },
       );
       this.loading = false;
@@ -342,6 +350,8 @@ export class TraceabilityEditorComponent
   }
 
   private async processDemoEvent(data: Requirement[]) {
+    if (data && !this.localStorageService.hasKey('current-project'))
+      this.localStorageService.saveData('current-project', data);
     for (let req of data) {
       //console.log(JSON.stringify(req));
       let requirement = new RequirementItem(req);
