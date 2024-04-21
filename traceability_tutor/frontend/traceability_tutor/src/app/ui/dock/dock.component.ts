@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FileUploadEvent } from 'primeng/fileupload';
-import { RequirementsService } from '../../../services/requirements/requirements.service';
-import { EventService } from '../../../services/event/event.service';
 import { Requirement } from '../../models/requirement';
 import { EditorEventType } from '../../types';
+import { RequirementsService } from '../../services/requirements/requirements.service';
+import { EventService } from '../../services/event/event.service';
 
 @Component({
   selector: 'app-dock',
