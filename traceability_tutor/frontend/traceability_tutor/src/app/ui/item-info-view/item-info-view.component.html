@@ -32,3 +32,7 @@
     <p>undefined</p>
   </ng-container>
 </ng-container>
+<div class="card flex flex-wrap gap-3 justify-content-center mt-5">
+<p-button label="Save Changes" [outlined]="true" (onClick)="saveChanges()" [disabled]="!dataChanged" class="mr-3"></p-button>
+<p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="cancelChanges()" ></p-button>
+</div>

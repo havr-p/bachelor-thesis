@@ -54,17 +54,40 @@ export class ItemInfoViewComponent {
   protected readonly ItemType = ItemType;
   dataChanged = false;
 
-  // ngOnInit(): void {
-  //   this.eventService.event$.subscribe(async (event: AppEvent) => {
-  //     if (event.context?.invokedFrom == EventSource.EDITOR) {
-  //       const type = event.context.eventType;
-  //       switch (type) {
-  //         case EditorEvent.ADD_CONNECTION:
-  //           break;
-  //         default:
-  //           break;
-  //       }
-  //     }
-  //   });
-  // }
+  saveChanges() {
+    if (this.dataChanged) {
+      const isValid = this.validationService.validateRequirement(
+        this.item as RequirementItem,
+      );
+      if (isValid) {
+        this.requirementsService.updateRequirement(this.item.data);
+        // .subscribe({
+        //   next: (response) => {
+        //     this.eventService.notify(
+        //       'Requirement saved successfully',
+        //       'success',
+        //     );
+        //     this.dataChanged = false;
+        //   },
+        //   error: (error) => {
+        //     this.eventService.notify(
+        //       'Failed to save requirement: ' + error.message,
+        //       'error',
+        //     );
+        //   },
+        // });
+      } else {
+        this.eventService.notify(
+          'Validation failed. Changes not saved.',
+          'error',
+        );
+      }
+    } else {
+      this.eventService.notify('No changes detected.', 'info');
+    }
+  }
+
+  cancelChanges() {
+    this.toggleVisible.emit(false);
+  }
 }
