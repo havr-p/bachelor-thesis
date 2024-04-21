@@ -22,6 +22,7 @@ import { ItemInfoViewComponent } from './ui/item-info-view/item-info-view.compon
 import { SharedModule } from './shared/shared.module';
 import { ReteModule } from 'rete-angular-plugin/17';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     SpeedDialModule,
     ReteModule,
     ProgressSpinnerModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
