@@ -26,6 +26,40 @@ export enum EditorEventType {
   CLEAR = 'clear',
 }
 
+export enum ItemViewEventType {
+  EDIT = 'edit',
+}
+export enum EventSource {
+  EDITOR = 'editor',
+  ITEM_VIEW = 'item view',
+}
+
+export abstract class BaseEvent<S extends EventSource, U> {
+  protected constructor(
+    public source: S,
+    public type: U,
+    public data: any,
+  ) {}
+}
+
+export class EditorEvent extends BaseEvent<
+  EventSource.EDITOR,
+  EditorEventType
+> {
+  constructor(type: EditorEventType, data: any) {
+    super(EventSource.EDITOR, type, data);
+  }
+}
+
+export class ItemViewEvent extends BaseEvent<
+  EventSource.ITEM_VIEW,
+  ItemViewEventType
+> {
+  constructor(type: ItemViewEventType, data: any) {
+    super(EventSource.ITEM_VIEW, type, data);
+  }
+}
+
 export enum ItemType {
   REQUIREMENT = 'Requirement',
   SOURCE = 'Source',
