@@ -7,7 +7,8 @@ import {
   EventSource,
   ItemViewEvent,
   ItemViewEventType,
-} from '../../app/types';
+} from '../../types';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,8 @@ import {
 export class EventService {
   private eventSource = new Subject<BaseEvent<EventSource, any>>();
   event$ = this.eventSource.asObservable();
+
+  constructor(private toastr: ToastrService) {}
 
   publishEditorEvent(type: EditorEventType, data: any) {
     console.log('publishEditorEvent', type, data);
