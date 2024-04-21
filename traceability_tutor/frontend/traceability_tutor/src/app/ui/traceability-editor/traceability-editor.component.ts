@@ -32,9 +32,14 @@ import { CustomSocketComponent } from '../../customization/custom-socket/custom-
 import { CustomConnectionComponent } from '../../customization/custom-connection/custom-connection.component';
 
 import { addCustomBackground } from '../../customization/custom-background';
-import { EventService } from '../../../services/event.service';
+import { EventService } from '../../../services/event/event.service';
 import { Requirement } from '../../models/requirement';
-import { EditorEvent, ItemProps } from '../../types';
+import {
+  BaseEvent,
+  EditorEventType,
+  EventSource,
+  ItemProps,
+} from '../../types';
 import { structures } from 'rete-structures';
 import { Connection } from '../../connection';
 import { MenuItem } from 'primeng/api';
@@ -103,7 +108,10 @@ export async function createEditor(
               label: 'Edit node',
               key: '3',
               handler: () => {
-                eventService.publishEditorEvent(EditorEvent.SELECT, context);
+                eventService.publishEditorEvent(
+                  EditorEventType.SELECT,
+                  context,
+                );
               },
             },
             {
@@ -313,19 +321,21 @@ export class TraceabilityEditorComponent
 
   ngOnInit(): void {
     this.eventService.event$.subscribe(
-      async (event: { type: string; data: any }) => {
-        switch (event.type) {
-          case EditorEvent.DEMO:
-            await this.processDemoEvent(event.data);
-            break;
-          case EditorEvent.ADD:
-            await this.addNode(new RequirementItem(event.data));
-            break;
-          case EditorEvent.SELECT:
-            console.log('selected', event.data);
-            this.openedItem = event.data;
-            this.sidebarVisible = true;
-            break;
+      async (event: BaseEvent<EventSource, EditorEventType>) => {
+        if (event.source === EventSource.EDITOR) {
+          switch (event.type) {
+            case EditorEventType.DEMO:
+              await this.processDemoEvent(event.data);
+              break;
+            case EditorEventType.ADD:
+              await this.addNode(new RequirementItem(event.data));
+              break;
+            case EditorEventType.SELECT:
+              console.log('selected', event.data);
+              this.openedItem = event.data;
+              this.sidebarVisible = true;
+              break;
+          }
         }
       },
     );

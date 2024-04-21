@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FileUploadEvent } from 'primeng/fileupload';
 import { RequirementsService } from '../../../services/requirements/requirements.service';
-import { EventService } from '../../../services/event.service';
+import { EventService } from '../../../services/event/event.service';
 import { Requirement } from '../../models/requirement';
-import { EditorEvent } from '../../types';
+import { EditorEventType } from '../../types';
 
 @Component({
   selector: 'app-dock',
@@ -38,7 +38,7 @@ export class DockComponent implements OnInit {
         icon: 'pi pi-fw pi-video',
         command: async () => {
           let data = await this.loadAll();
-          this.eventService.publishEditorEvent(EditorEvent.DEMO, data);
+          this.eventService.publishEditorEvent(EditorEventType.DEMO, data);
         },
       },
       {
@@ -58,7 +58,7 @@ export class DockComponent implements OnInit {
                 statement: 'New Requirement Description',
                 references: [],
               };
-              this.eventService.publishEditorEvent(EditorEvent.ADD, data);
+              this.eventService.publishEditorEvent(EditorEventType.ADD, data);
             },
           },
         ],
