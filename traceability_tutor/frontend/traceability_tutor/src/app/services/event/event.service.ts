@@ -27,4 +27,24 @@ export class EventService {
   publishItemViewEvent(type: ItemViewEventType, data: any) {
     this.eventSource.next(new ItemViewEvent(type, data));
   }
+
+  notify(message: string, type: 'success' | 'error' | 'info' | 'warning') {
+    switch (type) {
+      case 'success':
+        this.toastr.success(message);
+        break;
+      case 'error':
+        this.toastr.error(message);
+        break;
+      case 'info':
+        this.toastr.info(message);
+        break;
+      case 'warning':
+        this.toastr.warning(message);
+        break;
+      default:
+        this.toastr.show(message);
+        break;
+    }
+  }
 }
