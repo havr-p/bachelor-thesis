@@ -1,6 +1,7 @@
 import { GetSchemes } from 'rete';
 import { Connection } from './connection';
 import { RequirementItem } from './items/requirement-item';
+import { Requirement } from './models/requirement';
 
 export type ItemProps =
   // | DebugChat
