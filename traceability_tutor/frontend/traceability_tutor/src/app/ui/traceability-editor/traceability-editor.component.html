@@ -4,12 +4,12 @@
 <p-sidebar [(visible)]="sidebarVisible"
            [modal]="false"
            [closeOnEscape]="true"
-           class="p-sidebar-lg"
+
            position="right"
-           styleClass="w-4">
+           styleClass="p-sidebar-md">
   <ng-template pTemplate="header">
     <p class="text-2xl"> {{this.openedItem.id + "           "}}         <span class="font-medium">{{openedItemTitle}}</span></p>
   </ng-template>
-  <app-item-info-view *ngIf="this.openedItem"  [item]="openedItem"></app-item-info-view>
+  <app-item-info-view *ngIf="this.openedItem"  [item]="openedItem" (toggleVisible)="onItemInfoViewToggleVisible($event)"></app-item-info-view>
 
 </p-sidebar>

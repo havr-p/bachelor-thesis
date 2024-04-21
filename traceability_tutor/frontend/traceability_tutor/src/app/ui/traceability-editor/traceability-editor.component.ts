@@ -270,6 +270,9 @@ export class TraceabilityEditorComponent
   ];
   //todo disable vertical scroll
   loading = false;
+  onItemInfoViewToggleVisible(visible: boolean) {
+    this.sidebarVisible = visible;
+  }
 
   constructor(
     private injector: Injector,
