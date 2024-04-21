@@ -17,8 +17,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EventService } from 'src/app/services/event/event.service';
 import { ValidationService } from '../../services/validation/validation.service';
-import { RequirementItem } from '../../items/requirement-item';
 import { RequirementsService } from '../../services/requirements/requirements.service';
+import { Requirement } from '../../models/requirement';
 
 @Component({
   selector: 'app-item-info-view',
@@ -57,7 +57,7 @@ export class ItemInfoViewComponent {
   saveChanges() {
     if (this.dataChanged) {
       const isValid = this.validationService.validateRequirement(
-        this.item as RequirementItem,
+        this.item.data as Requirement,
       );
       if (isValid) {
         this.requirementsService.updateRequirement(this.item.data);

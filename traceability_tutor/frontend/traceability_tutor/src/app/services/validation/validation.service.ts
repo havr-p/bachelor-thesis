@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RequirementItem } from '../../items/requirement-item';
+import { Requirement } from '../../models/requirement';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +7,7 @@ import { RequirementItem } from '../../items/requirement-item';
 export class ValidationService {
   constructor() {}
 
-  validateRequirement(requirement: RequirementItem) {
+  validateRequirement(requirement: Requirement) {
     return true;
   }
 }
