@@ -8,10 +8,9 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { EventService } from '../../../../services/event.service';
 import { MenuItem } from 'primeng/api';
 import { RequirementItem } from '../../../items/requirement-item';
-import { EditorEvent } from '../../../types';
+import { EventService } from '../../../services/event/event.service';
 
 @Component({
   templateUrl: './requirement-item.component.html',

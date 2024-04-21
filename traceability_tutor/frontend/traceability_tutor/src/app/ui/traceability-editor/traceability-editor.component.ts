@@ -32,7 +32,6 @@ import { CustomSocketComponent } from '../../customization/custom-socket/custom-
 import { CustomConnectionComponent } from '../../customization/custom-connection/custom-connection.component';
 
 import { addCustomBackground } from '../../customization/custom-background';
-import { EventService } from '../../../services/event/event.service';
 import { Requirement } from '../../models/requirement';
 import {
   BaseEvent,
@@ -45,7 +44,8 @@ import { Connection } from '../../connection';
 import { MenuItem } from 'primeng/api';
 import { RequirementItem } from '../../items/requirement-item';
 import { RequirementItemComponent } from '../items/requirement-item/requirement-item.component';
-import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
+import { EventService } from 'src/app/services/event/event.service';
+import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 
 type Schemes = GetSchemes<
   ItemProps,
@@ -208,22 +208,6 @@ export async function createEditor(
 
   AreaExtensions.simpleNodesOrder(area);
 
-  const aLabel = 'Custom';
-  const bLabel = 'Custom';
-
-  const a = new ClassicPreset.Node(aLabel);
-  a.addOutput('a', new ClassicPreset.Output(socket));
-  a.addInput('a', new ClassicPreset.Input(socket));
-  //await editor.addNode(a);
-
-  const b = new ClassicPreset.Node(bLabel);
-  b.addOutput('a', new ClassicPreset.Output(socket));
-  b.addInput('a', new ClassicPreset.Input(socket));
-  //await editor.addNode(b);
-
-  await area.translate(a.id, { x: 0, y: 0 });
-  await area.translate(b.id, { x: 300, y: 0 });
-
   //await editor.addConnection(new ClassicPreset.Connection(a, 'a', b, 'a'));
 
   setTimeout(() => {
@@ -299,7 +283,7 @@ export class TraceabilityEditorComponent
     if (el) {
       this.loading = true;
       createEditor(el, this.injector, this.eventService).then(
-        ({ destroy, editor, area }) => {
+        async ({ destroy, editor, area }) => {
           this.destroyEditor = destroy;
           this.editor = editor;
           this.area = area;
@@ -355,9 +339,6 @@ export class TraceabilityEditorComponent
       );
       await this.editor.addNode(requirement);
     }
-    //console.log(this.editor.getNodes())
-
-    //const arrange = new AutoArrangePlugin<Schemes>();
 
     this.arrange.addPreset(ArrangePresets.classic.setup());
 
@@ -402,7 +383,7 @@ export class TraceabilityEditorComponent
   }
 
   get openedItemTitle(): string {
-    console.log('openedItem', this.openedItem);
+    //console.log('openedItem', this.openedItem);
     if (this.openedItem) return this.openedItem.requirement.name;
     return 'item not defined';
   }
