@@ -14,6 +14,9 @@ import { InplaceModule } from 'primeng/inplace';
 import { FormsModule } from '@angular/forms';
 import { Item } from '../../items/Item';
 import { ItemType } from '../../types';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { EventService } from '../../../services/event/event.service';
 
 @Component({
   selector: 'app-item-info-view',
@@ -31,6 +34,8 @@ import { ItemType } from '../../types';
     NgSwitchCase,
     FormsModule,
     NgForOf,
+    InputTextModule,
+    InputTextareaModule,
   ],
 })
 export class ItemInfoViewComponent {
