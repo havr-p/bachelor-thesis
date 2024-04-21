@@ -1,4 +1,6 @@
-<div class="rete" #rete></div>
+<div class="rete" #rete>
+  <div [hidden]="loading"> <p-progressSpinner></p-progressSpinner> </div>
+</div>
 <p-sidebar [(visible)]="sidebarVisible"
            [modal]="false"
            [closeOnEscape]="true"

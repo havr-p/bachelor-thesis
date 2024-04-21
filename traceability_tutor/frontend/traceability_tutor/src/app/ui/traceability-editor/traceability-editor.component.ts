@@ -276,6 +276,8 @@ export class TraceabilityEditorComponent
     },
   ];
   //todo disable vertical scroll
+  loading = false;
+
   constructor(
     private injector: Injector,
     private eventService: EventService,
@@ -292,6 +294,7 @@ export class TraceabilityEditorComponent
     const el = this.container.nativeElement;
 
     if (el) {
+      this.loading = true;
       createEditor(el, this.injector, this.eventService).then(
         ({ destroy, editor, area }) => {
           this.destroyEditor = destroy;
@@ -304,6 +307,7 @@ export class TraceabilityEditorComponent
           this.area.use(this.arrange);
         },
       );
+      this.loading = false;
     }
   }
 
