@@ -41,8 +41,6 @@ export class CustomConnectionComponent implements OnInit, OnDestroy {
       next: (data: any) => {
         this.strokeColor = data.isSelected ? 'red' : 'black';
         this.strokeWidth = data.isSelected ? '30px' : '15px';
-        this.pathElement.nativeElement.strokeWidth = this.strokeWidth;
-        this.pathElement.nativeElement.stroke = this.strokeColor;
         this.cdr.detectChanges();
       },
     });
