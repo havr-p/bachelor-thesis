@@ -21,6 +21,7 @@ import { SpeedDialModule } from 'primeng/speeddial';
 import { ItemInfoViewComponent } from './ui/item-info-view/item-info-view.component';
 import { SharedModule } from './shared/shared.module';
 import { ReteModule } from 'rete-angular-plugin/17';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { ReteModule } from 'rete-angular-plugin/17';
     SidebarModule,
     SpeedDialModule,
     ReteModule,
+    ProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
