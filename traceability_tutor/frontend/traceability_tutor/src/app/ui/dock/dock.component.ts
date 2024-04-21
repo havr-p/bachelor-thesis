@@ -64,33 +64,6 @@ export class DockComponent implements OnInit {
         ],
       },
 
-      // {
-      //   label: 'Export',
-      //   icon: 'pi pi-fw pi-external-link'
-      // }
-
-      // {
-      //   label: 'Edit',
-      //   items: [
-      //     {
-      //       label: 'Left',
-      //       icon: 'pi pi-fw pi-align-left'
-      //     },
-      //     {
-      //       label: 'Right',
-      //       icon: 'pi pi-fw pi-align-right'
-      //     },
-      //     {
-      //       label: 'Center',
-      //       icon: 'pi pi-fw pi-align-center'
-      //     },
-      //     {
-      //       label: 'Justify',
-      //       icon: 'pi pi-fw pi-align-justify'
-      //     }
-      //   ]
-      // },
-
       {
         label: 'Quit',
       },
@@ -108,14 +81,11 @@ export class DockComponent implements OnInit {
 
   private async loadAll(): Promise<Requirement[]> {
     try {
-      // Await the promise from fetchRequirements and return its result directly
       const requirements = await this.requirementsService.fetchRequirements();
-      // Process requirements if necessary
-      // console.log(requirements);
       return requirements;
     } catch (error) {
       console.error('Error fetching requirements:', error);
-      return []; // Return an empty array in case of error
+      return [];
     }
   }
 }

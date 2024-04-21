@@ -20,17 +20,6 @@ import { ItemType } from '../../types';
   templateUrl: './item-info-view.component.html',
   styleUrl: './item-info-view.component.sass',
   standalone: true,
-  // animations: [
-  //   trigger('slideInRight', [
-  //     transition(':enter', [
-  //       style({ transform: 'translateX(100%)' }),
-  //       animate('500ms ease-out', style({ transform: 'translateX(0)' })),
-  //     ]),
-  //     transition(':leave', [
-  //       animate('500ms ease-out', style({ transform: 'translateX(100%)' })),
-  //     ]),
-  //   ]),
-  // ],
   imports: [
     PanelModule,
     EditorModule,
@@ -55,4 +44,19 @@ export class ItemInfoViewComponent {
   };
 
   protected readonly ItemType = ItemType;
+  dataChanged = false;
+
+  // ngOnInit(): void {
+  //   this.eventService.event$.subscribe(async (event: AppEvent) => {
+  //     if (event.context?.invokedFrom == EventSource.EDITOR) {
+  //       const type = event.context.eventType;
+  //       switch (type) {
+  //         case EditorEvent.ADD_CONNECTION:
+  //           break;
+  //         default:
+  //           break;
+  //       }
+  //     }
+  //   });
+  // }
 }
