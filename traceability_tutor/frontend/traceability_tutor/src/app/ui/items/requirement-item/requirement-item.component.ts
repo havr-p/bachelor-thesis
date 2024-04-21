@@ -40,7 +40,6 @@ export class RequirementItemComponent implements OnChanges, OnInit {
   @HostListener('click', ['$event']) onClick(btn: any) {
     console.log('clicked', btn);
     this.data.selected = !this.data.selected;
-    this.eventService.publishEditorEvent(EditorEvent.SELECT, this.data);
   }
 
   @HostBinding('style.background-color') backgroundColor: string = '#fff';
