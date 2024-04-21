@@ -11,14 +11,14 @@ ELEMENTS:
     TYPE: String
     REQUIRED: False
   - TITLE: LEVEL
-    TYPE: SingleChoice(BUSINESS, STAKEHOLDER, SOLUTION)
-    REQUIRED: False
+    TYPE: String
+    REQUIRED: True
   - TITLE: STATUS
     TYPE: String
     REQUIRED: False
   - TITLE: TITLE
     TYPE: String
-    REQUIRED: False
+    REQUIRED: True
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
