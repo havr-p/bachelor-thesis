@@ -65,3 +65,5 @@ export enum ItemType {
   SOURCE = 'Source',
   TEST = 'Test',
 }
+
+export type ItemDataType = Requirement; // | Source
