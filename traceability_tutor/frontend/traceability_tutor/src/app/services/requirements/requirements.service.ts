@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Requirement } from '../../app/models/requirement';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
+import { Requirement } from '../../models/requirement';
+import { HttpResponse } from 'msw';
 
 @Injectable({
   providedIn: 'root',
@@ -13,5 +14,13 @@ export class RequirementsService {
       throw new Error('Network response was not ok');
     }
     return await response.json();
+  }
+
+  updateRequirement(requirement: any) {
+    console.log('i will save', requirement);
+    return new HttpResponse(null, {
+      status: 200,
+      statusText: 'ok',
+    });
   }
 }
