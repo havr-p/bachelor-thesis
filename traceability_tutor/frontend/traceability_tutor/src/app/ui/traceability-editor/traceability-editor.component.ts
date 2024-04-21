@@ -117,7 +117,7 @@ export async function createEditor(
             },
             {
               label: 'Delete node',
-              key: '4',
+              key: '5',
               handler: () => {
                 editor.removeNode(selectedNodeId);
                 const incomingConnections = graph
@@ -356,7 +356,10 @@ export class TraceabilityEditorComponent
       //console.log(JSON.stringify(req));
       let requirement = new RequirementItem(req);
       requirement.addOutput(requirement.id, new ClassicPreset.Output(socket));
-      requirement.addInput(requirement.id, new ClassicPreset.Input(socket));
+      requirement.addInput(
+        requirement.id,
+        new ClassicPreset.Input(socket, '', true),
+      );
       await this.editor.addNode(requirement);
     }
     //console.log(this.editor.getNodes())
