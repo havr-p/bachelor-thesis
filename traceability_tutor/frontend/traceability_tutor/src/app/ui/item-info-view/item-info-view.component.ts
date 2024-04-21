@@ -35,13 +35,7 @@ import { ItemType } from '../../types';
 })
 export class ItemInfoViewComponent {
   @Input() item!: Item;
-  requirement: Requirement = {
-    id: '1',
-    level: 'stakeholder',
-    name: 'New Requirement',
-    statement: 'New Requirement Description',
-    references: [],
-  };
+  constructor(private eventService: EventService) {}
 
   protected readonly ItemType = ItemType;
   dataChanged = false;
