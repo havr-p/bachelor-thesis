@@ -1,4 +1,4 @@
-# bachelor-thesis
+# Traceability Tutor
 My bachelor thesis
 
 
@@ -22,6 +22,3 @@ server
 --config="C:\Users\Consultis\PycharmProjects\bachelor-thesis\traceability_tutor\strictdoc.toml"
 C:\Users\Consultis\PycharmProjects\bachelor-thesis\traceability_tutor\docs\strictdoc-PoC.sdoc
 ```
-This way you will create a database with one superuser postgres and password postgres and run it on localhost:5432  
-
-* TODO: import or at least add test data. At least add sql script that will create all tables
