@@ -43,7 +43,14 @@ import { RequirementsService } from '../../services/requirements/requirements.se
 })
 export class ItemInfoViewComponent {
   @Input() item!: Item;
-  constructor(private eventService: EventService) {}
+  @Output() toggleVisible = new EventEmitter<boolean>();
+  constructor(
+    private eventService: EventService,
+    private validationService: ValidationService,
+    private requirementsService: RequirementsService,
+  ) {}
+
+  dataChanges: any;
 
   protected readonly ItemType = ItemType;
   dataChanged = false;
