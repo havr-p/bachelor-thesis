@@ -46,6 +46,8 @@ import { RequirementItem } from '../../items/requirement-item';
 import { RequirementItemComponent } from '../items/requirement-item/requirement-item.component';
 import { EventService } from 'src/app/services/event/event.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import { Item } from '../../items/Item';
+import { getDOMSocketPosition } from 'rete-render-utils';
 
 type Schemes = GetSchemes<
   ItemProps,
@@ -190,6 +192,14 @@ export async function createEditor(
           return CustomSocketComponent;
         },
       },
+      socketPositionWatcher: getDOMSocketPosition({
+        offset({ x, y }, nodeId, side, key) {
+          return {
+            x: x + 6 * (side === 'input' ? -1 : 1),
+            y: y,
+          };
+        },
+      }),
     }),
   );
   angularRender.addPreset(AngularPresets.minimap.setup());
@@ -242,7 +252,7 @@ export class TraceabilityEditorComponent
   area: any;
   arrange: any;
   sidebarVisible = false;
-  openedItem: any;
+  openedItem!: Item;
 
   nodeActions: MenuItem[] = [
     {
@@ -333,8 +343,9 @@ export class TraceabilityEditorComponent
   }
 
   private async processDemoEvent(data: Requirement[]) {
-    if (data && !this.localStorageService.hasKey('current-project'))
+    if (data && !this.localStorageService.hasKey('current-project')) {
       this.localStorageService.saveData('current-project', data);
+    }
     for (let req of data) {
       //console.log(JSON.stringify(req));
       let requirement = new RequirementItem(req);
@@ -366,10 +377,10 @@ export class TraceabilityEditorComponent
     }
     await this.arrange.layout({
       options: {
-        'elk.spacing.nodeNode': 300,
-        'elk.layered.spacing.nodeNodeBetweenLayers': 400,
+        'elk.spacing.nodeNode': 200,
+        'elk.layered.spacing.nodeNodeBetweenLayers': 200,
         'elk.alignment': 'RIGHT',
-        'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //also LINEAR_SEGMENTS
+        'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //LINEAR_SEGMENTS, BRANDES_KOEPF
         //'elk.graphviz.concentrate': true,
         'elk.direction': 'RIGHT', //we want DOWN but need to configure sockets,
         'elk.edge.type': 'DIRECTED',
@@ -390,7 +401,7 @@ export class TraceabilityEditorComponent
 
   get openedItemTitle(): string {
     //console.log('openedItem', this.openedItem);
-    if (this.openedItem) return this.openedItem.requirement.name;
+    if (this.openedItem) return this.openedItem.data.name;
     return 'item not defined';
   }
 

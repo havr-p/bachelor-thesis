@@ -8,7 +8,7 @@
            position="right"
            styleClass="p-sidebar-md">
   <ng-template pTemplate="header">
-    <p class="text-2xl"> {{this.openedItem.id + "           "}}         <span class="font-medium">{{openedItemTitle}}</span></p>
+    <p class="text-2xl"> {{this.openedItem.data.id + "           "}}         <span class="font-medium">{{openedItemTitle}}</span></p>
   </ng-template>
   <app-item-info-view *ngIf="this.openedItem"  [item]="openedItem" (toggleVisible)="onItemInfoViewToggleVisible($event)"></app-item-info-view>
 
