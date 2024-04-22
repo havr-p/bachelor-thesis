@@ -8,7 +8,6 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { MenuItem } from 'primeng/api';
 import { RequirementItem } from '../../../items/requirement-item';
 import { EventService } from '../../../services/event/event.service';
 
@@ -17,8 +16,6 @@ import { EventService } from '../../../services/event/event.service';
   styleUrls: ['./requirement-item.component.sass'],
   host: {
     'data-testid': 'item',
-    '(mouseenter)': 'onMouseEnter()',
-    '(mouseleave)': 'onMouseLeave()',
   },
 })
 export class RequirementItemComponent implements OnChanges, OnInit {
@@ -27,9 +24,6 @@ export class RequirementItemComponent implements OnChanges, OnInit {
   @Input() rendered!: () => void;
 
   seed = 0;
-
-  nodeActions: MenuItem[] = [];
-  displaySpeedDial = false;
 
   @HostBinding('class.selected') get selected() {
     // console.log(this.data.selected, this.data.label);
@@ -42,16 +36,6 @@ export class RequirementItemComponent implements OnChanges, OnInit {
   }
 
   @HostBinding('style.background-color') backgroundColor: string = '#fff';
-  onMouseEnter() {
-    console.log(this.data.data.name);
-    this.displaySpeedDial = true;
-    console.log('displaySpeedDial', this.displaySpeedDial);
-  }
-  onMouseLeave() {
-    console.log(this.data.data.name);
-    this.displaySpeedDial = false;
-    console.log('displaySpeedDial', this.displaySpeedDial);
-  }
 
   @HostBinding('style.border') get borderColorStyle(): string {
     return this.data.selected ? '4px solid red' : this.data.borderStyle;
@@ -64,32 +48,7 @@ export class RequirementItemComponent implements OnChanges, OnInit {
     this.cdr.detach();
   }
 
-  ngOnInit(): void {
-    this.nodeActions = [
-      {
-        label: 'Edit',
-        icon: 'pi pi-fw pi-pencil',
-        command: () => {
-          console.log('Edit');
-        },
-        tooltipOptions: {
-          tooltipLabel: 'Edit node',
-          tooltipPosition: 'bottom',
-        },
-      },
-      {
-        label: 'Delete',
-        icon: 'pi pi-fw pi-trash',
-        command: () => {
-          console.log('Delete');
-        },
-        tooltipOptions: {
-          tooltipLabel: 'Delete node',
-          tooltipPosition: 'bottom',
-        },
-      },
-    ];
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
