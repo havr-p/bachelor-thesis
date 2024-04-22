@@ -59,6 +59,7 @@ export class DockComponent implements OnInit {
                 name: 'New Requirement',
                 statement: 'New Requirement Description',
                 references: [],
+                mid: Number(this.id++).toString(),
               };
               this.eventService.publishEditorEvent(EditorEventType.ADD, data);
             },
