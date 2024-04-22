@@ -4,6 +4,7 @@ import { Requirement } from '../../models/requirement';
 import { EditorEventType } from '../../types';
 import { RequirementsService } from '../../services/requirements/requirements.service';
 import { EventService } from '../../services/event/event.service';
+import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-dock',
@@ -17,6 +18,7 @@ export class DockComponent implements OnInit {
   constructor(
     private requirementsService: RequirementsService,
     private eventService: EventService,
+    private localStorageService: LocalStorageService,
   ) {}
   ngOnInit() {
     this.menubarItems = [
