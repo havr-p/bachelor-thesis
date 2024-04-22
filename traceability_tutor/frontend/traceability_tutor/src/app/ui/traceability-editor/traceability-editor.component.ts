@@ -323,6 +323,9 @@ export class TraceabilityEditorComponent
               this.openedItem = event.data;
               this.sidebarVisible = true;
               break;
+            case EditorEventType.CLEAR:
+              await this.editor.clear();
+              break;
           }
         }
       },

@@ -67,7 +67,11 @@ export class DockComponent implements OnInit {
       },
 
       {
-        label: 'Quit',
+        label: 'Clear',
+        command: () => {
+          this.localStorageService.clearData();
+          this.eventService.publishEditorEvent(EditorEventType.CLEAR);
+        },
       },
     ];
   }
