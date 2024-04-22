@@ -10,4 +10,5 @@ export interface Requirement {
   statement: string;
   status?: string;
   references: ParentReference[];
+  mid: string;
 }
