@@ -28,6 +28,7 @@ def create_app(
         "https://traceability-tutor-git-python001-havr-ps-projects.vercel.app",
         "https://traceability-tutor-git-master-havr-ps-projects.vercel.app",
         "https://traceability-tutor-git-edit-requirements-havr-ps-projects.vercel.app",
+        "https://traceability-tutor-git-master-havr-ps-projects.vercel.app"
         "https://traceability-tutor-git-editrequirements-havr-ps-projects.vercel.app",
     ]
 

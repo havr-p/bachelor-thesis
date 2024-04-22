@@ -1,3 +1,4 @@
+import orjson
 from fastapi import APIRouter
 from starlette.datastructures import FormData
 from starlette.requests import Request
@@ -78,7 +79,8 @@ def create_traceability_tutor_router(
                  requirement=requirement
              )
          )
-        return JSONResponse(form_object)
+        serialized_form_object = orjson.dumps(form_object)
+        return JSONResponse(serialized_form_object)
 
     @router.post("/actions/update_requirement")
     async def update_requirement(request: Request):
