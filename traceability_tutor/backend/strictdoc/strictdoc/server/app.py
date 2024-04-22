@@ -1,5 +1,4 @@
 import os
-import tempfile
 import time
 
 from fastapi import FastAPI
@@ -10,9 +9,9 @@ from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.pickle import pickle_load
 from strictdoc.server.config import SDocServerEnvVariable
-from strictdoc.server.routers.traceability_tutor_router import create_traceability_tutor_router
 from strictdoc.server.routers.main_router import create_main_router
 from strictdoc.server.routers.other_router import create_other_router
+from strictdoc.server.routers.traceability_tutor_router import create_traceability_tutor_router
 
 
 def create_app(
@@ -27,6 +26,9 @@ def create_app(
         "http://localhost:4200",
         "https://bachelor-thesis-alpha.vercel.app",
         "https://traceability-tutor-git-python001-havr-ps-projects.vercel.app",
+        "https://traceability-tutor-git-master-havr-ps-projects.vercel.app",
+        "https://traceability-tutor-git-edit-requirements-havr-ps-projects.vercel.app",
+        "https://traceability-tutor-git-editrequirements-havr-ps-projects.vercel.app",
     ]
 
     # Uncomment this to enable performance measurements.
