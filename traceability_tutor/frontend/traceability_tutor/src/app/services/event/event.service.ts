@@ -19,7 +19,7 @@ export class EventService {
 
   constructor(private toastr: ToastrService) {}
 
-  publishEditorEvent(type: EditorEventType, data: any) {
+  publishEditorEvent(type: EditorEventType, data?: any) {
     console.log('publishEditorEvent', type, data);
     this.eventSource.next(new EditorEvent(type, data));
   }
