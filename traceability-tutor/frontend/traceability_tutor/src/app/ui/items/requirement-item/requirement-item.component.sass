@@ -1,0 +1,73 @@
+@use "sass:math"
+@import "../../../customization/vars"
+
+:host
+  display: block
+  border: 2px solid grey
+  border-radius: 10px
+  cursor: pointer
+  box-sizing: border-box
+  width: $node-width
+  height: auto
+  margin:  0 16px 0 0
+  position: relative
+  user-select: none
+  &:hover
+    background: #333
+  &.selected
+    border-color: red
+
+.title
+  color: black
+  font-family: sans-serif
+  font-size: 30px
+  display: flex
+  justify-content: center
+  align-items: center
+  text-align: center
+  padding: 20px
+
+.output
+  text-align: right
+
+.input
+  text-align: left
+
+.output-socket
+    text-align: right
+    margin-right: -1px
+    display: inline-block
+    vertical-align: middle
+.input-socket
+    text-align: left
+    margin-left: -1px
+    display: inline-block
+    vertical-align: middle
+
+.input-title, .output-title
+  vertical-align: middle
+  color: black
+  display: none //now we dont need this
+  font-family: sans-serif
+  font-size: 14px
+  margin: $socket-margin
+  line-height: $socket-size
+
+.input-control
+  z-index: 1
+  width: calc(100% - #{$socket-size + 2*$socket-margin})
+  vertical-align: middle
+  display: inline-block
+
+.control
+  padding: $socket-margin math.div($socket-size, 2) + $socket-margin
+
+.item-container
+  position: relative
+
+
+p-speedDial
+  position: absolute
+  top: -(math.div($speed-dial-size, 2))
+  right: math.div($speed-dial-size, 2)
+  transform: translate(50%, -50%)
