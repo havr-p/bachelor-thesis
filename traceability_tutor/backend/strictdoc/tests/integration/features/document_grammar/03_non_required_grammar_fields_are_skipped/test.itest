@@ -1,3 +1,0 @@
-RUN: %expect_exit 0 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
-
-CHECK:Export completed.

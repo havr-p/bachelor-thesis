@@ -1,8 +1,0 @@
-[DOCUMENT]
-TITLE: Doc with a section
-
-[SECTION]
-UID: SECTION
-TITLE: Referenced section
-
-[/SECTION]

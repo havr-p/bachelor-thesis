@@ -1,8 +1,0 @@
-[DOCUMENT]
-TITLE: Hello world doc
-OPTIONS:
-  AUTO_LEVELS: Off
-
-[FRAGMENT_FROM_FILE]
-FILE: input.ssec
-
