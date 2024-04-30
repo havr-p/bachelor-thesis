@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://frankfurt-postgres.render.com/ttutor}
+    username: ${JDBC_DATABASE_USERNAME:admin}
+    password: ${JDBC_DATABASE_PASSWORD:UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby}
+    dbcp2:
+      max-wait-millis: 30000
+      validation-query: select 1
+      validation-query-timeout: 30
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format-sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        id:
+          new_generator_mappings: true
+error:
+  handling:
+    http-status-in-json-response: true
+    exception-logging: NO_LOGGING
+    full-stacktrace-http-statuses: 5xx
+    log-levels:
+      5xx: ERROR
+springdoc:
+  pathsToMatch: /api/**
