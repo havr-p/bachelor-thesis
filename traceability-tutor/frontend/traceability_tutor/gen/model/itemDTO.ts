@@ -5,14 +5,14 @@
  * OpenAPI spec version: v0
  */
 import type { ItemDTOData } from './itemDTOData';
-import type { ItemDTOHistoryAction } from './itemDTOHistoryAction';
-import type { ItemDTOItemType } from './itemDTOItemType';
+import type { HistoryAction } from './historyAction';
+import type { ItemType } from './itemType';
 
 export interface ItemDTO {
   data: ItemDTOData;
-  historyAction?: ItemDTOHistoryAction;
+  historyAction?: HistoryAction;
   id?: number;
-  itemType: ItemDTOItemType;
+  itemType: ItemType;
   /**
    * @minLength 0
    * @maxLength 255

@@ -17,6 +17,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
+    static {
+        // use Reusable Enums for Swagger generation:
+        // see https://springdoc.org/#how-can-i-apply-enumasref-true-to-all-enums
+        io.swagger.v3.core.jackson.ModelResolver.enumsAsRef = true;
+    }
 
     @Bean
     public OpenAPI openApiSpec() {

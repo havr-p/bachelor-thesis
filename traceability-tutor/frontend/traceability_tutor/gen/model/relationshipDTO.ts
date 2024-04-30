@@ -4,8 +4,8 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import type { RelationshipDTOHistoryAction } from './relationshipDTOHistoryAction';
-import type { RelationshipDTOType } from './relationshipDTOType';
+import type { HistoryAction } from './historyAction';
+import type { RelationshipType } from './relationshipType';
 
 export interface RelationshipDTO {
   /**
@@ -14,9 +14,9 @@ export interface RelationshipDTO {
    */
   description?: string;
   endItem: number;
-  historyAction?: RelationshipDTOHistoryAction;
+  historyAction?: HistoryAction;
   id?: number;
   release?: number;
   startItem: number;
-  type: RelationshipDTOType;
+  type: RelationshipType;
 }
