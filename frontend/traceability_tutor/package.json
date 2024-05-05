@@ -21,6 +21,8 @@
     "@angular/router": "^17.2.2",
     "@types/quill": "^2.0.14",
     "@types/three": "^0.156.0",
+    "axios": "^1.6.8",
+    "bootstrap": "^5.3.3",
     "elkjs": "^0.8.2",
     "jwt-decode": "^4.0.0",
     "ngx-toastr": "^18.0.0",

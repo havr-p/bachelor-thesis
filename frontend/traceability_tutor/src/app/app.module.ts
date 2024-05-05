@@ -12,7 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FormsModule } from '@angular/forms';
 import { KeyValuePipe, NgForOf, NgOptimizedImage } from '@angular/common';
-import { EditorComponent } from './ui/editor/editor.component';
+import { TraceabilityEditorComponent } from './ui/traceability-editor/traceability-editor.component';
 import { RequirementItemComponent } from './ui/items/requirement-item/requirement-item.component';
 import { PanelModule } from 'primeng/panel';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,9 +23,10 @@ import { SharedModule } from './shared/shared.module';
 import { ReteModule } from 'rete-angular-plugin/17';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastrModule } from 'ngx-toastr';
-import { CreateProjectFormComponent } from './ui/forms/create-project.form/create-project.form.component';
-import { LoginComponent } from './login/login.component';
-import {PasswordModule} from "primeng/password";
+import {AuthComponent} from "./ui/auth/auth.component";
+import { LoginFormComponent } from './ui/login-form/login-form.component';
+import {TabViewModule} from "primeng/tabview";
+import {InputTextModule} from "primeng/inputtext";
 
 @NgModule({
   declarations: [
@@ -33,9 +34,9 @@ import {PasswordModule} from "primeng/password";
     CustomSocketComponent,
     CustomConnectionComponent,
     DockComponent,
-    EditorComponent,
+    TraceabilityEditorComponent,
     RequirementItemComponent,
-    LoginComponent,
+    LoginFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,10 +57,14 @@ import {PasswordModule} from "primeng/password";
     ProgressSpinnerModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    CreateProjectFormComponent,
-    PasswordModule,
+    AuthComponent,
+    TabViewModule,
+    InputTextModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
+  exports: [
+    LoginFormComponent
+  ]
 })
 export class AppModule {}
