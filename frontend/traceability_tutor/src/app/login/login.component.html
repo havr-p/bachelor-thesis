@@ -1,0 +1,18 @@
+<h1>Login</h1>
+
+<form (ngSubmit)="login()" class="form-horizontal" #loginForm="ngForm">
+  <div class="p-field">
+    <label for="username">Username</label>
+    <input id="username" type="text" name="username" pInputText class="form-control" [(ngModel)]="username" required>
+  </div>
+  <p>
+  <div class="p-field">
+    <label for="password">Password</label>
+    <p-password id="password" name="password" [(ngModel)]="password" [feedback]="false" required></p-password>
+  </div>
+  <p>
+    <button pButton type="submit" label="Login" icon="pi pi-check" [disabled]="!loginForm.form.valid"></button>
+  </p>
+</form>
+
+<p>{{message}}</p>

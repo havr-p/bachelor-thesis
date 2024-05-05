@@ -1,0 +1,11 @@
+<form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="project-form">
+  <div class="form-field">
+    <label for="name">Project Name:</label>
+    <input type="text" pInputText id="name" formControlName="name" class="input-text">
+  </div>
+  <div class="form-field">
+    <label for="repoUrl">Repository URL:</label>
+    <input type="text" pInputText id="repoUrl" formControlName="repoUrl" class="input-text">
+  </div>
+  <button type="submit" [disabled]="!projectForm.valid" class="submit-btn">Create Project</button>
+</form>

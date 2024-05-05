@@ -17,6 +17,6 @@ public class UserDTO {
     private String email;
 
     @NotNull
-    private String passwordHash;
+    private String password;
 
 }

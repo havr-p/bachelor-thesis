@@ -5,6 +5,7 @@ import { EditorEventType } from '../../types';
 import { RequirementsService } from '../../services/requirements/requirements.service';
 import { EventService } from '../../services/event/event.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import {StateManager} from "../../models/state";
 
 @Component({
   selector: 'app-dock',
@@ -19,6 +20,7 @@ export class DockComponent implements OnInit {
     private requirementsService: RequirementsService,
     private eventService: EventService,
     private localStorageService: LocalStorageService,
+    private stateManager: StateManager,
   ) {}
   ngOnInit() {
     this.menubarItems = [
@@ -28,9 +30,8 @@ export class DockComponent implements OnInit {
         items: [
           {
             label: 'New...',
-            icon: 'pi pi-fw pi-video',
             command: () => {
-              this.loadAll();
+              this.createNewProjectDialogVisible = true;
             },
           },
         ],
@@ -58,8 +59,6 @@ export class DockComponent implements OnInit {
                 level: 'stakeholder',
                 name: 'New Requirement',
                 statement: 'New Requirement Description',
-                references: [],
-                mid: Number(this.id++).toString(),
               };
               this.eventService.publishEditorEvent(EditorEventType.ADD, data);
             },

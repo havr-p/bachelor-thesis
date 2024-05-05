@@ -9,6 +9,4 @@ export interface Requirement {
   name: string;
   statement: string;
   status?: string;
-  references: ParentReference[];
-  mid: string;
 }

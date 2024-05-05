@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TraceabilityEditorComponent } from './traceability-editor.component';
+import { EditorComponent } from './editor.component';
 
 describe('TraceabilityEditorComponent', () => {
-  let component: TraceabilityEditorComponent;
-  let fixture: ComponentFixture<TraceabilityEditorComponent>;
+  let component: EditorComponent;
+  let fixture: ComponentFixture<EditorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TraceabilityEditorComponent]
+      declarations: [EditorComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(TraceabilityEditorComponent);
+
+    fixture = TestBed.createComponent(EditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -5,4 +5,5 @@ import uniba.fmph.traceability_tutor.domain.User;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    User findByUsername(String username);
 }

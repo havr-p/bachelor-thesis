@@ -51,7 +51,7 @@ import { getDOMSocketPosition } from 'rete-render-utils';
 
 type Schemes = GetSchemes<
   ItemProps,
-  Connection<RequirementItem, RequirementItem>
+  Connection<ItemProps, ItemProps>
 >;
 type AreaExtra =
   | Area2D<Schemes>
@@ -239,11 +239,11 @@ export async function createEditor(
 }
 
 @Component({
-  selector: 'app-traceability-editor',
-  templateUrl: './traceability-editor.component.html',
-  styleUrl: './traceability-editor.component.scss',
+  selector: 'app-editor',
+  templateUrl: './editor.component.html',
+  styleUrl: './editor.component.scss',
 })
-export class TraceabilityEditorComponent
+export class EditorComponent
   implements AfterViewInit, OnInit, OnDestroy
 {
   @ViewChild('rete') container!: ElementRef<HTMLElement>;
@@ -361,20 +361,21 @@ export class TraceabilityEditorComponent
 
     this.area.use(this.arrange);
 
-    for (let node of this.editor.getNodes()) {
-      //console.log(node);
-      if (node instanceof RequirementItem) {
-        const parentRefs = node.data.references;
-        for (const ref of parentRefs) {
-          const parent = this.editor.getNode(ref.parentId);
-          if (parent) {
-            await this.editor.addConnection(
-              new Connection(parent, parent.id, node, node.id),
-            );
-          }
-        }
-      }
-    }
+    // for (let node of this.editor.getNodes()) {
+    //   //console.log(node);
+    //   if (node instanceof RequirementItem) {
+    //     const parentRefs = node.data.references;
+    //     for (const ref of parentRefs) {
+    //       const parent = this.editor.getNode(ref.parentId);
+    //       if (parent) {
+    //         await this.editor.addConnection(
+    //           new Connection(parent, parent.id, node, node.id),
+    //         );
+    //       }
+    //     }
+    //   }
+    // }
+    //fixme add connections with help of relationships
     await this.arrange.layout({
       options: {
         'elk.spacing.nodeNode': 200,

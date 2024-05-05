@@ -38,10 +38,9 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private String email;
+    private String username;
 
-    @Column(nullable = false, columnDefinition = "text")
-    private String passwordHash;
+    private String password;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

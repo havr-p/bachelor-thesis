@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+export const EDITOR_STATE_KEY = 'editorState';
+export const CURRENT_PROJECT_KEY = 'currentProject';
 @Injectable({
   providedIn: 'root',
 })
