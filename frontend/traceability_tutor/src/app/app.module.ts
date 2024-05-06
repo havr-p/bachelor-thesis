@@ -12,7 +12,6 @@ import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FormsModule } from '@angular/forms';
 import { KeyValuePipe, NgForOf, NgOptimizedImage } from '@angular/common';
-import { TraceabilityEditorComponent } from './ui/traceability-editor/traceability-editor.component';
 import { RequirementItemComponent } from './ui/items/requirement-item/requirement-item.component';
 import { PanelModule } from 'primeng/panel';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -27,6 +26,11 @@ import {AuthComponent} from "./ui/auth/auth.component";
 import { LoginFormComponent } from './ui/login-form/login-form.component';
 import {TabViewModule} from "primeng/tabview";
 import {InputTextModule} from "primeng/inputtext";
+import {EditorComponent} from "./ui/editor/editor.component";
+import {CreateProjectFormComponent} from "./ui/forms/create-project.form/create-project.form.component";
+import { EditorWrapperComponent } from './ui/editor-wrapper/editor-wrapper.component';
+import {provideRouter} from "@angular/router";
+import {AppRoutingModule} from "./app-routing.module";
 
 @NgModule({
   declarations: [
@@ -34,9 +38,9 @@ import {InputTextModule} from "primeng/inputtext";
     CustomSocketComponent,
     CustomConnectionComponent,
     DockComponent,
-    TraceabilityEditorComponent,
+    EditorComponent,
     RequirementItemComponent,
-    LoginFormComponent,
+    EditorWrapperComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,11 +64,13 @@ import {InputTextModule} from "primeng/inputtext";
     AuthComponent,
     TabViewModule,
     InputTextModule,
+    LoginFormComponent,
+    CreateProjectFormComponent,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent],
   exports: [
-    LoginFormComponent
   ]
 })
 export class AppModule {}

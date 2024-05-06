@@ -12,7 +12,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let token = sessionStorage.getItem("app.token");
+    let token = localStorage.getItem("auth_token");
     if (token) {
       request = request.clone({
         setHeaders: {
@@ -28,7 +28,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private handleErrorRes(error: HttpErrorResponse): Observable<never> {
     if (error.status === 401) {
-      this.router.navigateByUrl("/login", {replaceUrl: true});
+      this.router.navigateByUrl("/auth", {replaceUrl: true});
     }
     return throwError(() => error);
   }

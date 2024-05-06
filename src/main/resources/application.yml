@@ -30,3 +30,9 @@ error:
       5xx: ERROR
 springdoc:
   pathsToMatch: /api/**
+
+
+security:
+  jwt:
+    token:
+      secret-key: my-secret-key

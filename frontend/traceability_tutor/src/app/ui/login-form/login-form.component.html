@@ -4,8 +4,8 @@
       <p-tabPanel header="Login">
         <form (ngSubmit)="onSubmitLogin()" #loginForm="ngForm">
           <div class="form-group">
-            <label for="loginName">Username</label>
-            <input type="text" id="loginName" name="login" pInputText class="form-control" [(ngModel)]="login" />
+            <label for="loginName">Email</label>
+            <input type="text" id="loginName" name="login" pInputText class="form-control" [(ngModel)]="email" />
           </div>
 
           <div class="form-group">
@@ -31,7 +31,7 @@
 
           <div class="form-group">
             <label for="registerLogin">Username</label>
-            <input type="text" id="registerLogin" name="login" pInputText class="form-control" [(ngModel)]="login" />
+            <input type="text" id="registerLogin" name="login" pInputText class="form-control" [(ngModel)]="email" />
           </div>
 
           <div class="form-group">

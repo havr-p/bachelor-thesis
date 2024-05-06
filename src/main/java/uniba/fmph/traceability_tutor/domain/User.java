@@ -9,8 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
-import lombok.Getter;
-import lombok.Setter;
+
+import jakarta.validation.constraints.Size;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -19,8 +20,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "\"User\"")
 @EntityListeners(AuditingEntityListener.class)
-@Getter
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
 public class User {
 
     @Id
@@ -38,9 +41,15 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private String username;
+    private String email;
 
+    @Column(nullable = false)
+    @Size(max = 100)
     private String password;
+
+    private String firstName;
+    private String lastName;
+    private String token;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -1,25 +1,36 @@
 package uniba.fmph.traceability_tutor.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import uniba.fmph.traceability_tutor.config.UserAuthenticationProvider;
 import uniba.fmph.traceability_tutor.model.CredentialsDTO;
+import uniba.fmph.traceability_tutor.model.SignUpDTO;
 import uniba.fmph.traceability_tutor.model.UserDTO;
 import uniba.fmph.traceability_tutor.service.UserService;
 
+import java.net.URI;
+
 @RestController
+@RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final UserAuthenticationProvider userAuthenticationProvider;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ResponseEntity<UserDTO> login(@RequestBody CredentialsDTO credentials) {
         UserDTO userDTO = userService.login(credentials);
         return ResponseEntity.ok(userDTO);
+    }
+
+    @PostMapping("/api/register")
+    public ResponseEntity<UserDTO> register(@RequestBody @Valid SignUpDTO user) {
+        UserDTO createdUser = userService.register(user);
+        createdUser.setToken(userAuthenticationProvider.createToken(createdUser));
+        return ResponseEntity.created(URI.create("/api/users/" + createdUser.getId())).body(createdUser);
     }
 }
