@@ -17,5 +17,6 @@ export * from './projectDTO';
 export * from './relationshipDTO';
 export * from './relationshipType';
 export * from './releaseDTO';
+export * from './role';
 export * from './signUpDTO';
 export * from './userDTO';

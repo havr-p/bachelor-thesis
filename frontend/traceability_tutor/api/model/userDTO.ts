@@ -4,6 +4,7 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
+import type { Role } from './role';
 
 export interface UserDTO {
   /**
@@ -15,5 +16,6 @@ export interface UserDTO {
   id?: number;
   lastName?: string;
   password: string;
+  role?: Role;
   token?: string;
 }

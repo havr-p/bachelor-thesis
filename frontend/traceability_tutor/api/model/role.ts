@@ -5,7 +5,8 @@
  * OpenAPI spec version: v0
  */
 
-export interface CredentialsDTO {
-  password?: string;
-  username?: string;
+export enum Role {
+  ROLE_USER= 'ROLE_USER',
+  ROLE_ADMIN= 'ROLE_ADMIN',
+
 }
