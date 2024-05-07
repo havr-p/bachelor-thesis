@@ -1,3 +1,12 @@
-dock {
+.dock {
   width: 100%;
+  display: flex;
+  align-items: center;
+
+}
+
+.menuItem {
+  text-decoration: none;
+  align-content: center;
+  align-self: center;
 }

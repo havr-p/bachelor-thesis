@@ -26,7 +26,6 @@ export class DockComponent implements OnInit {
     this.menubarItems = [
       {
         label: 'Project',
-        icon: 'pi pi-fw pi-plus',
         items: [
           {
             label: 'New...',
@@ -38,7 +37,6 @@ export class DockComponent implements OnInit {
       },
       {
         label: 'Load demo project',
-        icon: 'pi pi-fw pi-video',
         command: async () => {
           let data = await this.loadAll();
           this.eventService.publishEditorEvent(EditorEventType.DEMO, data);
@@ -46,7 +44,7 @@ export class DockComponent implements OnInit {
       },
       {
         label: 'Add node',
-        icon: 'pi pi-fw pi-trash',
+        styleClass: 'menuItem',
         items: [
           {
             label: 'Requirement',
