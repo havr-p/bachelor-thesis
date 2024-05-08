@@ -71,5 +71,12 @@ public class ProjectResource {
         return ResponseEntity.ok(id);
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<List<ProjectDTO>> getUserProjects() {
+        return ResponseEntity.ok(projectService.findByOwner());
+    }
+
+
+
 
 }

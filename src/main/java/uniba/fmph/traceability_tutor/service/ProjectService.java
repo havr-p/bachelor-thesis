@@ -105,4 +105,15 @@ public class ProjectService {
         return projectRepository.save(project).getId();
     }
 
+    public List<ProjectDTO> findByOwner() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof User user) {
+            return projectRepository.findAllByOwnerOrderByLastOpened(user).stream()
+                    .map(projectMapper::toDto).toList();
+        } else {
+            throw new AccessDeniedException("Unauthorized: Principal is not of type User");
+        }
+    }
+
 }
