@@ -13,7 +13,7 @@ import uniba.fmph.traceability_tutor.util.AppException;
 @ControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler(value = { AppException.class })
+    @ExceptionHandler(value = {AppException.class})
     @ResponseBody
     public ResponseEntity<ErrorDTO> handleException(AppException ex) {
         return ResponseEntity
@@ -21,7 +21,7 @@ public class RestExceptionHandler {
                 .body(new ErrorDTO(ex.getMessage()));
     }
 
-    @ExceptionHandler(value = { JWTVerificationException.class })
+    @ExceptionHandler(value = {JWTVerificationException.class})
     @ResponseBody
     public ResponseEntity<ErrorDTO> handleException(JWTVerificationException ex) {
         return ResponseEntity

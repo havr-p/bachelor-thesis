@@ -1,3 +1,4 @@
+<app-dock [items]="dockItems"></app-dock>
 <p-dataView #dv [value]="projects" [rows]="5" [paginator]="true" [alwaysShowPaginator]="false"
             emptyMessage="You haven't created any projects.">
   <ng-template pTemplate="list" let-projects>
@@ -29,3 +30,10 @@
     </div>
   </ng-template>
 </p-dataView>
+
+
+<p-dialog header="Create project" [(visible)]="createNewProjectDialogVisible" [modal]="true"
+          [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+  <app-create-project-form></app-create-project-form>
+
+</p-dialog>

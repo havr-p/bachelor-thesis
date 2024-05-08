@@ -1,12 +1,7 @@
 package uniba.fmph.traceability_tutor.service;
 
-import java.nio.CharBuffer;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.config.UserAuthenticationProvider;
@@ -21,6 +16,10 @@ import uniba.fmph.traceability_tutor.repos.UserRepository;
 import uniba.fmph.traceability_tutor.util.AppException;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
+
+import java.nio.CharBuffer;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -84,7 +83,7 @@ public class UserService {
     }
 
     public UserDTO login(CredentialsDTO credentials) {
-        User user = userRepository.findByEmail(credentials.email()).orElseThrow(()->new AppException("User not found", HttpStatus.NOT_FOUND));
+        User user = userRepository.findByEmail(credentials.email()).orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
         if (passwordEncoder.matches(CharBuffer.wrap(credentials.password()), user.getPassword())) {
             return userMapper.toUserDTO(user);
         }
@@ -105,6 +104,7 @@ public class UserService {
 
         return userMapper.toUserDTO(savedUser);
     }
+
     public ReferencedWarning getReferencedWarning(final Long id) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final User user = userRepository.findById(id)

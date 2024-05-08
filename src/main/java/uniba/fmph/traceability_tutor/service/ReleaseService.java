@@ -1,6 +1,5 @@
 package uniba.fmph.traceability_tutor.service;
 
-import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.Item;
@@ -15,6 +14,8 @@ import uniba.fmph.traceability_tutor.repos.ReleaseRepository;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
+import java.util.List;
+
 
 @Service
 public class ReleaseService {
@@ -25,8 +26,8 @@ public class ReleaseService {
     private final RelationshipRepository relationshipRepository;
 
     public ReleaseService(final ReleaseRepository releaseRepository,
-            final ProjectRepository projectRepository, final ItemRepository itemRepository,
-            final RelationshipRepository relationshipRepository) {
+                          final ProjectRepository projectRepository, final ItemRepository itemRepository,
+                          final RelationshipRepository relationshipRepository) {
         this.releaseRepository = releaseRepository;
         this.projectRepository = projectRepository;
         this.itemRepository = itemRepository;

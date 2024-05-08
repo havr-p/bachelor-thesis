@@ -4,9 +4,9 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import type { ItemDTOData } from './itemDTOData';
-import type { HistoryAction } from './historyAction';
-import type { ItemType } from './itemType';
+import type {ItemDTOData} from './itemDTOData';
+import type {HistoryAction} from './historyAction';
+import type {ItemType} from './itemType';
 
 export interface ItemDTO {
   data: ItemDTOData;

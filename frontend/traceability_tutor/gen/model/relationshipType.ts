@@ -6,8 +6,8 @@
  */
 
 export enum RelationshipType {
-  DERIVES= 'DERIVES',
-  SATISFIES= 'SATISFIES',
-  VALIDATES= 'VALIDATES',
+  DERIVES = 'DERIVES',
+  SATISFIES = 'SATISFIES',
+  VALIDATES = 'VALIDATES',
 
 }

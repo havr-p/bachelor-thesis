@@ -41,7 +41,6 @@ import {AppErrorHandler} from "./interceptors/app-error-handler";
     AppComponent,
     CustomSocketComponent,
     CustomConnectionComponent,
-    DockComponent,
     EditorComponent,
     RequirementItemComponent,
     EditorWrapperComponent,
@@ -71,7 +70,8 @@ import {AppErrorHandler} from "./interceptors/app-error-handler";
     InputTextModule,
     LoginFormComponent,
     CreateProjectFormComponent,
-    AppRoutingModule
+    AppRoutingModule,
+    DockComponent
   ],
   providers: [
     {
@@ -87,7 +87,9 @@ import {AppErrorHandler} from "./interceptors/app-error-handler";
     AppErrorHandler
   ],
   bootstrap: [AppComponent],
-  exports: []
+  exports: [
+    DockComponent
+  ]
 })
 export class AppModule {
 }

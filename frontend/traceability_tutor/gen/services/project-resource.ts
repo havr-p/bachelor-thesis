@@ -4,29 +4,16 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import {
-  HttpClient
-} from '@angular/common/http'
-import type {
-  HttpContext,
-  HttpHeaders,
-  HttpParams
-} from '@angular/common/http'
-import {
-  Injectable
-} from '@angular/core'
-import {
-  Observable
-} from 'rxjs'
-import type {
-  ProjectDTO
-} from '../model'
-
+import type {HttpContext, HttpHeaders, HttpParams} from '@angular/common/http'
+import {HttpClient} from '@angular/common/http'
+import {Injectable} from '@angular/core'
+import {Observable} from 'rxjs'
+import type {ProjectDTO} from '../model'
 
 
 type HttpClientOptions = {
   headers?: HttpHeaders | {
-      [header: string]: string | string[];
+    [header: string]: string | string[];
   };
   context?: HttpContext;
   observe?: any;
@@ -39,61 +26,69 @@ type HttpClientOptions = {
 };
 
 
-
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class ProjectResourceService {
   constructor(
     private http: HttpClient,
-  ) {} getProject<TData = ProjectDTO>(
+  ) {
+  }
+
+  getProject<TData = ProjectDTO>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/projects/${id}`,options
+      `/api/projects/${id}`, options
     );
   }
- updateProject<TData = number>(
+
+  updateProject<TData = number>(
     id: number,
     projectDTO: ProjectDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.put<TData>(
       `/api/projects/${id}`,
-      projectDTO,options
+      projectDTO, options
     );
   }
- deleteProject<TData = void>(
+
+  deleteProject<TData = void>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.delete<TData>(
-      `/api/projects/${id}`,options
+      `/api/projects/${id}`, options
     );
   }
- updateLastOpened<TData = number>(
+
+  updateLastOpened<TData = number>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.put<TData>(
-      `/api/projects/open/${id}`,undefined,options
+      `/api/projects/open/${id}`, undefined, options
     );
   }
- getAllProjects<TData = ProjectDTO[]>(
-     options?: HttpClientOptions
-  ): Observable<TData>  {
+
+  getAllProjects<TData = ProjectDTO[]>(
+    options?: HttpClientOptions
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/projects`,options
+      `/api/projects`, options
     );
   }
- createProject<TData = number>(
+
+  createProject<TData = number>(
     projectDTO: ProjectDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.post<TData>(
       `/api/projects`,
-      projectDTO,options
+      projectDTO, options
     );
   }
- getUserProjects<TData = ProjectDTO[]>(
-     options?: HttpClientOptions
-  ): Observable<TData>  {
+
+  getUserProjects<TData = ProjectDTO[]>(
+    options?: HttpClientOptions
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/projects/user`,options
+      `/api/projects/user`, options
     );
   }
 }

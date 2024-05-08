@@ -6,9 +6,9 @@
  */
 
 export enum ItemType {
-  REQUIREMENT= 'REQUIREMENT',
-  SOURCE= 'SOURCE',
-  TEST= 'TEST',
-  DESIGN= 'DESIGN',
+  REQUIREMENT = 'REQUIREMENT',
+  SOURCE = 'SOURCE',
+  TEST = 'TEST',
+  DESIGN = 'DESIGN',
 
 }

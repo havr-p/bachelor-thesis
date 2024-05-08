@@ -4,7 +4,7 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import type { Role } from './role';
+import type {Role} from './role';
 
 export interface UserDTO {
   /**

@@ -5,4 +5,4 @@
  * OpenAPI spec version: v0
  */
 
-export type ItemDTOData = {[key: string]: string};
+export type ItemDTOData = { [key: string]: string };

@@ -4,31 +4,16 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import {
-  HttpClient
-} from '@angular/common/http'
-import type {
-  HttpContext,
-  HttpHeaders,
-  HttpParams
-} from '@angular/common/http'
-import {
-  Injectable
-} from '@angular/core'
-import {
-  Observable
-} from 'rxjs'
-import type {
-  CredentialsDTO,
-  SignUpDTO,
-  UserDTO
-} from '../model'
-
+import type {HttpContext, HttpHeaders, HttpParams} from '@angular/common/http'
+import {HttpClient} from '@angular/common/http'
+import {Injectable} from '@angular/core'
+import {Observable} from 'rxjs'
+import type {CredentialsDTO, SignUpDTO, UserDTO} from '../model'
 
 
 type HttpClientOptions = {
   headers?: HttpHeaders | {
-      [header: string]: string | string[];
+    [header: string]: string | string[];
   };
   context?: HttpContext;
   observe?: any;
@@ -41,32 +26,36 @@ type HttpClientOptions = {
 };
 
 
-
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AuthControllerService {
   constructor(
     private http: HttpClient,
-  ) {} register<TData = UserDTO>(
+  ) {
+  }
+
+  register<TData = UserDTO>(
     signUpDTO: SignUpDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.post<TData>(
       `/api/register`,
-      signUpDTO,options
+      signUpDTO, options
     );
   }
- login<TData = UserDTO>(
+
+  login<TData = UserDTO>(
     credentialsDTO: CredentialsDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.post<TData>(
       `/api/login`,
-      credentialsDTO,options
+      credentialsDTO, options
     );
   }
- renewToken<TData = string>(
+
+  renewToken<TData = string>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/renewToken/${id}`,options
+      `/api/renewToken/${id}`, options
     );
   }
 }

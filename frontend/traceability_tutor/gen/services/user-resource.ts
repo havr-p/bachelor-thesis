@@ -4,29 +4,16 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import {
-  HttpClient
-} from '@angular/common/http'
-import type {
-  HttpContext,
-  HttpHeaders,
-  HttpParams
-} from '@angular/common/http'
-import {
-  Injectable
-} from '@angular/core'
-import {
-  Observable
-} from 'rxjs'
-import type {
-  UserDTO
-} from '../model'
-
+import type {HttpContext, HttpHeaders, HttpParams} from '@angular/common/http'
+import {HttpClient} from '@angular/common/http'
+import {Injectable} from '@angular/core'
+import {Observable} from 'rxjs'
+import type {UserDTO} from '../model'
 
 
 type HttpClientOptions = {
   headers?: HttpHeaders | {
-      [header: string]: string | string[];
+    [header: string]: string | string[];
   };
   context?: HttpContext;
   observe?: any;
@@ -39,54 +26,61 @@ type HttpClientOptions = {
 };
 
 
-
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class UserResourceService {
   constructor(
     private http: HttpClient,
-  ) {} getUser<TData = UserDTO>(
+  ) {
+  }
+
+  getUser<TData = UserDTO>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/users/${id}`,options
+      `/api/users/${id}`, options
     );
   }
- updateUser<TData = number>(
+
+  updateUser<TData = number>(
     id: number,
     userDTO: UserDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.put<TData>(
       `/api/users/${id}`,
-      userDTO,options
+      userDTO, options
     );
   }
- deleteUser<TData = void>(
+
+  deleteUser<TData = void>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.delete<TData>(
-      `/api/users/${id}`,options
+      `/api/users/${id}`, options
     );
   }
- getAllUsers<TData = UserDTO[]>(
-     options?: HttpClientOptions
-  ): Observable<TData>  {
+
+  getAllUsers<TData = UserDTO[]>(
+    options?: HttpClientOptions
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/users`,options
+      `/api/users`, options
     );
   }
- createUser<TData = number>(
+
+  createUser<TData = number>(
     userDTO: UserDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.post<TData>(
       `/api/users`,
-      userDTO,options
+      userDTO, options
     );
   }
- getUserByToken<TData = UserDTO>(
+
+  getUserByToken<TData = UserDTO>(
     token: string, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/users/verify/${token}`,options
+      `/api/users/verify/${token}`, options
     );
   }
 }

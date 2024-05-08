@@ -1,21 +1,23 @@
 @use "sass:math"
 @import "../../../customization/vars"
 
-  :host
-    display: block
-    border: 2px solid grey
-    border-radius: 10px
-    cursor: pointer
-    box-sizing: border-box
-    width: $node-width
-    height: auto
-    margin: 0 16px 0 0
-    position: relative
-    user-select: none
-    &:hover
-      background: #333
-    &.selected
-      border-color: red
+\:host
+  display: block
+  border: 2px solid grey
+  border-radius: 10px
+  cursor: pointer
+  box-sizing: border-box
+  width: $node-width
+  height: auto
+  margin: 0 16px 0 0
+  position: relative
+  user-select: none
+
+  &:hover
+    background: #333
+
+  &.selected
+    border-color: red
 
 .title
   color: black

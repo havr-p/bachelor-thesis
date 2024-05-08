@@ -4,7 +4,7 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import type { ApiFieldErrorRejectedValue } from './apiFieldErrorRejectedValue';
+import type {ApiFieldErrorRejectedValue} from './apiFieldErrorRejectedValue';
 
 export interface ApiFieldError {
   code?: string;

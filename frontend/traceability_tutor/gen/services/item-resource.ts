@@ -4,29 +4,16 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import {
-  HttpClient
-} from '@angular/common/http'
-import type {
-  HttpContext,
-  HttpHeaders,
-  HttpParams
-} from '@angular/common/http'
-import {
-  Injectable
-} from '@angular/core'
-import {
-  Observable
-} from 'rxjs'
-import type {
-  ItemDTO
-} from '../model'
-
+import type {HttpContext, HttpHeaders, HttpParams} from '@angular/common/http'
+import {HttpClient} from '@angular/common/http'
+import {Injectable} from '@angular/core'
+import {Observable} from 'rxjs'
+import type {ItemDTO} from '../model'
 
 
 type HttpClientOptions = {
   headers?: HttpHeaders | {
-      [header: string]: string | string[];
+    [header: string]: string | string[];
   };
   context?: HttpContext;
   observe?: any;
@@ -39,47 +26,53 @@ type HttpClientOptions = {
 };
 
 
-
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class ItemResourceService {
   constructor(
     private http: HttpClient,
-  ) {} getItem<TData = ItemDTO>(
+  ) {
+  }
+
+  getItem<TData = ItemDTO>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/items/${id}`,options
+      `/api/items/${id}`, options
     );
   }
- updateItem<TData = number>(
+
+  updateItem<TData = number>(
     id: number,
     itemDTO: ItemDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.put<TData>(
       `/api/items/${id}`,
-      itemDTO,options
+      itemDTO, options
     );
   }
- deleteItem<TData = void>(
+
+  deleteItem<TData = void>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.delete<TData>(
-      `/api/items/${id}`,options
+      `/api/items/${id}`, options
     );
   }
- getAllItems<TData = ItemDTO[]>(
-     options?: HttpClientOptions
-  ): Observable<TData>  {
+
+  getAllItems<TData = ItemDTO[]>(
+    options?: HttpClientOptions
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/items`,options
+      `/api/items`, options
     );
   }
- createItem<TData = number>(
+
+  createItem<TData = number>(
     itemDTO: ItemDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.post<TData>(
       `/api/items`,
-      itemDTO,options
+      itemDTO, options
     );
   }
 }

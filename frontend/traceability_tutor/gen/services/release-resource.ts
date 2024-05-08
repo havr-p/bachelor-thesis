@@ -4,29 +4,16 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import {
-  HttpClient
-} from '@angular/common/http'
-import type {
-  HttpContext,
-  HttpHeaders,
-  HttpParams
-} from '@angular/common/http'
-import {
-  Injectable
-} from '@angular/core'
-import {
-  Observable
-} from 'rxjs'
-import type {
-  ReleaseDTO
-} from '../model'
-
+import type {HttpContext, HttpHeaders, HttpParams} from '@angular/common/http'
+import {HttpClient} from '@angular/common/http'
+import {Injectable} from '@angular/core'
+import {Observable} from 'rxjs'
+import type {ReleaseDTO} from '../model'
 
 
 type HttpClientOptions = {
   headers?: HttpHeaders | {
-      [header: string]: string | string[];
+    [header: string]: string | string[];
   };
   context?: HttpContext;
   observe?: any;
@@ -39,47 +26,53 @@ type HttpClientOptions = {
 };
 
 
-
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class ReleaseResourceService {
   constructor(
     private http: HttpClient,
-  ) {} getRelease<TData = ReleaseDTO>(
+  ) {
+  }
+
+  getRelease<TData = ReleaseDTO>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/releases/${id}`,options
+      `/api/releases/${id}`, options
     );
   }
- updateRelease<TData = number>(
+
+  updateRelease<TData = number>(
     id: number,
     releaseDTO: ReleaseDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.put<TData>(
       `/api/releases/${id}`,
-      releaseDTO,options
+      releaseDTO, options
     );
   }
- deleteRelease<TData = void>(
+
+  deleteRelease<TData = void>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.delete<TData>(
-      `/api/releases/${id}`,options
+      `/api/releases/${id}`, options
     );
   }
- getAllReleases<TData = ReleaseDTO[]>(
-     options?: HttpClientOptions
-  ): Observable<TData>  {
+
+  getAllReleases<TData = ReleaseDTO[]>(
+    options?: HttpClientOptions
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/releases`,options
+      `/api/releases`, options
     );
   }
- createRelease<TData = number>(
+
+  createRelease<TData = number>(
     releaseDTO: ReleaseDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.post<TData>(
       `/api/releases`,
-      releaseDTO,options
+      releaseDTO, options
     );
   }
 }

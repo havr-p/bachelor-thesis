@@ -4,29 +4,16 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import {
-  HttpClient
-} from '@angular/common/http'
-import type {
-  HttpContext,
-  HttpHeaders,
-  HttpParams
-} from '@angular/common/http'
-import {
-  Injectable
-} from '@angular/core'
-import {
-  Observable
-} from 'rxjs'
-import type {
-  RelationshipDTO
-} from '../model'
-
+import type {HttpContext, HttpHeaders, HttpParams} from '@angular/common/http'
+import {HttpClient} from '@angular/common/http'
+import {Injectable} from '@angular/core'
+import {Observable} from 'rxjs'
+import type {RelationshipDTO} from '../model'
 
 
 type HttpClientOptions = {
   headers?: HttpHeaders | {
-      [header: string]: string | string[];
+    [header: string]: string | string[];
   };
   context?: HttpContext;
   observe?: any;
@@ -39,47 +26,53 @@ type HttpClientOptions = {
 };
 
 
-
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class RelationshipResourceService {
   constructor(
     private http: HttpClient,
-  ) {} getRelationship<TData = RelationshipDTO>(
+  ) {
+  }
+
+  getRelationship<TData = RelationshipDTO>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/relationships/${id}`,options
+      `/api/relationships/${id}`, options
     );
   }
- updateRelationship<TData = number>(
+
+  updateRelationship<TData = number>(
     id: number,
     relationshipDTO: RelationshipDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.put<TData>(
       `/api/relationships/${id}`,
-      relationshipDTO,options
+      relationshipDTO, options
     );
   }
- deleteRelationship<TData = void>(
+
+  deleteRelationship<TData = void>(
     id: number, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.delete<TData>(
-      `/api/relationships/${id}`,options
+      `/api/relationships/${id}`, options
     );
   }
- getAllRelationships<TData = RelationshipDTO[]>(
-     options?: HttpClientOptions
-  ): Observable<TData>  {
+
+  getAllRelationships<TData = RelationshipDTO[]>(
+    options?: HttpClientOptions
+  ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/relationships`,options
+      `/api/relationships`, options
     );
   }
- createRelationship<TData = number>(
+
+  createRelationship<TData = number>(
     relationshipDTO: RelationshipDTO, options?: HttpClientOptions
-  ): Observable<TData>  {
+  ): Observable<TData> {
     return this.http.post<TData>(
       `/api/relationships`,
-      relationshipDTO,options
+      relationshipDTO, options
     );
   }
 }

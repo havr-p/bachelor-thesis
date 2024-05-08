@@ -15,6 +15,7 @@ public interface ProjectMapper {
     @Mapping(target = "owner.id", source = "owner")
     Project toEntity(ProjectDTO projectDTO);
 
-    @Mapping(target = "owner", ignore = true) // Owner handled manually
+    @Mapping(target = "owner", ignore = true)
+        // Owner handled manually
     void updateProjectFromDto(ProjectDTO projectDTO, @MappingTarget Project project);
 }

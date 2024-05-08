@@ -2,7 +2,6 @@ package uniba.fmph.traceability_tutor.rest;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,8 @@ import uniba.fmph.traceability_tutor.model.UserDTO;
 import uniba.fmph.traceability_tutor.service.UserService;
 import uniba.fmph.traceability_tutor.util.ReferencedException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
+
+import java.util.List;
 
 
 @RestController
@@ -42,7 +43,7 @@ public class UserResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateUser(@PathVariable(name = "id") final Long id,
-            @RequestBody @Valid final UserDTO userDTO) {
+                                           @RequestBody @Valid final UserDTO userDTO) {
         userService.update(id, userDTO);
         return ResponseEntity.ok(id);
     }

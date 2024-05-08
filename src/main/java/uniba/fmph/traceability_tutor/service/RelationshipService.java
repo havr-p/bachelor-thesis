@@ -1,6 +1,5 @@
 package uniba.fmph.traceability_tutor.service;
 
-import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.Item;
@@ -12,6 +11,8 @@ import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
 import uniba.fmph.traceability_tutor.repos.ReleaseRepository;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 
+import java.util.List;
+
 
 @Service
 public class RelationshipService {
@@ -21,7 +22,7 @@ public class RelationshipService {
     private final ReleaseRepository releaseRepository;
 
     public RelationshipService(final RelationshipRepository relationshipRepository,
-            final ItemRepository itemRepository, final ReleaseRepository releaseRepository) {
+                               final ItemRepository itemRepository, final ReleaseRepository releaseRepository) {
         this.relationshipRepository = relationshipRepository;
         this.itemRepository = itemRepository;
         this.releaseRepository = releaseRepository;
@@ -58,7 +59,7 @@ public class RelationshipService {
     }
 
     private RelationshipDTO mapToDTO(final Relationship relationship,
-            final RelationshipDTO relationshipDTO) {
+                                     final RelationshipDTO relationshipDTO) {
         relationshipDTO.setId(relationship.getId());
         relationshipDTO.setType(relationship.getType());
         relationshipDTO.setHistoryAction(relationship.getHistoryAction());
@@ -70,7 +71,7 @@ public class RelationshipService {
     }
 
     private Relationship mapToEntity(final RelationshipDTO relationshipDTO,
-            final Relationship relationship) {
+                                     final Relationship relationship) {
         relationship.setType(relationshipDTO.getType());
         relationship.setHistoryAction(relationshipDTO.getHistoryAction());
         relationship.setDescription(relationshipDTO.getDescription());

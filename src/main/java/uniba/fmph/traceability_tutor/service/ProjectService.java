@@ -1,9 +1,5 @@
 package uniba.fmph.traceability_tutor.service;
 
-import java.time.OffsetDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +9,7 @@ import uniba.fmph.traceability_tutor.domain.Project;
 import uniba.fmph.traceability_tutor.domain.Release;
 import uniba.fmph.traceability_tutor.domain.User;
 import uniba.fmph.traceability_tutor.mapper.ProjectMapper;
+import uniba.fmph.traceability_tutor.mapper.UserMapper;
 import uniba.fmph.traceability_tutor.model.ProjectDTO;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.ProjectRepository;
@@ -20,6 +17,10 @@ import uniba.fmph.traceability_tutor.repos.ReleaseRepository;
 import uniba.fmph.traceability_tutor.repos.UserRepository;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
+
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -30,15 +31,17 @@ public class ProjectService {
     private final ItemRepository itemRepository;
     private final ReleaseRepository releaseRepository;
     private final ProjectMapper projectMapper;
+    private final UserMapper userMapper;
 
     public ProjectService(final ProjectRepository projectRepository,
                           final UserRepository userRepository, final ItemRepository itemRepository,
-                          final ReleaseRepository releaseRepository, ProjectMapper projectMapper) {
+                          final ReleaseRepository releaseRepository, ProjectMapper projectMapper, UserMapper userMapper) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.releaseRepository = releaseRepository;
         this.projectMapper = projectMapper;
+        this.userMapper = userMapper;
     }
 
     // Use mapper to convert List<Project> to List<ProjectDTO>

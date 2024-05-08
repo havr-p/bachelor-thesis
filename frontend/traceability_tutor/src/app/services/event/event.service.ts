@@ -22,7 +22,7 @@ export class EventService {
     this.eventSource.next(new ItemViewEvent(type, data));
   }
 
-  notify(message: string, type: 'success' | 'error' | 'info' | 'warning', title?: string, override?: Partial<IndividualConfig<any>>) {
+  notify(message: string, type: 'success' | 'error' | 'info' | 'warning', title?: string, override?: Partial<IndividualConfig>) {
     switch (type) {
       case 'success':
         this.toastr.success(message, title, override);

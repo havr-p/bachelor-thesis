@@ -4,8 +4,8 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import type { HistoryAction } from './historyAction';
-import type { RelationshipType } from './relationshipType';
+import type {HistoryAction} from './historyAction';
+import type {RelationshipType} from './relationshipType';
 
 export interface RelationshipDTO {
   /**
