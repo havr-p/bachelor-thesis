@@ -89,6 +89,13 @@ export class ProjectResourceService {
       projectDTO,options
     );
   }
+ getUserProjects<TData = ProjectDTO[]>(
+     options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/projects/user`,options
+    );
+  }
 };
 
 export type GetProjectClientResult = NonNullable<ProjectDTO>
@@ -97,3 +104,4 @@ export type DeleteProjectClientResult = NonNullable<void>
 export type UpdateLastOpenedClientResult = NonNullable<number>
 export type GetAllProjectsClientResult = NonNullable<ProjectDTO[]>
 export type CreateProjectClientResult = NonNullable<number>
+export type GetUserProjectsClientResult = NonNullable<ProjectDTO[]>
