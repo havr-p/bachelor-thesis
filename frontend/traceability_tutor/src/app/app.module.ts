@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppComponent} from './app.component';
@@ -29,12 +29,12 @@ import {InputTextModule} from "primeng/inputtext";
 import {EditorComponent} from "./ui/editor/editor.component";
 import {CreateProjectFormComponent} from "./ui/forms/create-project.form/create-project.form.component";
 import {EditorWrapperComponent} from './ui/editor-wrapper/editor-wrapper.component';
-import {provideRouter} from "@angular/router";
 import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from './ui/page-not-found/page-not-found.component';
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {APIInterceptor} from "./interceptors/api-interceptor";
+import {AppErrorHandler} from "./interceptors/app-error-handler";
 
 @NgModule({
   declarations: [
@@ -84,6 +84,7 @@ import {APIInterceptor} from "./interceptors/api-interceptor";
       useClass: APIInterceptor,
       multi: true,
     },
+    AppErrorHandler
   ],
   bootstrap: [AppComponent],
   exports: []
