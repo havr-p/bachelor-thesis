@@ -84,11 +84,11 @@ public class UserService {
     }
 
     public UserDTO login(CredentialsDTO credentials) {
-        User user = userRepository.findByEmail(credentials.email()).orElseThrow(()->new NotFoundException("User not found"));
+        User user = userRepository.findByEmail(credentials.email()).orElseThrow(()->new AppException("User not found", HttpStatus.NOT_FOUND));
         if (passwordEncoder.matches(CharBuffer.wrap(credentials.password()), user.getPassword())) {
             return userMapper.toUserDTO(user);
         }
-        throw new BadCredentialsException("Invalid password");
+        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
     }
 
     public UserDTO register(SignUpDTO userDto) {

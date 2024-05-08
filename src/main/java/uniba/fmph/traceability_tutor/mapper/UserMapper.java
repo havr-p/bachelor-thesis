@@ -12,5 +12,6 @@ public interface UserMapper {
 
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "email", source = "email")
+    @Mapping(target = "role", constant = "ROLE_USER")
     User signUpToUser(SignUpDTO signUpDto);
 }
