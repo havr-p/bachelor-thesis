@@ -18,7 +18,6 @@ import uniba.fmph.traceability_tutor.repos.UserRepository;
 import uniba.fmph.traceability_tutor.util.AppException;
 
 import java.util.Base64;
-import java.util.Collections;
 import java.util.Date;
 
 @RequiredArgsConstructor
@@ -51,22 +50,6 @@ public class UserAuthenticationProvider {
                 .sign(algorithm);
     }
 
-    public Authentication validateToken(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-
-        JWTVerifier verifier = JWT.require(algorithm)
-                .build();
-
-        DecodedJWT decoded = verifier.verify(token);
-
-        UserDTO user = UserDTO.builder()
-                .email(decoded.getSubject())
-                .firstName(decoded.getClaim("firstName").asString())
-                .lastName(decoded.getClaim("lastName").asString())
-                .build();
-
-        return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
-    }
 
     public UserDTO findByToken(String token) {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
@@ -80,7 +63,7 @@ public class UserAuthenticationProvider {
         return userMapper.toUserDTO(user);
     }
 
-    public Authentication validateTokenStrongly(String token) {
+    public Authentication validateToken(String token) {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
         JWTVerifier verifier = JWT.require(algorithm)
@@ -90,6 +73,6 @@ public class UserAuthenticationProvider {
 
         User user = userRepository.findByEmail(decoded.getSubject()).orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
-        return new UsernamePasswordAuthenticationToken(userMapper.toUserDTO(user), null, user.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 }
