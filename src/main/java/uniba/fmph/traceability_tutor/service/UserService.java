@@ -55,10 +55,15 @@ public class UserService {
     }
 
     public UserDTO findByEmail(final String email) {
-        return userRepository.findByEmail(email).map(userMapper::toUserDTO).orElseThrow(NotFoundException::new);
+        return userRepository.findByEmail(email).map(userMapper::toUserDTO).orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
+    }
+
     public UserDTO findByToken(final String token) {
         return userAuthenticationProvider.findByToken(token);
     }
+
+    public UserDTO findById(final Long id) {
+        return userRepository.findById(id).map(userMapper::toUserDTO).orElseThrow(NotFoundException::new);
     }
 
     public Long create(final UserDTO userDTO) {

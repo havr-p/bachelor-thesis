@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
+import {EventService} from "../../../services/event/event.service";
+import {ProjectResourceService} from "../../../../../api/services/project-resource";
 
 @Component({
   selector: 'app-create-project-form',
@@ -15,7 +17,17 @@ export class CreateProjectFormComponent {
     repoUrl: new FormControl('', [Validators.required])
   });
 
+  constructor(private eventService: EventService, private projectService: ProjectResourceService) {
+  }
+
   onSubmit() {
     console.log('Form Submitted!', this.projectForm.value);
+    if (this.projectForm.value)
+    this.projectService.createProject( {owner: 12121, repoUrl: this.projectForm.value.repoUrl!, name: this.projectForm.value.name!}).subscribe( {
+      next: (response) => {
+        this.eventService.notify("Project was created", 'success');
+      }
+      }
+    )
   }
 }
