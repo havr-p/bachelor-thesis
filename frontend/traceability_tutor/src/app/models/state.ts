@@ -42,6 +42,14 @@ export class StateManager {
     return project;
   }
 
+  set currentUser(userDTO: UserDTO) {
+    this.localStorageService.saveData(CURRENT_USER, userDTO);
+  }
+
+  get currentUser(): UserDTO {
+    return this.localStorageService.getData(CURRENT_USER);
+  }
+
   saveEditorState() {
     this.localStorageService.saveData(EDITOR_STATE_KEY, this.editorState);
   }
