@@ -71,6 +71,12 @@ export class DockComponent implements OnInit {
           this.eventService.publishEditorEvent(EditorEventType.CLEAR);
         },
       },
+      {
+        label: 'Logout',
+        command: () => {
+          this.stateManager.logout()
+        }
+      }
     ];
   }
 
