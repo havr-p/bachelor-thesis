@@ -67,6 +67,13 @@ export class ProjectResourceService {
       `/api/projects/${id}`,options
     );
   }
+ updateLastOpened<TData = number>(
+    id: number, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.put<TData>(
+      `/api/projects/open/${id}`,undefined,options
+    );
+  }
  getAllProjects<TData = ProjectDTO[]>(
      options?: HttpClientOptions
   ): Observable<TData>  {
@@ -87,5 +94,6 @@ export class ProjectResourceService {
 export type GetProjectClientResult = NonNullable<ProjectDTO>
 export type UpdateProjectClientResult = NonNullable<number>
 export type DeleteProjectClientResult = NonNullable<void>
+export type UpdateLastOpenedClientResult = NonNullable<number>
 export type GetAllProjectsClientResult = NonNullable<ProjectDTO[]>
 export type CreateProjectClientResult = NonNullable<number>

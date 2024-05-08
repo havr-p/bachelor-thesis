@@ -65,4 +65,11 @@ public class ProjectResource {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/open/{id}")
+    public ResponseEntity<Long> updateLastOpened(@PathVariable(name = "id") final Long id) {
+        projectService.updateLastOpened(id);
+        return ResponseEntity.ok(id);
+    }
+
+
 }

@@ -99,4 +99,10 @@ public class ProjectService {
         return null;
     }
 
+    public Long updateLastOpened(final Long id) {
+        Project project = projectRepository.findById(id).orElseThrow(NotFoundException::new);
+        project.setLastOpened(OffsetDateTime.now());
+        return projectRepository.save(project).getId();
+    }
+
 }
