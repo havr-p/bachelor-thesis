@@ -7,11 +7,17 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import uniba.fmph.traceability_tutor.domain.User;
+import uniba.fmph.traceability_tutor.mapper.UserMapper;
 import uniba.fmph.traceability_tutor.model.UserDTO;
+import uniba.fmph.traceability_tutor.repos.UserRepository;
 import uniba.fmph.traceability_tutor.service.UserService;
+import uniba.fmph.traceability_tutor.util.AppException;
 
 import java.util.Base64;
 import java.util.Collections;
@@ -24,7 +30,8 @@ public class UserAuthenticationProvider {
     @Value("${security.jwt.token.secret-key:secret-key}")
     private String secretKey;
 
-    private final UserService userService;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @PostConstruct
     protected void init() {
@@ -34,11 +41,13 @@ public class UserAuthenticationProvider {
 
     public String createToken(UserDTO user) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + 36000000); // 100 hours
+        Date validity = new Date(now.getTime() + 3600_000); // 1 hour
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         return JWT.create()
                 .withSubject(user.getEmail())
+                .withClaim("firstName", user.getFirstName())
+                .withClaim("lastName", user.getLastName())
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
                 .sign(algorithm);
@@ -54,9 +63,23 @@ public class UserAuthenticationProvider {
 
         UserDTO user = UserDTO.builder()
                 .email(decoded.getSubject())
+                .firstName(decoded.getClaim("firstName").asString())
+                .lastName(decoded.getClaim("lastName").asString())
                 .build();
 
         return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+    }
+
+    public UserDTO findByToken(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+
+        JWTVerifier verifier = JWT.require(algorithm)
+                .build();
+
+        DecodedJWT decoded = verifier.verify(token);
+
+        User user = userRepository.findByEmail(decoded.getSubject()).orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
+        return userMapper.toUserDTO(user);
     }
 
     public Authentication validateTokenStrongly(String token) {
@@ -67,8 +90,8 @@ public class UserAuthenticationProvider {
 
         DecodedJWT decoded = verifier.verify(token);
 
-        UserDTO user = userService.findByEmail(decoded.getSubject());
+        User user = userRepository.findByEmail(decoded.getSubject()).orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
-        return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(userMapper.toUserDTO(user), null, user.getAuthorities());
     }
 }
