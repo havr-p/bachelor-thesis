@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 
-export const EDITOR_STATE_KEY = 'editorState';
-export const CURRENT_PROJECT_KEY = 'currentProject';
+export const EDITOR_STATE_KEY = 'editor-state';
+export const CURRENT_PROJECT_KEY = 'current-project';
+export const CURRENT_USER = 'current-user' ;
+export const AUTH_TOKEN = 'auth-token'
 @Injectable({
   providedIn: 'root',
 })
