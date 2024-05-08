@@ -5,6 +5,15 @@ import {AppModule} from "../../app.module";
 import {LoginFormComponent} from "../login-form/login-form.component";
 import {EventService} from "../../services/event/event.service";
 import {Router} from "@angular/router";
+import {AppRoutingModule} from "../../app-routing.module";
+import {StateManager} from "../../models/state";
+import {AuthControllerService} from "../../../../api/services/auth-controller";
+import {AUTH_TOKEN, LocalStorageService} from "../../services/local-storage/local-storage.service";
+import {CredentialsDTO, SignUpDTO, UserDTO} from "../../../../api/model";
+import {Subscription} from "rxjs";
+import {error} from "@angular/compiler-cli/src/transformers/util";
+import {HttpErrorResponse} from "@angular/common/http";
+import {UserResourceService} from "../../../../api/services/user-resource";
 
 @Component({
   selector: 'app-auth',
@@ -18,62 +27,65 @@ import {Router} from "@angular/router";
 })
 export class AuthComponent implements OnInit{
     data: any;
-    constructor(private axiosService: AxiosService, private eventService: EventService, private router: Router) {
+    constructor(private authService: AuthControllerService, private eventService: EventService, private router: Router, private stateManager: StateManager, private localStorageService: LocalStorageService, private userService: UserResourceService) {
     }
 
     ngOnInit(): void {
-      console.log("on init");
-      // this.axiosService.request("GET", '/api/projects', {}).then(
-      //   (response) => {
-      //     this.data = response.data;
-      //     console.log(response.data);
-      //   }
-      // )
+
+      if (this.stateManager.currentUser) {
+        const token = this.localStorageService.getData(AUTH_TOKEN);
+        const observer = {
+          next: (userDTO: UserDTO) => {
+            if (userDTO.id === this.stateManager.currentUser.id) {
+              const token = this.authService.renewToken(userDTO.id!);
+              this.localStorageService.saveData(AUTH_TOKEN, token);
+            }
+          },
+          error: (err: HttpErrorResponse) => {
+          }
+        }
+
+        this.userService.getUserByToken(token).subscribe(observer)
+      }
+
+
     }
 
-  componentToShow: string = "welcome";
 
-  showComponent(componentToShow: string): void {
-    this.componentToShow = componentToShow;
-  }
-
-  onLogin(input: any): void {
-    this.axiosService.request(
-      "POST",
-      "/api/login",
-      {
-        email: input.email,
-        password: input.password
-      }).then(
-      response => {
-        this.axiosService.setAuthToken(response.data.token);
-        this.router.navigateByUrl('/editor');
-      }).catch(
-      error => {
-        this.axiosService.setAuthToken(null);
+  onLogin(input: CredentialsDTO): void {
+    const observer = {
+      next: (value: UserDTO) => {
+        this.localStorageService.saveData(AUTH_TOKEN, value.token);
+        this.stateManager.currentUser = value;
+        this.router.navigateByUrl('/projects');
+      },
+      error: (err: HttpErrorResponse) => {
+        this.eventService.notify("Login failed: " + err.message, 'error')
       }
-    );
+      }
 
+    this.authService.login( {
+      email: input.email,
+      password: input.password
+    }).subscribe(observer);
   }
 
-  onRegister(input: any): void {
-    this.axiosService.request(
-      "POST",
-      "/api/register",
-      {
-        firstName: input.firstName,
-        lastName: input.lastName,
-        email: input.email,
-        password: input.password
-      }).then(
-      response => {
+  onRegister(input: SignUpDTO): void {
+    const observer = {
+      next: (value: UserDTO) => {
         this.eventService.notify("New user was successfully registered.", 'success')
-        this.axiosService.setAuthToken(response.data.token);
-      }).catch(
-      error => {
-        this.eventService.notify("Error on registering " + error, 'error');
-        this.axiosService.setAuthToken(null);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.eventService.notify("Login failed: " + err.message, 'error')
       }
-    );
+    }
+
+    this.authService.register( {
+      firstName: input.firstName,
+      lastName: input.lastName,
+      email: input.email,
+      password: input.password
+    }).subscribe(observer);
   }
+
 }

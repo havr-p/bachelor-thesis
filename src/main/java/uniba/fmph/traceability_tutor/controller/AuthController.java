@@ -3,9 +3,7 @@ package uniba.fmph.traceability_tutor.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uniba.fmph.traceability_tutor.config.UserAuthenticationProvider;
 import uniba.fmph.traceability_tutor.model.CredentialsDTO;
 import uniba.fmph.traceability_tutor.model.SignUpDTO;
@@ -33,5 +31,11 @@ public class AuthController {
         UserDTO createdUser = userService.register(user);
         createdUser.setToken(userAuthenticationProvider.createToken(createdUser));
         return ResponseEntity.created(URI.create("/api/users/" + createdUser.getId())).body(createdUser);
+    }
+
+    @GetMapping("api/renewToken/{id}")
+    public ResponseEntity<String> renewToken(@PathVariable Long id) {
+        String token = this.userAuthenticationProvider.createToken(this.userService.findById(id));
+        return ResponseEntity.ok(token);
     }
 }

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {catchError, Observable, throwError} from 'rxjs';
 import {Router} from '@angular/router';
+import {AUTH_TOKEN} from "../services/local-storage/local-storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,10 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let token = localStorage.getItem("auth_token");
+    console.log("LOG in interceptor")
+    let token = localStorage.getItem(AUTH_TOKEN);
     if (token) {
+      console.log("adding token")
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
