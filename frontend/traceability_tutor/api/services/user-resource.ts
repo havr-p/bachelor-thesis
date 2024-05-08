@@ -82,6 +82,13 @@ export class UserResourceService {
       userDTO,options
     );
   }
+ getUserByToken<TData = UserDTO>(
+    token: string, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/users/verify/${token}`,options
+    );
+  }
 };
 
 export type GetUserClientResult = NonNullable<UserDTO>
@@ -89,3 +96,4 @@ export type UpdateUserClientResult = NonNullable<number>
 export type DeleteUserClientResult = NonNullable<void>
 export type GetAllUsersClientResult = NonNullable<UserDTO[]>
 export type CreateUserClientResult = NonNullable<number>
+export type GetUserByTokenClientResult = NonNullable<UserDTO>
