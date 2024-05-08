@@ -55,4 +55,7 @@ public class Project {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
+    @Column(nullable = false)
+    private OffsetDateTime lastOpened;
+
 }
