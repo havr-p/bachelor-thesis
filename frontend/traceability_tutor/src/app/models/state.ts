@@ -1,10 +1,11 @@
 import {Injectable} from "@angular/core";
 import {Project} from "./project";
-import {ProjectDTO, RelationshipType} from "../../../gen/model";
+import {ProjectDTO, RelationshipType, UserDTO} from "../../../api/model";
 import {Item} from "../items/Item";
 import {Release} from "./release";
 import {
-  CURRENT_PROJECT_KEY,
+  AUTH_TOKEN,
+  CURRENT_PROJECT_KEY, CURRENT_USER,
   EDITOR_STATE_KEY,
   LocalStorageService
 } from "../services/local-storage/local-storage.service";
@@ -14,6 +15,8 @@ import {ItemProps} from "../types";
 import {Connection} from "../connection";
 import {RequirementItem} from "../items/requirement-item";
 import {tsCallMethod} from "@angular/compiler-cli/src/ngtsc/typecheck/src/ts_util";
+import {AuthControllerService} from "../../../api/services/auth-controller";
+import {Router} from "@angular/router";
 
 export interface EditorState {
   nodes: ItemProps[],
@@ -27,9 +30,9 @@ export class StateManager {
   private projects: Map<number, Project> = new Map();
   private currentProject: Project | undefined;
   private currentRelease: Release | undefined;
-  private editorState: EditorState | undefined
+  private editorState: EditorState | undefined;
 
-  constructor(private validationService: ValidationService, private localStorageService: LocalStorageService) {
+  constructor(private validationService: ValidationService, private localStorageService: LocalStorageService, private authService: AuthControllerService, private router: Router) {
   }
 
   createProject(projectDTO: ProjectDTO): Project {
@@ -93,6 +96,11 @@ export class StateManager {
     //requirement.update(updates);
     //return requirement;
   //}
+
+  logout() {
+    this.localStorageService.removeData(AUTH_TOKEN);
+    this.router.navigateByUrl('/auth');
+  }
 
 
 
