@@ -8,7 +8,7 @@ import {
   ItemViewEvent,
   ItemViewEventType,
 } from '../../types';
-import { ToastrService } from 'ngx-toastr';
+import {IndividualConfig, ToastrService} from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -28,22 +28,22 @@ export class EventService {
     this.eventSource.next(new ItemViewEvent(type, data));
   }
 
-  notify(message: string, type: 'success' | 'error' | 'info' | 'warning') {
+  notify(message: string, type: 'success' | 'error' | 'info' | 'warning', title?: string, override?:  Partial<IndividualConfig<any>>) {
     switch (type) {
       case 'success':
-        this.toastr.success(message);
+        this.toastr.success(message, title, override);
         break;
       case 'error':
-        this.toastr.error(message);
+        this.toastr.error(message, title, override);
         break;
       case 'info':
-        this.toastr.info(message);
+        this.toastr.info(message, title, override);
         break;
       case 'warning':
-        this.toastr.warning(message);
+        this.toastr.warning(message, title, override);
         break;
       default:
-        this.toastr.show(message);
+        this.toastr.show(message, title, override);
         break;
     }
   }
