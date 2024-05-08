@@ -1,6 +1,5 @@
-import { ClassicPreset, NodeEditor } from 'rete';
-import { ActionSocket, TextSocket } from './sockets';
-import { Schemes } from './types';
+import {ClassicPreset} from 'rete';
+import {ActionSocket, TextSocket} from './sockets';
 
 type Sockets = ActionSocket | TextSocket;
 type Input = ClassicPreset.Input<Sockets>;

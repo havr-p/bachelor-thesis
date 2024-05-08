@@ -1,13 +1,13 @@
-import { GetSchemes } from 'rete';
-import { Connection } from './connection';
-import { RequirementItem } from './items/requirement-item';
-import { Requirement } from './models/requirement';
+import {GetSchemes} from 'rete';
+import {Connection} from './connection';
+import {RequirementItem} from './items/requirement-item';
+import {Requirement} from './models/requirement';
 
 export type ItemProps =
-  // | DebugChat
-  // | Message
-  // | OnMessage
-  // | MatchMessage
+// | DebugChat
+// | Message
+// | OnMessage
+// | MatchMessage
   RequirementItem;
 export type ConnProps = Connection<RequirementItem, RequirementItem>;
 // | Connection<MatchMessage, SendMessage>
@@ -30,6 +30,7 @@ export enum EditorEventType {
 export enum ItemViewEventType {
   EDIT = 'edit',
 }
+
 export enum EventSource {
   EDITOR = 'editor',
   ITEM_VIEW = 'item view',
@@ -40,7 +41,8 @@ export abstract class BaseEvent<S extends EventSource, U> {
     public source: S,
     public type: U,
     public data: any,
-  ) {}
+  ) {
+  }
 }
 
 export class EditorEvent extends BaseEvent<

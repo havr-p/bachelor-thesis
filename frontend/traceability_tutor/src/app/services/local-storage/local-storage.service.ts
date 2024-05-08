@@ -1,14 +1,16 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 export const EDITOR_STATE_KEY = 'editor-state';
 export const CURRENT_PROJECT_KEY = 'current-project';
-export const CURRENT_USER = 'current-user' ;
+export const CURRENT_USER = 'current-user';
 export const AUTH_TOKEN = 'auth-token'
+
 @Injectable({
   providedIn: 'root',
 })
 export class LocalStorageService {
-  constructor() {}
+  constructor() {
+  }
 
   public saveData(key: string, value: any) {
     localStorage.setItem(key, JSON.stringify(value));
@@ -18,6 +20,7 @@ export class LocalStorageService {
     let item = localStorage.getItem(key);
     return item ? JSON.parse(item) : undefined;
   }
+
   public removeData(key: string) {
     localStorage.removeItem(key);
   }

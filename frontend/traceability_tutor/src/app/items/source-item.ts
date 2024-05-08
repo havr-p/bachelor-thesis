@@ -1,10 +1,11 @@
-import { ClassicPreset } from 'rete';
+import {ClassicPreset} from 'rete';
 
 export class SourceItem extends ClassicPreset.Node {
   width = 400;
   height = 200;
   backgroundColor = 'blue';
   borderStyle: string;
+
   //requirement: Requirement;
   constructor() {
     super('Source');

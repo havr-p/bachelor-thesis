@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Requirement } from '../../models/requirement';
+import {Injectable} from '@angular/core';
+import {Requirement} from '../../models/requirement';
 import {Item} from "../../items/Item";
 import {RelationshipType} from "../../../../gen/model";
 
@@ -7,7 +7,8 @@ import {RelationshipType} from "../../../../gen/model";
   providedIn: 'root',
 })
 export class ValidationService {
-  constructor() {}
+  constructor() {
+  }
 
   validateRequirement(requirement: Requirement) {
     return true;
@@ -24,6 +25,7 @@ export class ValidationService {
   validateRequirementEdits(requirement: Requirement, updates: any): string[] {
     return [];
   }
+
   validateItemEdits(item: Item, updates: any): string[] {
     return [];
   }

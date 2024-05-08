@@ -1,14 +1,16 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { Requirement } from '../../models/requirement';
-import { HttpResponse } from 'msw';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {environment} from '../../../environments/environment';
+import {Requirement} from '../../models/requirement';
+import {HttpResponse} from 'msw';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RequirementsService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
+
   async fetchRequirements(): Promise<Requirement[]> {
     const response = await fetch(`${environment.apiUrl}/requirements/all`);
 

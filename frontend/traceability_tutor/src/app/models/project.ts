@@ -1,7 +1,7 @@
-import { ProjectDTO } from "../../../gen/model";
+import {ProjectDTO} from "../../../gen/model";
 import {Release} from "./release";
 
-export class Project implements ProjectDTO{
+export class Project implements ProjectDTO {
   id: number | undefined;
   name: string;
   owner: number;

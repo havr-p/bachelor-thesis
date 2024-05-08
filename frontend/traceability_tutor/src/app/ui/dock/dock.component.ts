@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FileUploadEvent } from 'primeng/fileupload';
-import { Requirement } from '../../models/requirement';
-import { EditorEventType } from '../../types';
-import { RequirementsService } from '../../services/requirements/requirements.service';
-import { EventService } from '../../services/event/event.service';
-import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {FileUploadEvent} from 'primeng/fileupload';
+import {Requirement} from '../../models/requirement';
+import {EditorEventType} from '../../types';
+import {RequirementsService} from '../../services/requirements/requirements.service';
+import {EventService} from '../../services/event/event.service';
+import {LocalStorageService} from '../../services/local-storage/local-storage.service';
 import {StateManager} from "../../models/state";
 
 @Component({
@@ -13,7 +13,7 @@ import {StateManager} from "../../models/state";
   styleUrl: './dock.component.scss',
 })
 export class DockComponent implements OnInit {
-  menubarItems: any[] | undefined;
+  @Input() items: any[] | undefined;
   id = 1;
 
   constructor(
@@ -21,9 +21,11 @@ export class DockComponent implements OnInit {
     private eventService: EventService,
     private localStorageService: LocalStorageService,
     private stateManager: StateManager,
-  ) {}
+  ) {
+  }
+
   ngOnInit() {
-    this.menubarItems = [
+    this.items = [
       {
         label: 'Project',
         items: [
@@ -85,9 +87,11 @@ export class DockComponent implements OnInit {
   uploadedFiles: any;
   value: any;
 
-  private createNewProject() {}
+  private createNewProject() {
+  }
 
-  onUpload($event: FileUploadEvent) {}
+  onUpload($event: FileUploadEvent) {
+  }
 
   private async loadAll(): Promise<Requirement[]> {
     try {

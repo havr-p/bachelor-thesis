@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ProjectMenuComponent } from './project-menu.component';
+import {ProjectMenuComponent} from './project-menu.component';
 
 describe('ProjectMenuComponent', () => {
   let component: ProjectMenuComponent;
@@ -10,8 +10,8 @@ describe('ProjectMenuComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ProjectMenuComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(ProjectMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

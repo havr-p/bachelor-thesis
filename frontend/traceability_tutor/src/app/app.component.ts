@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Injector, ViewChild } from '@angular/core'
+import {Component} from '@angular/core'
 
 
 @Component({
@@ -6,6 +6,6 @@ import { AfterViewInit, Component, ElementRef, Injector, ViewChild } from '@angu
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent{
+export class AppComponent {
   title = 'traceability_tutor'
 }

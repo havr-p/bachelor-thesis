@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ItemInfoViewComponent } from './item-info-view.component';
+import {ItemInfoViewComponent} from './item-info-view.component';
 
 describe('NodeInfoViewComponent', () => {
   let component: ItemInfoViewComponent;

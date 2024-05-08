@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { EditorWrapperComponent } from './editor-wrapper.component';
+import {EditorWrapperComponent} from './editor-wrapper.component';
 
 describe('EditorWrapperComponent', () => {
   let component: EditorWrapperComponent;
@@ -10,8 +10,8 @@ describe('EditorWrapperComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [EditorWrapperComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(EditorWrapperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

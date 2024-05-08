@@ -1,33 +1,34 @@
 <ng-container [ngSwitch]="item.type">
-  <div *ngSwitchCase="ItemType.REQUIREMENT"  class="p-fluid">
+  <div *ngSwitchCase="ItemType.REQUIREMENT" class="p-fluid">
     <div class="grid p-4 gap-3">
-      <div class="col-12 md:col-6 lg:col-4"><strong>ID:</strong> {{item.data.id}}</div>
-      <div class="col-12 md:col-6 lg:col-4"><strong>Level:</strong> {{item.data.level}}</div>
+      <div class="col-12 md:col-6 lg:col-4"><strong>ID:</strong> {{ item.data.id }}</div>
+      <div class="col-12 md:col-6 lg:col-4"><strong>Level:</strong> {{ item.data.level }}</div>
       <div class="col-12 p-field">
         <div class="flex flex-column gap-2">
-    <label for="name">Name</label>
-    <input pInputText id="name" aria-describedby="name-help" [(ngModel)]="item.data.name" />
-    <small id="name-help"></small>
-</div>
+          <label for="name">Name</label>
+          <input pInputText id="name" aria-describedby="name-help" [(ngModel)]="item.data.name"/>
+          <small id="name-help"></small>
+        </div>
       </div>
       <div class="col-12">
         <div class="flex flex-column gap-2">
-        <label for="statement">Statement</label>
+          <label for="statement">Statement</label>
           <textarea id="statement" [(ngModel)]="item.data.statement" pInputTextarea></textarea>
         </div>
       </div>
       <div class="col-12">
         <div class="flex flex-column gap-2">
           <label for="status">Status</label>
-        <p-dropdown id="status"   (onChange)="dataChanged = true;" [options]="['Open', 'Closed', 'TBD']" [(ngModel)]="item.data.status" placeholder="Select a status"></p-dropdown>
-      </div>
+          <p-dropdown id="status" (onChange)="dataChanged = true;" [options]="['Open', 'Closed', 'TBD']"
+                      [(ngModel)]="item.data.status" placeholder="Select a status"></p-dropdown>
+        </div>
       </div>
     </div>
     <div class="col-12 mt-2">
       <label for="references">References</label>
-<!--      <ng-container id="references" *ngFor="let ref of relationships">-->
-<!--        <div class="p-2">{{ref.parentId}}</div>-->
-<!--      </ng-container>-->
+      <!--      <ng-container id="references" *ngFor="let ref of relationships">-->
+      <!--        <div class="p-2">{{ref.parentId}}</div>-->
+      <!--      </ng-container>-->
     </div>
   </div>
   <ng-container *ngSwitchDefault>
@@ -35,6 +36,7 @@
   </ng-container>
 </ng-container>
 <div class="card flex flex-wrap gap-3 justify-content-center mt-5">
-<p-button label="Save Changes" [outlined]="true" (onClick)="saveChanges()" [disabled]="!dataChanged" class="mr-3"></p-button>
-<p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="cancelChanges()" ></p-button>
+  <p-button label="Save Changes" [outlined]="true" (onClick)="saveChanges()" [disabled]="!dataChanged"
+            class="mr-3"></p-button>
+  <p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="cancelChanges()"></p-button>
 </div>

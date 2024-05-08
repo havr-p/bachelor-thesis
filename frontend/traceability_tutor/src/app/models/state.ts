@@ -5,16 +5,14 @@ import {Item} from "../items/Item";
 import {Release} from "./release";
 import {
   AUTH_TOKEN,
-  CURRENT_PROJECT_KEY, CURRENT_USER,
+  CURRENT_PROJECT_KEY,
+  CURRENT_USER,
   EDITOR_STATE_KEY,
   LocalStorageService
 } from "../services/local-storage/local-storage.service";
-import {Requirement} from "./requirement";
 import {ValidationService} from "../services/validation/validation.service";
 import {ItemProps} from "../types";
 import {Connection} from "../connection";
-import {RequirementItem} from "../items/requirement-item";
-import {tsCallMethod} from "@angular/compiler-cli/src/ngtsc/typecheck/src/ts_util";
 import {AuthControllerService} from "../../../gen/services/auth-controller";
 import {Router} from "@angular/router";
 
@@ -53,6 +51,7 @@ export class StateManager {
   saveEditorState() {
     this.localStorageService.saveData(EDITOR_STATE_KEY, this.editorState);
   }
+
   saveCurrentProject() {
     this.localStorageService.saveData(CURRENT_PROJECT_KEY, this.currentProject);
   }
@@ -83,14 +82,6 @@ export class StateManager {
 
     return true;
   }
-  // editItem(itemId: number, updates: any, suppressWarnings: boolean = false): Requirement {
-  //   const requirement = this.findItemById(itemId);
-  //   if (!requirement) throw new Error('Requirement not found');
-  //
-  //   const warnings = this.validationService.validateItemEdits(item, updates);
-  //   if (warnings.length > 0 && !suppressWarnings) {
-  //     warnings.forEach(warning => console.warn(warning));
-  //   }
 
   // editItem(itemId: number, updates: any, suppressWarnings: boolean = false): Requirement {
   //   const requirement = this.findItemById(itemId);
@@ -101,16 +92,23 @@ export class StateManager {
   //     warnings.forEach(warning => console.warn(warning));
   //   }
 
-    //requirement.update(updates);
-    //return requirement;
+  // editItem(itemId: number, updates: any, suppressWarnings: boolean = false): Requirement {
+  //   const requirement = this.findItemById(itemId);
+  //   if (!requirement) throw new Error('Requirement not found');
+  //
+  //   const warnings = this.validationService.validateItemEdits(item, updates);
+  //   if (warnings.length > 0 && !suppressWarnings) {
+  //     warnings.forEach(warning => console.warn(warning));
+  //   }
+
+  //requirement.update(updates);
+  //return requirement;
   //}
 
   logout() {
     this.localStorageService.removeData(AUTH_TOKEN);
     this.router.navigateByUrl('/auth');
   }
-
-
 
 
 }

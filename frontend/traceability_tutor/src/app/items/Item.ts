@@ -1,4 +1,4 @@
-import { ItemDataType, ItemType } from '../types';
+import {ItemDataType, ItemType} from '../types';
 
 export interface Item {
   width: number;

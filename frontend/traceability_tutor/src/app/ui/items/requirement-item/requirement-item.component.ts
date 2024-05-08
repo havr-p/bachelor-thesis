@@ -8,8 +8,8 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { RequirementItem } from '../../../items/requirement-item';
-import { EventService } from '../../../services/event/event.service';
+import {RequirementItem} from '../../../items/requirement-item';
+import {EventService} from '../../../services/event/event.service';
 
 @Component({
   templateUrl: './requirement-item.component.html',
@@ -48,7 +48,8 @@ export class RequirementItemComponent implements OnChanges, OnInit {
     this.cdr.detach();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {

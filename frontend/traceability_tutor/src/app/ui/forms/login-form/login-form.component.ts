@@ -38,6 +38,11 @@ export class LoginFormComponent {
   }
 
   onSubmitRegister(): void {
-    this.onSubmitRegisterEvent.emit({"firstName": this.firstName, "lastName": this.lastName, "email": this.email, "password": this.password});
+    this.onSubmitRegisterEvent.emit({
+      "firstName": this.firstName,
+      "lastName": this.lastName,
+      "email": this.email,
+      "password": this.password
+    });
   }
 }

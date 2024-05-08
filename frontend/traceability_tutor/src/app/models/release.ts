@@ -1,6 +1,6 @@
-import {ProjectDTO, ReleaseDTO} from "../../../gen/model";
+import {ReleaseDTO} from "../../../gen/model";
 
-export class Release implements ReleaseDTO{
+export class Release implements ReleaseDTO {
   id: number;
   project: number;
   releaseCommitId: string;
@@ -12,6 +12,7 @@ export class Release implements ReleaseDTO{
     this.releaseCommitId = dto.releaseCommitId;
     this.semanticId = dto.semanticId;
   }
+
   updateFromDTO(dto: ReleaseDTO) {
     this.id = dto.id!;
     this.project = dto.project;

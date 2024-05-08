@@ -5,9 +5,10 @@
     </ng-template>
   </p-menubar>
 
-  <p-dialog header="Create project" [(visible)]="createNewProjectDialogVisible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+  <p-dialog header="Create project" [(visible)]="createNewProjectDialogVisible" [modal]="true"
+            [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
     <app-create-project-form></app-create-project-form>
 
-</p-dialog>
+  </p-dialog>
   <ng-content></ng-content>
 </div>

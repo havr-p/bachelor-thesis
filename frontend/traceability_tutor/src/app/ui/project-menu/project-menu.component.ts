@@ -1,11 +1,11 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ProjectDTO} from "../../../../gen/model";
 import {DataViewModule} from "primeng/dataview";
 import {NgClass, NgForOf} from "@angular/common";
 import {ButtonModule} from "primeng/button";
 import {StateManager} from "../../models/state";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
-import {GetUserProjectsClientResult, ProjectResourceService} from "../../../../gen/services/project-resource";
+import {ProjectResourceService} from "../../../../gen/services/project-resource";
 
 @Component({
   selector: 'app-project-menu',
@@ -19,7 +19,7 @@ import {GetUserProjectsClientResult, ProjectResourceService} from "../../../../g
   ],
   standalone: true
 })
-export class ProjectMenuComponent implements OnInit{
+export class ProjectMenuComponent implements OnInit {
 
   constructor(private stateManager: StateManager, private localStorageService: LocalStorageService, private projectService: ProjectResourceService) {
   }

@@ -1,10 +1,4 @@
-import {
-  Component,
-  Input,
-  HostBinding,
-  ChangeDetectorRef,
-  OnChanges
-} from "@angular/core";
+import {ChangeDetectorRef, Component, HostBinding, Input, OnChanges} from "@angular/core";
 
 @Component({
   template: ``,

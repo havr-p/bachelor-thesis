@@ -1,8 +1,8 @@
-import { Requirement } from '../models/requirement';
-import { getColorByLevel } from '../utils';
-import { Item } from './Item';
-import { ClassicPreset } from 'rete';
-import { ItemType } from '../types';
+import {Requirement} from '../models/requirement';
+import {getColorByLevel} from '../utils';
+import {Item} from './Item';
+import {ClassicPreset} from 'rete';
+import {ItemType} from '../types';
 
 export class RequirementItem extends ClassicPreset.Node implements Item {
   width = 400;
@@ -11,6 +11,7 @@ export class RequirementItem extends ClassicPreset.Node implements Item {
   backgroundColor: string;
   borderStyle: string;
   data: Requirement;
+
   constructor(requirement: Requirement) {
     super(requirement.name);
     //console.log(requirement);

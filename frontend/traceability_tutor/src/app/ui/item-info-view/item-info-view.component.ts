@@ -1,24 +1,19 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PanelModule } from 'primeng/panel';
-import { EditorModule } from 'primeng/editor';
-import { DropdownModule } from 'primeng/dropdown';
-import { TableModule } from 'primeng/table';
-import {
-  NgForOf,
-  NgSwitch,
-  NgSwitchCase,
-  NgSwitchDefault,
-} from '@angular/common';
-import { InplaceModule } from 'primeng/inplace';
-import { FormsModule } from '@angular/forms';
-import { Item } from '../../items/Item';
-import { ItemType } from '../../types';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { EventService } from 'src/app/services/event/event.service';
-import { ValidationService } from '../../services/validation/validation.service';
-import { RequirementsService } from '../../services/requirements/requirements.service';
-import { Requirement } from '../../models/requirement';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {PanelModule} from 'primeng/panel';
+import {EditorModule} from 'primeng/editor';
+import {DropdownModule} from 'primeng/dropdown';
+import {TableModule} from 'primeng/table';
+import {NgForOf, NgSwitch, NgSwitchCase, NgSwitchDefault,} from '@angular/common';
+import {InplaceModule} from 'primeng/inplace';
+import {FormsModule} from '@angular/forms';
+import {Item} from '../../items/Item';
+import {ItemType} from '../../types';
+import {InputTextModule} from 'primeng/inputtext';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {EventService} from 'src/app/services/event/event.service';
+import {ValidationService} from '../../services/validation/validation.service';
+import {RequirementsService} from '../../services/requirements/requirements.service';
+import {Requirement} from '../../models/requirement';
 import {RelationshipDTO} from "../../../../gen/model";
 
 @Component({
@@ -45,11 +40,13 @@ export class ItemInfoViewComponent {
   @Input() item!: Item;
   @Input() relationships!: RelationshipDTO
   @Output() toggleVisible = new EventEmitter<boolean>();
+
   constructor(
     private eventService: EventService,
     private validationService: ValidationService,
     private requirementsService: RequirementsService,
-  ) {}
+  ) {
+  }
 
   dataChanges: any;
 

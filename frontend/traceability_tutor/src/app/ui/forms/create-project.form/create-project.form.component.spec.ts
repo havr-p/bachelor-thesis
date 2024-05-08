@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CreateProjectFormComponent } from './create-project.form.component';
+import {CreateProjectFormComponent} from './create-project.form.component';
 
 describe('CreateProjectFormComponent', () => {
   let component: CreateProjectFormComponent;
@@ -10,8 +10,8 @@ describe('CreateProjectFormComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [CreateProjectFormComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(CreateProjectFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

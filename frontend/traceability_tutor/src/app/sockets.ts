@@ -1,4 +1,4 @@
-import { ClassicPreset } from "rete";
+import {ClassicPreset} from "rete";
 
 export class ActionSocket extends ClassicPreset.Socket {
   constructor() {
