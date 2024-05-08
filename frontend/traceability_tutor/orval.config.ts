@@ -4,8 +4,8 @@ export default defineConfig({
   evo: {
     output: {
       mode: "tags",
-      schemas: "gen/model",
-      target: "gen/services",
+      schemas: "api/model",
+      target: "api/services",
       client: 'angular',
       mock: false, // enable/disable test mock generation
       // I recommend enabling this option if you generate an api client
