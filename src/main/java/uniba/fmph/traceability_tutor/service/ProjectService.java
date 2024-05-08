@@ -1,12 +1,18 @@
 package uniba.fmph.traceability_tutor.service;
 
+import java.time.OffsetDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.Item;
 import uniba.fmph.traceability_tutor.domain.Project;
 import uniba.fmph.traceability_tutor.domain.Release;
 import uniba.fmph.traceability_tutor.domain.User;
+import uniba.fmph.traceability_tutor.mapper.ProjectMapper;
 import uniba.fmph.traceability_tutor.model.ProjectDTO;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.ProjectRepository;
@@ -23,61 +29,53 @@ public class ProjectService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final ReleaseRepository releaseRepository;
+    private final ProjectMapper projectMapper;
 
     public ProjectService(final ProjectRepository projectRepository,
-            final UserRepository userRepository, final ItemRepository itemRepository,
-            final ReleaseRepository releaseRepository) {
+                          final UserRepository userRepository, final ItemRepository itemRepository,
+                          final ReleaseRepository releaseRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.releaseRepository = releaseRepository;
+        this.projectMapper = projectMapper;
     }
 
+    // Use mapper to convert List<Project> to List<ProjectDTO>
     public List<ProjectDTO> findAll() {
-        final List<Project> projects = projectRepository.findAll(Sort.by("id"));
-        return projects.stream()
-                .map(project -> mapToDTO(project, new ProjectDTO()))
-                .toList();
+        return projectRepository.findAll(Sort.by("id")).stream()
+                .map(projectMapper::toDto)
+                .collect(Collectors.toList());
     }
 
+    // Use mapper to convert Project to ProjectDTO
     public ProjectDTO get(final Long id) {
         return projectRepository.findById(id)
-                .map(project -> mapToDTO(project, new ProjectDTO()))
+                .map(projectMapper::toDto)
                 .orElseThrow(NotFoundException::new);
     }
 
+    // Create a new project using the mapper
     public Long create(final ProjectDTO projectDTO) {
-        final Project project = new Project();
-        mapToEntity(projectDTO, project);
+        Project project = projectMapper.toEntity(projectDTO);
         return projectRepository.save(project).getId();
     }
 
     public void update(final Long id, final ProjectDTO projectDTO) {
-        final Project project = projectRepository.findById(id)
+        Project project = projectRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(projectDTO, project);
+
+        projectMapper.updateProjectFromDto(projectDTO, project);
+
+        User owner = userRepository.findById(projectDTO.getOwner())
+                .orElseThrow(() -> new NotFoundException("Owner not found"));
+        project.setOwner(owner);
+
         projectRepository.save(project);
     }
 
     public void delete(final Long id) {
         projectRepository.deleteById(id);
-    }
-
-    private ProjectDTO mapToDTO(final Project project, final ProjectDTO projectDTO) {
-        projectDTO.setId(project.getId());
-        projectDTO.setRepoUrl(project.getRepoUrl());
-        projectDTO.setName(project.getName());
-        projectDTO.setOwner(project.getOwner() == null ? null : project.getOwner().getId());
-        return projectDTO;
-    }
-
-    private Project mapToEntity(final ProjectDTO projectDTO, final Project project) {
-        project.setRepoUrl(projectDTO.getRepoUrl());
-        project.setName(projectDTO.getName());
-        final User owner = projectDTO.getOwner() == null ? null : userRepository.findById(projectDTO.getOwner())
-                .orElseThrow(() -> new NotFoundException("owner not found"));
-        project.setOwner(owner);
-        return project;
     }
 
     public ReferencedWarning getReferencedWarning(final Long id) {
