@@ -22,7 +22,7 @@ import { Component } from '@angular/core';
         <p class="lead">
           The page you’re looking for doesn’t exist.
         </p>
-        <a [routerLink]="'/editor'" class="btn btn-primary">Go to editor</a>
+        <a [routerLink]="'/projects'" class="btn btn-primary">Go to projects menu</a>
       </div>
     </div>
     </body>
