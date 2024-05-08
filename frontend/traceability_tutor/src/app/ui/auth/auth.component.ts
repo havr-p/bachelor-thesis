@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AxiosService} from "../../services/axios/axios.service";
 import {NgForOf} from "@angular/common";
 import {AppModule} from "../../app.module";
-import {LoginFormComponent} from "../login-form/login-form.component";
+import {LoginFormComponent} from "../forms/login-form/login-form.component";
 import {EventService} from "../../services/event/event.service";
 import {Router} from "@angular/router";
 import {AppRoutingModule} from "../../app-routing.module";
