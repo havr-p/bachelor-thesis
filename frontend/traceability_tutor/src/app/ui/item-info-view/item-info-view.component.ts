@@ -19,7 +19,7 @@ import { EventService } from 'src/app/services/event/event.service';
 import { ValidationService } from '../../services/validation/validation.service';
 import { RequirementsService } from '../../services/requirements/requirements.service';
 import { Requirement } from '../../models/requirement';
-import {RelationshipDTO} from "../../../../api/model";
+import {RelationshipDTO} from "../../../../gen/model";
 
 @Component({
   selector: 'app-item-info-view',

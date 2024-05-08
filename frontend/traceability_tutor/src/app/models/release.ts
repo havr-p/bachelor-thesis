@@ -1,4 +1,4 @@
-import {ProjectDTO, ReleaseDTO} from "../../../api/model";
+import {ProjectDTO, ReleaseDTO} from "../../../gen/model";
 
 export class Release implements ReleaseDTO{
   id: number;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Requirement } from '../../models/requirement';
 import {Item} from "../../items/Item";
-import {RelationshipType} from "../../../../api/model";
+import {RelationshipType} from "../../../../gen/model";
 
 @Injectable({
   providedIn: 'root',

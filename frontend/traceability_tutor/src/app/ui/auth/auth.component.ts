@@ -7,13 +7,13 @@ import {EventService} from "../../services/event/event.service";
 import {Router} from "@angular/router";
 import {AppRoutingModule} from "../../app-routing.module";
 import {StateManager} from "../../models/state";
-import {AuthControllerService} from "../../../../api/services/auth-controller";
+import {AuthControllerService} from "../../../../gen/services/auth-controller";
 import {AUTH_TOKEN, LocalStorageService} from "../../services/local-storage/local-storage.service";
-import {CredentialsDTO, SignUpDTO, UserDTO} from "../../../../api/model";
+import {CredentialsDTO, SignUpDTO, UserDTO} from "../../../../gen/model";
 import {Subscription} from "rxjs";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {HttpErrorResponse} from "@angular/common/http";
-import {UserResourceService} from "../../../../api/services/user-resource";
+import {UserResourceService} from "../../../../gen/services/user-resource";
 
 @Component({
   selector: 'app-auth',

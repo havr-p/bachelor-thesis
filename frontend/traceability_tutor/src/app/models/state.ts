@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Project} from "./project";
-import {ProjectDTO, RelationshipType, UserDTO} from "../../../api/model";
+import {ProjectDTO, RelationshipType, UserDTO} from "../../../gen/model";
 import {Item} from "../items/Item";
 import {Release} from "./release";
 import {
@@ -15,7 +15,7 @@ import {ItemProps} from "../types";
 import {Connection} from "../connection";
 import {RequirementItem} from "../items/requirement-item";
 import {tsCallMethod} from "@angular/compiler-cli/src/ngtsc/typecheck/src/ts_util";
-import {AuthControllerService} from "../../../api/services/auth-controller";
+import {AuthControllerService} from "../../../gen/services/auth-controller";
 import {Router} from "@angular/router";
 
 export interface EditorState {

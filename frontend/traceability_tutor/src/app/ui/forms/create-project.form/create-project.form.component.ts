@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {EventService} from "../../../services/event/event.service";
-import {ProjectResourceService} from "../../../../../api/services/project-resource";
+import {ProjectResourceService} from "../../../../../gen/services/project-resource";
 
 @Component({
   selector: 'app-create-project-form',
