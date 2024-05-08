@@ -6,7 +6,10 @@
  */
 
 export interface ProjectDTO {
+  dateCreated?: Date;
   id?: number;
+  lastModified?: Date;
+  lastOpened?: Date;
   /**
    * @minLength 0
    * @maxLength 255
