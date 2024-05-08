@@ -10,13 +10,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import uniba.fmph.traceability_tutor.domain.User;
 import uniba.fmph.traceability_tutor.mapper.UserMapper;
 import uniba.fmph.traceability_tutor.model.UserDTO;
 import uniba.fmph.traceability_tutor.repos.UserRepository;
-import uniba.fmph.traceability_tutor.service.UserService;
 import uniba.fmph.traceability_tutor.util.AppException;
 
 import java.util.Base64;

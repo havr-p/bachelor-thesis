@@ -82,7 +82,7 @@ export class RelationshipResourceService {
       relationshipDTO,options
     );
   }
-};
+}
 
 export type GetRelationshipClientResult = NonNullable<RelationshipDTO>
 export type UpdateRelationshipClientResult = NonNullable<number>

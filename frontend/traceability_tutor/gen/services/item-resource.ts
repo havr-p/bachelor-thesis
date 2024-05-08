@@ -82,7 +82,7 @@ export class ItemResourceService {
       itemDTO,options
     );
   }
-};
+}
 
 export type GetItemClientResult = NonNullable<ItemDTO>
 export type UpdateItemClientResult = NonNullable<number>

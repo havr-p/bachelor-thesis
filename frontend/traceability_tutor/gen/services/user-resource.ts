@@ -89,7 +89,7 @@ export class UserResourceService {
       `/api/users/verify/${token}`,options
     );
   }
-};
+}
 
 export type GetUserClientResult = NonNullable<UserDTO>
 export type UpdateUserClientResult = NonNullable<number>

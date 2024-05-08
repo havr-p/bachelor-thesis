@@ -69,7 +69,7 @@ export class AuthControllerService {
       `/api/renewToken/${id}`,options
     );
   }
-};
+}
 
 export type RegisterClientResult = NonNullable<UserDTO>
 export type LoginClientResult = NonNullable<UserDTO>

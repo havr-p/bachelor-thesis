@@ -82,7 +82,7 @@ export class ReleaseResourceService {
       releaseDTO,options
     );
   }
-};
+}
 
 export type GetReleaseClientResult = NonNullable<ReleaseDTO>
 export type UpdateReleaseClientResult = NonNullable<number>
