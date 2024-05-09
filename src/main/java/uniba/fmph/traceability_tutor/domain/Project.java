@@ -3,6 +3,7 @@ package uniba.fmph.traceability_tutor.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,6 +33,7 @@ public class Project {
     private Long id;
 
     @Column(nullable = false)
+    @URL
     private String repoUrl;
 
     @Column(nullable = false)

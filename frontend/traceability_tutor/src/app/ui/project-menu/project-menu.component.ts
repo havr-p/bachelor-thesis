@@ -9,7 +9,8 @@ import {ProjectResourceService} from "../../../../gen/services/project-resource"
 import {CreateProjectFormComponent} from "../forms/create-project.form/create-project.form.component";
 import {DialogModule} from "primeng/dialog";
 import {DockComponent} from "../dock/dock.component";
-import {MenuItem} from "primeng/api";
+import {EventService} from "../../services/event/event.service";
+import {BaseEvent, EditorEventType, EventSource, ProjectEventType} from "../../types";
 
 @Component({
   selector: 'app-project-menu',
@@ -28,22 +29,29 @@ import {MenuItem} from "primeng/api";
 })
 export class ProjectMenuComponent implements OnInit {
 
-  constructor(private stateManager: StateManager, private localStorageService: LocalStorageService, private projectService: ProjectResourceService) {
+  constructor(private stateManager: StateManager, private localStorageService: LocalStorageService, private projectService: ProjectResourceService, private eventService: EventService) {
   }
 
   projects: ProjectDTO[] = [];
   createNewProjectDialogVisible = false;
-  dockItems: MenuItem[] = [];
 
-  ngAfterViewInit(): void {
 
-  }
 
   ngOnInit(): void {
     this.projectService.getUserProjects().subscribe(projects => {
       this.projects = projects;
     });
     console.log(this.projects)
+    this.eventService.event$.subscribe(
+      async (event: BaseEvent<EventSource, ProjectEventType>) => {
+        if (event.source === EventSource.PROJECT_MENU) {
+          switch (event.type) {
+            case ProjectEventType.CREATE:
+              this.createNewProjectDialogVisible = true;
+          }
+        }
+
+      });
   }
 
 }

@@ -21,6 +21,13 @@ spring:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Iv23lisHIjkXIrrDliv7
+            client-secret: 8b265f251abb6ddd2c2591f72a8c56a800f66101
 error:
   handling:
     http-status-in-json-response: true
@@ -30,6 +37,7 @@ error:
       5xx: ERROR
 springdoc:
   pathsToMatch: /api/**
+
 
 
 security:

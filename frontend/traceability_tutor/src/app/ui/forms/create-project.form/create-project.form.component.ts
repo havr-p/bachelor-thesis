@@ -3,6 +3,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {InputTextModule} from "primeng/inputtext";
 import {EventService} from "../../../services/event/event.service";
 import {ProjectResourceService} from "../../../../../gen/services/project-resource";
+import {StateManager} from "../../../models/state";
 
 @Component({
   selector: 'app-create-project-form',
@@ -17,14 +18,14 @@ export class CreateProjectFormComponent {
     repoUrl: new FormControl('', [Validators.required])
   });
 
-  constructor(private eventService: EventService, private projectService: ProjectResourceService) {
+  constructor(private eventService: EventService, private projectService: ProjectResourceService, private stateManager: StateManager) {
   }
 
   onSubmit() {
     console.log('Form Submitted!', this.projectForm.value);
     if (this.projectForm.value)
       this.projectService.createProject({
-        owner: 12121,
+        owner: this.stateManager.currentUser.id!,
         repoUrl: this.projectForm.value.repoUrl!,
         name: this.projectForm.value.name!
       }).subscribe({

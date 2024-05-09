@@ -1,6 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
-import {BaseEvent, EditorEvent, EditorEventType, EventSource, ItemViewEvent, ItemViewEventType,} from '../../types';
+import {
+  BaseEvent,
+  EditorEvent,
+  EditorEventType,
+  EventSource,
+  ItemViewEvent,
+  ItemViewEventType, ProjectEvent,
+  ProjectEventType,
+} from '../../types';
 import {IndividualConfig, ToastrService} from 'ngx-toastr';
 
 @Injectable({
@@ -20,6 +28,11 @@ export class EventService {
 
   publishItemViewEvent(type: ItemViewEventType, data: any) {
     this.eventSource.next(new ItemViewEvent(type, data));
+  }
+
+  publishProjectMenuEvent(type: ProjectEventType, data?: any) {
+    console.log('publishEditorEvent', type, data);
+    this.eventSource.next(new ProjectEvent(type, data));
   }
 
   notify(message: string, type: 'success' | 'error' | 'info' | 'warning', title?: string, override?: Partial<IndividualConfig>) {

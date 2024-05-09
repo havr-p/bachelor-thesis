@@ -35,13 +35,14 @@ export class AuthComponent implements OnInit {
           if (userDTO.id === this.stateManager.currentUser.id) {
             const token = this.authService.renewToken(userDTO.id!);
             this.localStorageService.saveData(AUTH_TOKEN, token);
+            this.router.navigateByUrl('/projects');
           }
         },
         error: (err: HttpErrorResponse) => {
         }
       }
-
-      this.userService.getUserByToken(token).subscribe(observer)
+      if (token)
+      this.userService.getUserByToken(token as string).subscribe(observer)
     }
 
 

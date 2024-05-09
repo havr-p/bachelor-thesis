@@ -27,6 +27,13 @@ export enum EditorEventType {
   CLEAR = 'clear',
 }
 
+export enum ProjectEventType {
+  CREATE = 'create',
+  REMOVE = 'remove',
+  EDIT = 'edit',
+  SELECT = 'select',
+}
+
 export enum ItemViewEventType {
   EDIT = 'edit',
 }
@@ -34,6 +41,7 @@ export enum ItemViewEventType {
 export enum EventSource {
   EDITOR = 'editor',
   ITEM_VIEW = 'item view',
+  PROJECT_MENU = 'project menu'
 }
 
 export abstract class BaseEvent<S extends EventSource, U> {
@@ -60,6 +68,15 @@ export class ItemViewEvent extends BaseEvent<
 > {
   constructor(type: ItemViewEventType, data: any) {
     super(EventSource.ITEM_VIEW, type, data);
+  }
+}
+
+export class ProjectEvent extends BaseEvent<
+  EventSource.PROJECT_MENU,
+  ProjectEventType
+> {
+  constructor(type: ProjectEventType, data: any) {
+    super(EventSource.PROJECT_MENU, type, data);
   }
 }
 

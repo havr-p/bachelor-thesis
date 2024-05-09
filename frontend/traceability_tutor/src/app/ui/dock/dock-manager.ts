@@ -3,10 +3,9 @@ import {EventService} from "../../services/event/event.service";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {StateManager} from "../../models/state";
 import {MenuItem} from "primeng/api";
-import {EditorEventType} from "../../types";
+import {EditorEventType, ProjectEventType} from "../../types";
 import {Requirement} from "../../models/requirement";
 import {Injectable} from "@angular/core";
-import {ProjectDTO} from "../../../../gen/model";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";
 
 @Injectable({
@@ -32,17 +31,6 @@ export class DockManager  {
 
     if (mode === 'editor') {
       items = [
-        {
-          label: 'Project',
-          items: [
-            {
-              label: 'New...',
-              command: () => {
-                console.log('Creating a new project...');
-              },
-            },
-          ],
-        },
         {
           label: 'Load demo project',
           command: async () => {
@@ -80,7 +68,14 @@ export class DockManager  {
       ];
     } else if (mode === 'projects') {
       console.log("projects mode")
-      items = this.buildProjectMenuItems();
+      items = [
+        {
+          label: 'New Project',
+          command: () => {
+            this.eventService.publishProjectMenuEvent(ProjectEventType.CREATE)
+          }
+        },
+      ]
     }
     return items;
   }
@@ -92,21 +87,5 @@ export class DockManager  {
       console.error('Error fetching requirements:', error);
       return [];
     }
-  }
-
-  private buildProjectMenuItems(): MenuItem[] {
-    let projectMenuItems: MenuItem[] = [];
-
-    projectMenuItems.push(
-      {
-        label: 'New Project',
-        command: () => {
-          console.log('Creating a new project...');
-        }
-      },
-    );
-
-    console.log("projectItems", projectMenuItems)
-    return projectMenuItems;
   }
 }

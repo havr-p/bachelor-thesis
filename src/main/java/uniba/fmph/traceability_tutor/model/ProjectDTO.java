@@ -5,18 +5,19 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.OffsetDateTime;
 
 
 @Getter
 @Setter
-@NotBlank
 public class ProjectDTO {
 
     private Long id;
 
-    @NotNull
+    @NotBlank
+    @URL
     @Size(max = 255)
     private String repoUrl;
 

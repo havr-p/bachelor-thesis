@@ -19,3 +19,8 @@
   background-position: -3.2px -3.2px, -3.2px -3.2px, -1.6px -1.6px,
   -1.6px -1.6px;
 }
+
+.p-menuitem-content a {
+  text-decoration: none !important;
+}
+

@@ -8,7 +8,8 @@ import {StateManager} from "../../models/state";
 import {MenubarModule} from "primeng/menubar";
 import {MenuModule} from "primeng/menu";
 import {ButtonModule} from "primeng/button";
-import {MenuItem} from "primeng/api";
+import {MenuItem, MenuItemCommandEvent} from "primeng/api";
+import {DockManager} from "./dock-manager";
 
 @Component({
   selector: 'app-dock',
@@ -22,114 +23,37 @@ import {MenuItem} from "primeng/api";
   standalone: true
 })
 export class DockComponent implements OnInit {
-  @Input() items: MenuItem[] | undefined;
+  @Input() items: MenuItem[] = [];
+  @Input() mode: 'projects' | 'releases' | 'editor' = 'editor';
   id = 1;
 
-  userMenuItems: MenuItem[] = [
-    {
-      label: 'Options',
-      style: {left: 'auto', right: 0, position: 'absolute'},
-      items: [
-        {
-          label: 'Refresh',
-          icon: 'pi pi-refresh'
-        },
-        {
-          label: 'Export',
-          icon: 'pi pi-upload'
-        }
-      ]
-    }
-  ];
-
-  constructor(
-    private requirementsService: RequirementsService,
-    private eventService: EventService,
-    private localStorageService: LocalStorageService,
-    private stateManager: StateManager,
-  ) {
+  constructor(private dockManager: DockManager, private stateManager: StateManager) {
   }
+
+
+
 
   ngOnInit() {
-    //fixme we need to get rid of that completely
-    // @ts-ignore
-    // this.items = [
-    //   {
-    //     label: 'Project',
-    //     items: [
-    //       {
-    //         label: 'New...',
-    //         command: () => {
-    //           this.createNewProjectDialogVisible = true;
-    //         },
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     label: 'Load demo project',
-    //     command: async () => {
-    //       let data = await this.loadAll();
-    //       this.eventService.publishEditorEvent(EditorEventType.DEMO, data);
-    //     },
-    //   },
-    //   {
-    //     label: 'Add node',
-    //     styleClass: 'menuItem',
-    //     items: [
-    //       {
-    //         label: 'Requirement',
-    //         tooltip: 'Use this command to create a new requirement node',
-    //         tooltipPosition: 'bottom',
-    //         command: async () => {
-    //           console.log('called');
-    //           let data: Requirement = {
-    //             id: Number(this.id++).toString(),
-    //             level: 'stakeholder',
-    //             name: 'New Requirement',
-    //             statement: 'New Requirement Description',
-    //           };
-    //           this.eventService.publishEditorEvent(EditorEventType.ADD, data);
-    //         },
-    //       },
-    //     ],
-    //   },
-    //
-    //   {
-    //     label: 'Clear',
-    //     command: () => {
-    //       this.localStorageService.clearData();
-    //       this.eventService.publishEditorEvent(EditorEventType.CLEAR);
-    //     },
-    //   },
-    //   {
-    //     label: 'Logout',
-    //     command: () => {
-    //       this.stateManager.logout()
-    //     }
-    //   }
-    // ];
-    this.items?.push(...this.userMenuItems);
-
+    const userMenuItems: MenuItem[] = [
+      {
+        label: this.stateManager.currentUser.email,
+        styleClass: 'user-menu',
+        icon: 'pi pi-user',
+        items: [
+          {
+            label: 'Logout',
+            command: () => {
+              this.stateManager.logout();
+            },
+            icon: 'pi pi-sign-out',
+          },
+        ],
+      },
+    ];
+    const menuItems = this.dockManager.buildMenuItems(this.mode);
+    this.items.push(...menuItems);
+    this.items.push(...userMenuItems);
   }
 
-  protected readonly Date = Date;
-  createNewProjectDialogVisible = false;
-  uploadedFiles: any;
-  value: any;
 
-  private createNewProject() {
-  }
-
-  onUpload($event: FileUploadEvent) {
-  }
-
-  private async loadAll(): Promise<Requirement[]> {
-    try {
-      const requirements = await this.requirementsService.fetchRequirements();
-      return requirements;
-    } catch (error) {
-      console.error('Error fetching requirements:', error);
-      return [];
-    }
-  }
 }

@@ -2,7 +2,6 @@
   width: 100%;
   display: flex;
   align-items: center;
-
 }
 
 .menuItem {
@@ -12,5 +11,13 @@
 }
 
 .user-menu {
-  padding-right: 500px;
+  position: absolute;
+
+  top: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+a {
+  text-decoration: none !important;
 }
