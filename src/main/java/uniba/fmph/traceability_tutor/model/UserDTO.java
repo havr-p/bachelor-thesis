@@ -29,6 +29,7 @@ public class UserDTO {
     private String firstName;
     private String lastName;
 
+    @Builder.Default
     private Role role = Role.ROLE_USER;
 
     private String token;

@@ -1,3 +1,8 @@
-<!--<div>-->
-<!--  <app-login-form (onSubmitLoginEvent)="onLogin($event)" (onSubmitRegisterEvent)="onRegister($event)"></app-login-form>-->
-<!--</div>-->
+<div class="container unauthenticated" *ngIf="!authenticated">
+  With GitHub: <a href="/oauth2/authorization/github">click here</a>
+</div>
+
+<div class="container authenticated" *ngIf="authenticated">
+  <p>Logged in as: {{ user?.name }}</p>
+  <button (click)="logout()" class="btn btn-primary">Logout</button>
+</div>

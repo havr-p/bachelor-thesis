@@ -26,8 +26,8 @@ spring:
       client:
         registration:
           github:
-            client-id: Iv23lisHIjkXIrrDliv7
-            client-secret: 8b265f251abb6ddd2c2591f72a8c56a800f66101
+            client-id: Ov23liK0394qW9swak2d
+            client-secret: abea36565ba2e57f3e6dc429e05b3b478b36bbbd
 error:
   handling:
     http-status-in-json-response: true
@@ -38,6 +38,10 @@ error:
 springdoc:
   pathsToMatch: /api/**
 
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
 
 
 security:

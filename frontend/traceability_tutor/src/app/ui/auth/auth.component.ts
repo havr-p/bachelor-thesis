@@ -1,88 +1,49 @@
-import {Component, OnInit} from '@angular/core';
-import {NgForOf} from "@angular/common";
-import {LoginFormComponent} from "../forms/login-form/login-form.component";
-import {EventService} from "../../services/event/event.service";
-import {Router} from "@angular/router";
-import {StateManager} from "../../models/state";
-import {AuthControllerService} from "../../../../gen/services/auth-controller";
-import {AUTH_TOKEN, LocalStorageService} from "../../services/local-storage/local-storage.service";
-import {CredentialsDTO, SignUpDTO, UserDTO} from "../../../../gen/model";
-import {HttpErrorResponse} from "@angular/common/http";
-import {UserResourceService} from "../../../../gen/services/user-resource";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { LocalStorageService, AUTH_TOKEN } from '../../services/local-storage/local-storage.service';
+import { UserDTO } from '../../../../gen/model';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   standalone: true,
-  imports: [
-    NgForOf, LoginFormComponent
-  ],
-  styleUrl: './auth.component.scss'
-
+  styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  data: any;
+  authenticated: boolean = false;
+  user: any;
 
-  constructor(private authService: AuthControllerService, private eventService: EventService, private router: Router, private stateManager: StateManager, private localStorageService: LocalStorageService, private userService: UserResourceService) {
-  }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private localStorageService: LocalStorageService
+  ) {}
 
   ngOnInit(): void {
-
-    if (this.stateManager.currentUser) {
-      const token = this.localStorageService.getData(AUTH_TOKEN);
-      const observer = {
-        next: (userDTO: UserDTO) => {
-          if (userDTO.id === this.stateManager.currentUser.id) {
-            const token = this.authService.renewToken(userDTO.id!);
-            this.localStorageService.saveData(AUTH_TOKEN, token);
-            this.router.navigateByUrl('/projects');
-          }
-        },
-        error: (err: HttpErrorResponse) => {
-        }
-      }
-      if (token)
-      this.userService.getUserByToken(token as string).subscribe(observer)
-    }
-
-
-  }
-
-
-  onLogin(input: CredentialsDTO): void {
-    const observer = {
-      next: (value: UserDTO) => {
-        this.localStorageService.saveData(AUTH_TOKEN, value.token);
-        this.stateManager.currentUser = value;
-        this.router.navigateByUrl('/projects');
+    // Attempt to fetch user information with a GET request
+    this.http.get<any>('/user').subscribe({
+      next: (data) => {
+        this.authenticated = true;
+        this.user = data;
       },
-      error: (err: HttpErrorResponse) => {
-        this.eventService.notify("Login failed: " + err.message, 'error')
+      error: () => {
+        this.authenticated = false;
       }
-    }
-
-    this.authService.login({
-      email: input.email,
-      password: input.password
-    }).subscribe(observer);
+    });
   }
 
-  onRegister(input: SignUpDTO): void {
-    const observer = {
-      next: (value: UserDTO) => {
-        this.eventService.notify("New user was successfully registered.", 'success')
+  logout(): void {
+    this.http.post('/logout', {}).subscribe({
+      next: () => {
+        this.localStorageService.removeData(AUTH_TOKEN);
+        this.authenticated = false;
+        this.user = undefined;
+        this.router.navigate(['/']);
       },
-      error: (err: HttpErrorResponse) => {
-        this.eventService.notify("Login failed: " + err.message, 'error')
+      error: () => {
+        console.error('Logout failed');
       }
-    }
-
-    this.authService.register({
-      firstName: input.firstName,
-      lastName: input.lastName,
-      email: input.email,
-      password: input.password
-    }).subscribe(observer);
+    });
   }
-
 }

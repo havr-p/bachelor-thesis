@@ -4,7 +4,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uniba.fmph.traceability_tutor.config.UserAuthenticationProvider;
 import uniba.fmph.traceability_tutor.domain.Project;
 import uniba.fmph.traceability_tutor.domain.User;
 import uniba.fmph.traceability_tutor.mapper.UserMapper;
@@ -29,15 +28,13 @@ public class UserService {
     private final ProjectRepository projectRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final UserAuthenticationProvider userAuthenticationProvider;
 
     public UserService(final UserRepository userRepository,
-                       final ProjectRepository projectRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, UserAuthenticationProvider userAuthenticationProvider) {
+                       final ProjectRepository projectRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
-        this.userAuthenticationProvider = userAuthenticationProvider;
     }
 
     public List<UserDTO> findAll() {
@@ -57,9 +54,6 @@ public class UserService {
         return userRepository.findByEmail(email).map(userMapper::toUserDTO).orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
     }
 
-    public UserDTO findByToken(final String token) {
-        return userAuthenticationProvider.findByToken(token);
-    }
 
     public UserDTO findById(final Long id) {
         return userRepository.findById(id).map(userMapper::toUserDTO).orElseThrow(NotFoundException::new);

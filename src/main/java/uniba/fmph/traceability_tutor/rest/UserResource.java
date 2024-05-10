@@ -59,10 +59,6 @@ public class UserResource {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/verify/{token}")
-    public ResponseEntity<UserDTO> getUserByToken(@PathVariable(name = "token") final String token) {
-        UserDTO userDTO = this.userService.findByToken(token);
-        return ResponseEntity.ok(userDTO);
-    }
+
 
 }
