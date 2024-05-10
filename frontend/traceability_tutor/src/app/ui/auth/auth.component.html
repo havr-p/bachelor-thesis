@@ -1,8 +1,11 @@
+
+<div class="card container">
 <div class="container unauthenticated" *ngIf="!authenticated">
-  With GitHub: <a href="/oauth2/authorization/github">click here</a>
+  <p-button label="Sign in with Github" icon="pi pi-github" (onClick)="signIn()"></p-button>
 </div>
 
 <div class="container authenticated" *ngIf="authenticated">
-  <p>Logged in as: {{ user?.name }}</p>
-  <button (click)="logout()" class="btn btn-primary">Logout</button>
+  <p>Logged in as: {{ user }}</p>
+  <p-button (onClick)="logout()" icon="pi pi-sign-out">Logout</p-button>
+</div>
 </div>

@@ -51,8 +51,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             // other public endpoints of your API may be appended to this array
             //auth endpoints
-            "/api/login",
-            "/api/register",
+            "/api/login", "/api/register", "/api/user", "/api/logout", "/",
             "/index.html", "/error", "/webjars/**",
     };
 
@@ -73,24 +72,12 @@ public class SecurityConfig {
 //                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .logout(l -> l
-                        .logoutSuccessUrl("/").permitAll()
+                        .logoutUrl("/api/logout")
+                        .logoutSuccessUrl("/") // This redirects to the Angular base URL
+                        .permitAll()
                 )
-                .oauth2Login(Customizer.withDefaults())
-                .addFilterAfter(new OncePerRequestFilter() {
-            @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-                // Retrieve the CSRF token from the repository
-                CsrfToken csrfToken = csrfTokenRepository.loadToken(request);
-                if (csrfToken == null) {
-                    // Create a new token if it's not available
-                    csrfToken = csrfTokenRepository.generateToken(request);
-                    csrfTokenRepository.saveToken(csrfToken, request, response);
-                }
-                // Set the CSRF token as a request attribute
-                request.setAttribute(CsrfToken.class.getName(), csrfToken);
-                filterChain.doFilter(request, response);
-            }
-        }, CsrfFilter.class);
+                .oauth2Login(Customizer.withDefaults());
+
                 
         return http.build();
     }
