@@ -10,7 +10,6 @@ import uniba.fmph.traceability_tutor.model.UserDTO;
 public interface UserMapper {
     UserDTO toUserDTO(User user);
 
-    @Mapping(target = "password", ignore = true)
     @Mapping(target = "email", source = "email")
     @Mapping(target = "role", constant = "ROLE_USER")
     User signUpToUser(SignUpDTO signUpDto);

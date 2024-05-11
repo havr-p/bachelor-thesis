@@ -14,10 +14,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 
 @Entity
@@ -27,7 +29,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Data
-public class User implements UserDetails {
+public class User implements OAuth2User {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -47,26 +49,27 @@ public class User implements UserDetails {
     @Email
     private String email;
 
-    @Column(nullable = false)
-    private String firstName;
-
-    @Column(nullable = false)
-    private String lastName;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     @Builder.Default
     private Role role = Role.ROLE_USER;
 
+    private String provider; // currently only GitHub
+
+    private String githubAccessToken; //in case Oauth apps - valid until not revoked
+
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return Map.of();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    @Column(nullable = false)
-    @Size(max = 100)
-    @NotBlank
-    private String password;
 
 
     @CreatedDate
@@ -79,27 +82,7 @@ public class User implements UserDetails {
 
 
     @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public String getName() {
+        return email;
     }
 }

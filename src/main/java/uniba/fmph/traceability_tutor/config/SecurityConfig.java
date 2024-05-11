@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,6 +29,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import reactor.core.publisher.Mono;
+import uniba.fmph.traceability_tutor.service.GitHubService;
 
 import java.io.IOException;
 
@@ -35,6 +37,8 @@ import java.io.IOException;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final GitHubService gitHubService;
+    private final FrontendOAuth2SuccessHandler successHandler;
 
 
     public static final String[] AUTH_WHITELIST = {
@@ -72,11 +76,11 @@ public class SecurityConfig {
 //                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .logout(l -> l
-                        .logoutUrl("/api/logout")
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl("/") // This redirects to the Angular base URL
                         .permitAll()
                 )
-                .oauth2Login(Customizer.withDefaults());
+                .oauth2Login(oauth2 -> oauth2.successHandler(successHandler));
 
                 
         return http.build();

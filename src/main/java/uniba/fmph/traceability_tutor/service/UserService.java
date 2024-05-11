@@ -61,7 +61,6 @@ public class UserService {
 
     public Long create(final UserDTO userDTO) {
         final User user = new User();
-        //mapToEntity(userDTO, user);
         return userRepository.save(user).getId();
     }
 
@@ -76,28 +75,28 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public UserDTO login(CredentialsDTO credentials) {
-        User user = userRepository.findByEmail(credentials.email()).orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
-        if (passwordEncoder.matches(CharBuffer.wrap(credentials.password()), user.getPassword())) {
-            return userMapper.toUserDTO(user);
-        }
-        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
-    }
-
-    public UserDTO register(SignUpDTO userDto) {
-        Optional<User> optionalUser = userRepository.findByEmail(userDto.email());
-
-        if (optionalUser.isPresent()) {
-            throw new AppException("User already exists", HttpStatus.BAD_REQUEST);
-        }
-
-        User user = userMapper.signUpToUser(userDto);
-        user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.password())));
-
-        User savedUser = userRepository.save(user);
-
-        return userMapper.toUserDTO(savedUser);
-    }
+//    public UserDTO login(CredentialsDTO credentials) {
+//        User user = userRepository.findByEmail(credentials.email()).orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
+//        if (passwordEncoder.matches(CharBuffer.wrap(credentials.password()), user.getPassword())) {
+//            return userMapper.toUserDTO(user);
+//        }
+//        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
+//    }
+//
+//    public UserDTO register(SignUpDTO userDto) {
+//        Optional<User> optionalUser = userRepository.findByEmail(userDto.email());
+//
+//        if (optionalUser.isPresent()) {
+//            throw new AppException("User already exists", HttpStatus.BAD_REQUEST);
+//        }
+//
+//        User user = userMapper.signUpToUser(userDto);
+//        user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.password())));
+//
+//        User savedUser = userRepository.save(user);
+//
+//        return userMapper.toUserDTO(savedUser);
+//    }
 
     public ReferencedWarning getReferencedWarning(final Long id) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();

@@ -1,11 +1,15 @@
 
-<div class="card container">
+<div class="card container py-4 px-4">
+  <h1>Traceability tutor</h1>
 <div class="container unauthenticated" *ngIf="!authenticated">
-  <p-button label="Sign in with Github" icon="pi pi-github" (onClick)="signIn()"></p-button>
+  <p-button label="Sign in with Github" icon="pi pi-github" (onClick)="handleGithubLogin()"></p-button>
 </div>
 
-<div class="container authenticated" *ngIf="authenticated">
-  <p>Logged in as: {{ user }}</p>
-  <p-button (onClick)="logout()" icon="pi pi-sign-out">Logout</p-button>
+<div class="container authenticated flex gap-3" *ngIf="authenticated">
+
+  <p>Logged in as: </p>
+  <p>You may now proceed to projects: </p>
+  <p-button label="Go to projects" (onClick)="onProjectsClick()" class="pr-4"></p-button>
+  <p-button (onClick)="logout()" icon="pi pi-sign-out" label="Logout"></p-button>
 </div>
 </div>

@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${JDBC_DATABASE_URL:jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:5432/postgres}
-    username: ${JDBC_DATABASE_USERNAME:postgres.mvzityhzbbqcmgkuhzlc}
-    password: ${JDBC_DATABASE_PASSWORD:inDtt8Z6b82S5FVD}
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://frankfurt-postgres.render.com/ttutor}
+    username: ${JDBC_DATABASE_USERNAME:admin}
+    password: ${JDBC_DATABASE_PASSWORD:UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby}
     dbcp2:
       max-wait-millis: 30000
       validation-query: select 1

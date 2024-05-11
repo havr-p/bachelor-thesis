@@ -47,7 +47,7 @@
         $(".authenticated").show();
     });
     var logout = function() {
-        $.post("/logout", function() {
+        $.post("/api/logout", function() {
             $("#user").html('');
             $(".unauthenticated").show();
             $(".authenticated").hide();
