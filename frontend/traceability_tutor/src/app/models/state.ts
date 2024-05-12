@@ -29,6 +29,7 @@ export class StateManager {
   private currentProject: Project | undefined;
   private currentRelease: Release | undefined;
   private editorState: EditorState | undefined;
+  public currentUser!: UserDTO | undefined;
 
   constructor(private validationService: ValidationService, private localStorageService: LocalStorageService, private authService: AuthControllerService, private router: Router) {
   }
@@ -40,11 +41,11 @@ export class StateManager {
     return project;
   }
 
-  set currentUser(userDTO: UserDTO) {
-    this.localStorageService.saveData(CURRENT_USER, userDTO);
+  saveCurrentUser() {
+    this.localStorageService.saveData(CURRENT_USER, this.currentUser);
   }
 
-  get currentUser(): UserDTO {
+  restoreCurrentUser(): UserDTO {
     return this.localStorageService.getData(CURRENT_USER);
   }
 
@@ -112,7 +113,7 @@ export class StateManager {
 
 
   openProject(project: ProjectDTO) {
-    
+
   }
 }
 

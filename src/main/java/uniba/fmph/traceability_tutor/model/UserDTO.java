@@ -17,21 +17,15 @@ public class UserDTO {
 
     private Long id;
 
-    @NotNull
     @Size(max = 255)
     @Email
     private String email;
 
-    @NotNull
-    @NotBlank
-    private String password;
+    private String gitHubLogin;
 
-    private String firstName;
-    private String lastName;
+
 
     @Builder.Default
     private Role role = Role.ROLE_USER;
-
-    private String token;
 
 }

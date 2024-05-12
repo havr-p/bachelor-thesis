@@ -1,8 +1,13 @@
 package uniba.fmph.traceability_tutor.service;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.Item;
 import uniba.fmph.traceability_tutor.domain.Project;
@@ -15,11 +20,13 @@ import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.ProjectRepository;
 import uniba.fmph.traceability_tutor.repos.ReleaseRepository;
 import uniba.fmph.traceability_tutor.repos.UserRepository;
+import uniba.fmph.traceability_tutor.util.AppException;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -31,42 +38,40 @@ public class ProjectService {
     private final ItemRepository itemRepository;
     private final ReleaseRepository releaseRepository;
     private final ProjectMapper projectMapper;
-    private final UserMapper userMapper;
 
-    public ProjectService(final ProjectRepository projectRepository,
-                          final UserRepository userRepository, final ItemRepository itemRepository,
-                          final ReleaseRepository releaseRepository, ProjectMapper projectMapper, UserMapper userMapper) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository,
+                          ItemRepository itemRepository, ReleaseRepository releaseRepository,
+                          ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.releaseRepository = releaseRepository;
         this.projectMapper = projectMapper;
-        this.userMapper = userMapper;
     }
 
-    // Use mapper to convert List<Project> to List<ProjectDTO>
     public List<ProjectDTO> findAll() {
         return projectRepository.findAll(Sort.by("id")).stream()
                 .map(projectMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    // Use mapper to convert Project to ProjectDTO
-    public ProjectDTO get(final Long id) {
+    public ProjectDTO get(Long id) {
         return projectRepository.findById(id)
                 .map(projectMapper::toDto)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("Project not found with id: " + id));
     }
 
-    // Create a new project using the mapper
-    public Long create(final ProjectDTO projectDTO) {
+    public Long create(ProjectDTO projectDTO) {
         Project project = projectMapper.toEntity(projectDTO);
+        User owner = getCurrentUser();
+        project.setOwner(owner);
+        project.setLastOpened(OffsetDateTime.now()); // Set the last opened time when creating
         return projectRepository.save(project).getId();
     }
 
     public void update(final Long id, final ProjectDTO projectDTO) {
         Project project = projectRepository.findById(id)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("Project not found with id: " + id));
 
         projectMapper.updateProjectFromDto(projectDTO, project);
 
@@ -77,7 +82,10 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public void delete(final Long id) {
+    public void delete(Long id) {
+        if (!projectRepository.existsById(id)) {
+            throw new NotFoundException("Project not found with id: " + id);
+        }
         projectRepository.deleteById(id);
     }
 
@@ -106,15 +114,21 @@ public class ProjectService {
         return projectRepository.save(project).getId();
     }
 
-    public List<ProjectDTO> findByOwner() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof User user) {
-            return projectRepository.findAllByOwnerOrderByLastOpened(user).stream()
-                    .map(projectMapper::toDto).toList();
-        } else {
-            throw new AccessDeniedException("Unauthorized: Principal is not of type User");
+    public List<ProjectDTO> findByOwner(final Long id) {
+        Optional<User> owner = userRepository.findById(id);
+        if (owner.isPresent()) {
+            return projectRepository.findAllByOwner(owner.get(), Sort.by(Sort.Direction.DESC, "lastOpened")).stream()
+                    .map(projectMapper::toDto)
+                    .collect(Collectors.toList());
         }
+        else throw new NotFoundException("User not found with id: " + id);
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String githubId = authentication.getName(); // Assuming the username is the GitHub ID for simplicity
+        return userRepository.findByGithubId(githubId)
+                .orElseThrow(() -> new NotFoundException("User not found with GitHub ID: " + githubId));
     }
 
 }

@@ -29,7 +29,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Builder
 @Data
-public class User implements OAuth2User {
+public class User {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -45,9 +45,11 @@ public class User implements OAuth2User {
     )
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    @Email
+    @Column
     private String email;
+
+    @Column
+    private String githubLogin;
 
 
     @Enumerated(EnumType.STRING)
@@ -55,20 +57,16 @@ public class User implements OAuth2User {
     @Builder.Default
     private Role role = Role.ROLE_USER;
 
+    @Column
     private String provider; // currently only GitHub
 
+    @Column
     private String githubAccessToken; //in case Oauth apps - valid until not revoked
 
+    @Column(nullable = false, unique = true)
+    private String githubId;
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return Map.of();
-    }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
 
 
 
@@ -80,9 +78,4 @@ public class User implements OAuth2User {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
-
-    @Override
-    public String getName() {
-        return email;
-    }
 }

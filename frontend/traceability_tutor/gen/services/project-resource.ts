@@ -85,10 +85,10 @@ export class ProjectResourceService {
   }
 
   getUserProjects<TData = ProjectDTO[]>(
-    options?: HttpClientOptions
+    id: number, options?: HttpClientOptions
   ): Observable<TData> {
     return this.http.get<TData>(
-      `/api/projects/user`, options
+      `/api/projects/user/${id}`, options
     );
   }
 }

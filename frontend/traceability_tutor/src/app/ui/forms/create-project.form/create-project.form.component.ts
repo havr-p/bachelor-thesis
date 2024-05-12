@@ -25,7 +25,7 @@ export class CreateProjectFormComponent {
     console.log('Form Submitted!', this.projectForm.value);
     if (this.projectForm.value)
       this.projectService.createProject({
-        owner: this.stateManager.currentUser.id!,
+        owner: this.stateManager.currentUser!.id!,
         repoUrl: this.projectForm.value.repoUrl!,
         name: this.projectForm.value.name!
       }).subscribe({

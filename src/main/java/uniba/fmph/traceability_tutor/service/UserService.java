@@ -50,9 +50,7 @@ public class UserService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public UserDTO findByEmail(final String email) {
-        return userRepository.findByEmail(email).map(userMapper::toUserDTO).orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
-    }
+
 
 
     public UserDTO findById(final Long id) {

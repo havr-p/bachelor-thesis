@@ -12,6 +12,7 @@ import uniba.fmph.traceability_tutor.util.ReferencedException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -65,9 +66,9 @@ public class ProjectResource {
         return ResponseEntity.ok(id);
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<List<ProjectDTO>> getUserProjects() {
-        return ResponseEntity.ok(projectService.findByOwner());
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<ProjectDTO>> getUserProjects(@PathVariable(name = "id") final Long id) {
+        return ResponseEntity.of(Optional.ofNullable(projectService.findByOwner(id)));
     }
 
 

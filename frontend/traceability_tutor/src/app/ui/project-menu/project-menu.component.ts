@@ -38,7 +38,8 @@ export class ProjectMenuComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.projectService.getUserProjects().subscribe(projects => {
+    if (this.stateManager.currentUser)
+    this.projectService.getUserProjects(this.stateManager.currentUser.id).subscribe(projects => {
       this.projects = projects;
     });
     console.log(this.projects)

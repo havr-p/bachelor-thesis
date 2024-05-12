@@ -36,7 +36,7 @@ export class DockComponent implements OnInit {
   ngOnInit() {
     const userMenuItems: MenuItem[] = [
       {
-        label: this.stateManager.currentUser.email,
+        label: this.stateManager.currentUser!.gitHubLogin,
         styleClass: 'user-menu',
         icon: 'pi pi-user',
         items: [

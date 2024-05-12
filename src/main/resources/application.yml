@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: traceability-tutor
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${JDBC_DATABASE_URL:jdbc:postgresql://frankfurt-postgres.render.com/ttutor}
@@ -48,3 +50,7 @@ security:
   jwt:
     token:
       secret-key: my-secret-key
+
+app:
+  oauth2:
+    redirectUri: http://localhost:4200/oauth2/redirect

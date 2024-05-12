@@ -11,11 +11,8 @@ export interface UserDTO {
    * @minLength 0
    * @maxLength 255
    */
-  email: string;
-  firstName?: string;
-  id?: number;
-  lastName?: string;
-  password: string;
+  gitHubLogin: string;
+  id: number;
   role?: Role;
-  token?: string;
+  token?: string; //currently not used
 }

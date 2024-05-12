@@ -1,5 +1,6 @@
 package uniba.fmph.traceability_tutor.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,44 +27,37 @@ public class AuthController {
     private String githubClientSecret;
 
 
-    @GetMapping("git/success")
-    public Object loginSuccess(@AuthenticationPrincipal OAuth2User principal) {
-        return principal.getAttributes();
-    }
-
     //fixme need to migrate to GitHub App in future
     //now exposuring cookie to client
     //https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/migrating-oauth-apps-to-github-apps
     @GetMapping("/login/oauth2/code/github")
-    public RedirectView loginGitHubSuccess(@AuthenticationPrincipal OAuth2User principal,
-                                           @RequestParam("code") String accessCode,
-                                           HttpServletResponse response) {
+    public RedirectView loginGitHubSuccess(HttpServletRequest request) {
 
         // Handle storing the user information and token, then redirect to a successful login page
         // For example, store user details in your database and generate a JWT token for further authentication.
 
-        String userEmail = principal.getAttributes().get("email").toString();
-        System.out.println("user email"  + userEmail);
-        System.out.println("user: " + principal.getAttributes().toString());
+//        String userEmail = "email";
+//        System.out.println("userEmail: " + request);
+//       // System.out.println("user email"  + userEmail);
+//       // System.out.println("user: " + principal.getAttributes().toString());
+//
+//        String githubAccessToken = githubService.fetchAccessToken(githubClientId,
+//                githubClientSecret, "session").block();
 
-        String githubAccessToken = githubService.fetchAccessToken(githubClientId,
-                githubClientSecret,
-                accessCode).block();
 
-
-        Optional<User> existingUser = userRepository.findByEmail(userEmail);
-        if (existingUser.isEmpty()) {
-            User user = new User();
-            user.setEmail(userEmail);
-            user.setProvider("gitHub");
-            user.setGithubAccessToken(githubAccessToken);
-            userRepository.save(user);
-        } else {
-            User userValue = existingUser.get();
-            userValue.setGithubAccessToken(githubAccessToken);
-            userRepository.save(userValue);
-        }
-        return new RedirectView(frontendUrl + "/auth?success=true&github=" + githubAccessToken);
+//        Optional<User> existingUser = userRepository.findByEmail(userEmail);
+//        if (existingUser.isEmpty()) {
+//            User user = new User();
+//            user.setEmail(userEmail);
+//            user.setProvider("gitHub");
+//            user.setGithubAccessToken(githubAccessToken);
+//            userRepository.save(user);
+//        } else {
+//            User userValue = existingUser.get();
+//            userValue.setGithubAccessToken(githubAccessToken);
+//            userRepository.save(userValue);
+//        }
+    return new RedirectView(frontendUrl + "/auth?success=true&github=" );
 
     }
 

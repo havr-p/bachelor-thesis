@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { LocalStorageService, AUTH_TOKEN } from '../../services/local-storage/local-storage.service';
+import {LocalStorageService, AUTH_TOKEN, CURRENT_USER} from '../../services/local-storage/local-storage.service';
 import { UserDTO } from '../../../../gen/model';
 import {NgIf} from "@angular/common";
 import {ButtonModule} from "primeng/button";
 import {environment} from "../../../environments/environment";
+import {StateManager} from "../../models/state";
 
 @Component({
   selector: 'app-auth',
@@ -26,7 +27,8 @@ export class AuthComponent implements OnInit {
     private http: HttpClient,
     protected router: Router,
     private localStorageService: LocalStorageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    protected stateManager: StateManager,
   ) {}
 
   ngOnInit(): void {
@@ -45,12 +47,15 @@ export class AuthComponent implements OnInit {
     // });
     this.route.queryParams.subscribe(params => {
       // Retrieve and parse the `authSuccess` query parameter
-      const succeedParam = params['success'];
-      //const githubAccessToken = params['github'];
-      this.authenticated = (succeedParam === 'true');
-      console.log(succeedParam)
-      //console.log(githubAccessToken);
-      //this.localStorageService.saveData(AUTH_TOKEN, githubAccessToken);
+      const success = Boolean(params['success'] as string);
+      if (success) {
+        this.localStorageService.removeData(CURRENT_USER);
+        const gitHubLogin = params['login'];
+        const id = params['id'] as number;
+        this.stateManager.currentUser = {gitHubLogin: gitHubLogin, id: id};
+      }
+      this.authenticated = success
+
     });
   }
 
@@ -75,4 +80,5 @@ export class AuthComponent implements OnInit {
   onProjectsClick() {
     this.router.navigateByUrl('/projects');
   }
+
 }
