@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ProjectDTO} from "../../../../gen/model";
 import {DataViewModule} from "primeng/dataview";
-import {NgClass, NgForOf} from "@angular/common";
+import {DatePipe, NgClass, NgForOf} from "@angular/common";
 import {ButtonModule} from "primeng/button";
 import {StateManager} from "../../models/state";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
@@ -13,6 +13,7 @@ import {EventService} from "../../services/event/event.service";
 import {BaseEvent, EditorEventType, EventSource, ProjectEventType} from "../../types";
 import {AuthService} from "../../services/auth/auth.service";
 import {of, switchMap} from "rxjs";
+import {NavigationService} from "../../services/navigation.service";
 
 @Component({
   selector: 'app-project-menu',
@@ -25,7 +26,8 @@ import {of, switchMap} from "rxjs";
     ButtonModule,
     CreateProjectFormComponent,
     DialogModule,
-    DockComponent
+    DockComponent,
+    DatePipe
   ],
   standalone: true
 })
@@ -35,7 +37,8 @@ export class ProjectMenuComponent implements OnInit {
               private localStorageService: LocalStorageService,
               private projectService: ProjectResourceService,
               private eventService: EventService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private navigationService: NavigationService) {
   }
 
   projects: ProjectDTO[] = [];
@@ -63,4 +66,7 @@ export class ProjectMenuComponent implements OnInit {
       });
   }
 
+  openProject(project: ProjectDTO) {
+    this.navigationService.navigateToEditor(project.id!);
+  }
 }

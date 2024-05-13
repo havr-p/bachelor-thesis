@@ -15,7 +15,7 @@ import {CustomConnectionComponent} from '../../customization/custom-connection/c
 
 import {addCustomBackground} from '../../customization/custom-background';
 import {Requirement} from '../../models/requirement';
-import {BaseEvent, EditorEventType, EventSource, ItemProps,} from '../../types';
+import {BaseEvent, EditorEventType, EventSource, ItemProps, Schemes,} from '../../types';
 import {structures} from 'rete-structures';
 import {Connection} from '../../connection';
 import {MenuItem} from 'primeng/api';
@@ -25,196 +25,18 @@ import {EventService} from 'src/app/services/event/event.service';
 import {LocalStorageService} from '../../services/local-storage/local-storage.service';
 import {Item} from '../../items/Item';
 import {getDOMSocketPosition} from 'rete-render-utils';
-
-type Schemes = GetSchemes<
-  ItemProps,
-  Connection<ItemProps, ItemProps>
->;
-type AreaExtra =
-  | Area2D<Schemes>
-  | AngularArea2D<Schemes>
-  | ContextMenuExtra
-  | MinimapExtra;
+import {StateManager} from "../../models/state";
+import {AuthService} from "../../services/auth/auth.service";
+import {ProjectResourceService} from "../../../../gen/services/project-resource";
+import {ActivatedRoute} from "@angular/router";
+import {createEditor} from "./create-editor";
+import {map, switchMap} from "rxjs";
+import {ProjectDTO, ReleaseDTO} from "../../../../gen/model";
+import {Project} from "../../models/project";
+import {Release} from "../../models/release";
+import {ReleaseResourceService} from "../../../../gen/services/release-resource";
 
 const socket = new ClassicPreset.Socket('socket');
-
-export async function createEditor(
-  container: HTMLElement,
-  injector: Injector,
-  eventService: EventService,
-) {
-  const editor = new NodeEditor<Schemes>();
-  const area = new AreaPlugin<Schemes, AreaExtra>(container);
-  const connection = new ConnectionPlugin<Schemes, AreaExtra>();
-  const minimap = new MinimapPlugin<Schemes>();
-  const contextMenu = new ContextMenuPlugin<Schemes>({
-    items: (context, plugin) => {
-      console.log(context);
-      const graph = structures(editor);
-      if (context instanceof RequirementItem) {
-        const selectedNodeId = context.id;
-        return {
-          searchBar: false,
-          list: [
-            {
-              //fixme maybe we can use parent-child relationship to show lineage
-              handler: () => {
-                const incomingConnections = graph
-                  .connections()
-                  .filter((connection) => connection.target === selectedNodeId);
-                graph
-                  .predecessors(selectedNodeId)
-                  .connections()
-                  .concat(incomingConnections)
-                  .forEach((connection) => {
-                    connection.updateData({
-                      isSelected: true,
-                    });
-                  });
-              },
-              key: '1',
-              label: 'Show lineage',
-            },
-            {
-              label: 'Hide lineage',
-              key: '2',
-              handler: () => {
-                graph.connections().forEach((connection) => {
-                  connection.updateData({isSelected: false});
-                });
-              },
-            },
-            {
-              label: 'Edit node',
-              key: '3',
-              handler: () => {
-                eventService.publishEditorEvent(
-                  EditorEventType.SELECT,
-                  context,
-                );
-              },
-            },
-            {
-              label: 'Delete node',
-              key: '5',
-              handler: () => {
-                editor.removeNode(selectedNodeId);
-                const incomingConnections = graph
-                  .connections()
-                  .filter((connection) => connection.target === selectedNodeId);
-                const outgoingConnections = graph
-                  .connections()
-                  .filter((connection) => connection.source === selectedNodeId);
-                incomingConnections.forEach((connection) =>
-                  editor.removeConnection(connection.id),
-                );
-                outgoingConnections.forEach((connection) =>
-                  editor.removeConnection(connection.id),
-                );
-              },
-            },
-            // {
-            //   label: 'Collection', key: '1', handler: () => null,
-            //   subitems: [
-            //     { label: 'Subitem', key: '1', handler: () => console.log('Subitem') }
-            //   ]
-            // }
-          ],
-        };
-      }
-      return {
-        searchBar: false,
-        list: [
-          {
-            label: 'Root context menu item',
-            key: '2',
-            handler: () => {
-            },
-          },
-        ],
-      };
-    },
-    // items: ContextMenuPresets.classic.setup([
-    //   ['Source', () => new SourceNode()],
-    //   [
-    //     'Requirement',
-    //     () =>
-    //       new RequirementNode({
-    //         id: '1',
-    //         name: 'Test',
-    //         statement: 'Test',
-    //         references: [],
-    //         status: 'Test',
-    //         level: 'Test',
-    //       }),
-    //   ],
-    // ]),
-  });
-
-  const angularRender = new AngularPlugin<Schemes, AreaExtra>({injector});
-
-  AreaExtensions.selectableNodes(area, AreaExtensions.selector(), {
-    accumulating: AreaExtensions.accumulateOnCtrl(),
-  });
-
-  angularRender.addPreset(
-    AngularPresets.classic.setup({
-      customize: {
-        node() {
-          return RequirementItemComponent;
-        },
-        connection() {
-          return CustomConnectionComponent;
-        },
-        socket() {
-          return CustomSocketComponent;
-        },
-      },
-      socketPositionWatcher: getDOMSocketPosition({
-        offset({x, y}, nodeId, side, key) {
-          return {
-            x: x + 6 * (side === 'input' ? -1 : 1),
-            y: y,
-          };
-        },
-      }),
-    }),
-  );
-  angularRender.addPreset(AngularPresets.minimap.setup());
-  angularRender.addPreset(AngularPresets.contextMenu.setup());
-
-  connection.addPreset(ConnectionPresets.classic.setup());
-
-  addCustomBackground(area);
-
-  editor.use(area);
-  area.use(connection);
-
-  area.use(angularRender);
-  area.use(minimap);
-  area.use(contextMenu);
-
-  AreaExtensions.simpleNodesOrder(area);
-
-  //await editor.addConnection(new ClassicPreset.Connection(a, 'a', b, 'a'));
-
-  setTimeout(() => {
-    AreaExtensions.zoomAt(area, editor.getNodes());
-  }, 300);
-
-  //const arrange = new AutoArrangePlugin<Schemes>();
-
-  //arrange.addPreset(ArrangePresets.classic.setup());
-
-  //area.use(arrange);
-
-  return {
-    destroy: () => area.destroy(),
-    editor: editor,
-    area: area,
-    //  arrange: arrange,
-  };
-}
 
 @Component({
   selector: 'app-editor',
@@ -264,8 +86,13 @@ export class EditorComponent
 
   constructor(
     private injector: Injector,
+    private route: ActivatedRoute,
     private eventService: EventService,
     private localStorageService: LocalStorageService,
+    private state: StateManager,
+    private authService: AuthService,
+    private projectService: ProjectResourceService,
+    private releaseService: ReleaseResourceService,
   ) {
   }
 
@@ -285,11 +112,6 @@ export class EditorComponent
 
           this.area.use(this.arrange);
 
-          let currentProject =
-            this.localStorageService.getData('current-project');
-          if (currentProject) {
-            await this.processDemoEvent(currentProject);
-          }
         },
       );
       this.loading = false;
@@ -297,6 +119,17 @@ export class EditorComponent
   }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      const projectId = Number(params.get('projectId'));
+      if (projectId) {
+        this.loadProject(projectId);
+      } else {
+        console.error('Project ID not found');
+      }
+    });
+
+
+
     this.eventService.event$.subscribe(
       async (event: BaseEvent<EventSource, EditorEventType>) => {
         if (event.source === EventSource.EDITOR) {
@@ -321,21 +154,55 @@ export class EditorComponent
     );
   }
 
-  private async processDemoEvent(data: Requirement[]) {
-    if (data && !this.localStorageService.hasKey('current-project')) {
-      this.localStorageService.saveData('current-project', data);
-    }
-    for (let req of data) {
-      //console.log(JSON.stringify(req));
-      let requirement = new RequirementItem(req);
-      requirement.addOutput(requirement.id, new ClassicPreset.Output(socket));
-      requirement.addInput(
-        requirement.id,
-        new ClassicPreset.Input(socket, '', true),
-      );
-      await this.editor.addNode(requirement);
-    }
+  private loadProject(projectId: number) {
+    this.projectService.getProject(projectId).pipe(
+      switchMap((projectDTO: ProjectDTO) => {
+        const project = new Project(projectDTO);
+        return this.releaseService.getAllReleases({ params: { projectId: projectId } }).pipe(
+          map((releases: ReleaseDTO[]) => {
+            releases.forEach(releaseDTO => {
+              const release = new Release(releaseDTO);
+              project.addRelease(release);
+            });
+            return project;
+          })
+        );
+      })
+    ).subscribe({
+      next: (project) => {
+        this.state.currentProject = project;
+        console.log('Project loaded with releases', project);
+      },
+      error: (error) => {
+        console.error('Failed to load project:', error);
+      }
+    });
+  }
 
+
+
+  async addNode(node: any) {
+    node.addOutput(node.id, new ClassicPreset.Output(socket));
+    node.addInput(node.id, new ClassicPreset.Input(socket));
+    await this.editor.addNode(node);
+  }
+
+  get openedItemTitle(): string {
+    if (this.openedItem) return this.openedItem.data.name;
+    return 'item not defined';
+  }
+
+  ngOnDestroy(): void {
+    if (this.destroyEditor) {
+      this.destroyEditor();
+    }
+  }
+
+  private async processDemoEvent(data: any) {
+    console.log("demo event");
+  }
+
+  private async arrangeNodes() {
     this.arrange.addPreset(ArrangePresets.classic.setup());
 
     this.area.use(this.arrange);
@@ -373,21 +240,4 @@ export class EditorComponent
     await AreaExtensions.zoomAt(this.area, this.editor.getNodes());
   }
 
-  async addNode(node: any) {
-    node.addOutput(node.id, new ClassicPreset.Output(socket));
-    node.addInput(node.id, new ClassicPreset.Input(socket));
-    await this.editor.addNode(node);
-  }
-
-  get openedItemTitle(): string {
-    //console.log('openedItem', this.openedItem);
-    if (this.openedItem) return this.openedItem.data.name;
-    return 'item not defined';
-  }
-
-  ngOnDestroy(): void {
-    if (this.destroyEditor) {
-      this.destroyEditor();
-    }
-  }
 }

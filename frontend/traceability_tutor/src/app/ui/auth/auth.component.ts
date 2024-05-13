@@ -48,6 +48,7 @@ export class AuthComponent implements OnInit {
   }
 
   handleGithubLogin() {
+    console.log('handleGithubLogin')
     window.location.href = environment.apiUrl + getSocialLoginUrl('github');
   }
 

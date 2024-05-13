@@ -1,6 +1,7 @@
 import {environment} from "../../environments/environment";
 
 export function getSocialLoginUrl(name: string) {
+  console.log("test getSocialLoginUrl")
   return `/oauth2/authorization/${name}?redirect_uri=${environment.oauthRedirectUri}`
 }
 
@@ -18,5 +19,9 @@ export function parseUserFromJwt(token: string) {
   if (!token) { return }
   const base64Url = token.split('.')[1]
   const base64 = base64Url.replace('-', '+').replace('_', '/')
-  return JSON.parse(window.atob(base64))
+  const decoded = JSON.parse(window.atob(base64));
+  if (decoded.exp) {
+    decoded.exp = new Date(decoded.exp * 1000);
+  }
+  return decoded;
 }

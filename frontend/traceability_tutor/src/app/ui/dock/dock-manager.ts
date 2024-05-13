@@ -8,6 +8,8 @@ import {Requirement} from "../../models/requirement";
 import {Injectable} from "@angular/core";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";
 
+export type DockMode = 'projects' | 'releases' | 'editor' | 'editor-release'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +28,7 @@ export class DockManager  {
    * @param mode Mode of the application (e.g., 'projects', 'releases', 'editor')
    * @returns An array of `MenuItem` suitable for PrimeNG Menubar.
    */
-  buildMenuItems(mode: 'projects' | 'releases' | 'editor'): MenuItem[] {
+  buildMenuItems(mode: DockMode): MenuItem[] {
     let items: MenuItem[] = [];
 
     if (mode === 'editor') {

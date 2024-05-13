@@ -38,9 +38,9 @@ export class OAuth2RedirectComponent implements OnInit{
     const data = parseUserFromJwt(accessToken);
     const user: UserDTO = {
       accessToken: accessToken,
-      tokenExpiry: new Date(data['exp']),
-      username: data['preferred_username'],
-      id: data['user_id'],
+      tokenExpiry: data.exp,
+      username: data.preferred_username,
+      id: data.user_id,
     }
     this.authService.saveAndSetUser(user);
   }

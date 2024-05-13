@@ -9,7 +9,7 @@ import {MenubarModule} from "primeng/menubar";
 import {MenuModule} from "primeng/menu";
 import {ButtonModule} from "primeng/button";
 import {MenuItem, MenuItemCommandEvent} from "primeng/api";
-import {DockManager} from "./dock-manager";
+import {DockManager, DockMode} from "./dock-manager";
 import {AuthService} from "../../services/auth/auth.service";
 
 @Component({
@@ -25,7 +25,7 @@ import {AuthService} from "../../services/auth/auth.service";
 })
 export class DockComponent implements OnInit {
   @Input() items: MenuItem[] = [];
-  @Input() mode: 'projects' | 'releases' | 'editor' = 'editor';
+  @Input() mode: DockMode = 'editor';
   id = 1;
 
   constructor(private dockManager: DockManager, private stateManager: StateManager, private authService: AuthService) {
@@ -38,9 +38,10 @@ export class DockComponent implements OnInit {
     const menuItems = this.dockManager.buildMenuItems(this.mode);
     this.items.push(...menuItems);
     this.authService.currentUser.subscribe(user => {
+      console.log("user in dock", user)
       const userMenuItems: MenuItem[] = [
         {
-          label: user?.name,  // Fallback label if username is not defined
+          label: user?.username,
           styleClass: 'user-menu',
           icon: 'pi pi-user',
           items: [{

@@ -42,13 +42,14 @@ public class TokenProvider {
 
         byte[] signingKey = jwtSecret.getBytes();
         System.out.println("signingKey: " + jwtExpirationMinutes);
-
+        var expirationDate = Date.from(ZonedDateTime.now().plusMinutes(jwtExpirationMinutes).toInstant());
+        var issuedAt = Date.from(ZonedDateTime.now().toInstant());
         return Jwts.builder()
                 .header().add("typ", TOKEN_TYPE)
                 .and()
                 .signWith(Keys.hmacShaKeyFor(signingKey), Jwts.SIG.HS512)
-                .expiration(Date.from(ZonedDateTime.now().plusMinutes(jwtExpirationMinutes).toInstant()))
-                .issuedAt(Date.from(ZonedDateTime.now().toInstant()))
+                .expiration(expirationDate)
+                .issuedAt(issuedAt)
                 .id(UUID.randomUUID().toString())
                 .issuer(TOKEN_ISSUER)
                 .audience().add(TOKEN_AUDIENCE)

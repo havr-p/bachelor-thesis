@@ -31,7 +31,7 @@ export class EventService {
   }
 
   publishProjectMenuEvent(type: ProjectEventType, data?: any) {
-    console.log('publishEditorEvent', type, data);
+    console.log('publishProjectMenuEvent', type, data);
     this.eventSource.next(new ProjectEvent(type, data));
   }
 

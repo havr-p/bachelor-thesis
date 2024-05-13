@@ -18,7 +18,7 @@ export interface EditorState {
 })
 export class StateManager {
   private projects: Map<number, Project> = new Map();
-  private currentProject: Project | undefined;
+  public currentProject: Project | undefined;
   private currentRelease: Release | undefined;
   private editorState: EditorState | undefined;
 
