@@ -126,7 +126,7 @@ public class ProjectService {
 
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String githubId = authentication.getName(); // Assuming the username is the GitHub ID for simplicity
+        Long githubId = Long.getLong(authentication.getName()); // Assuming the username is the GitHub ID for simplicity
         return userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new NotFoundException("User not found with GitHub ID: " + githubId));
     }

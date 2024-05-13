@@ -1,4 +1,4 @@
-package uniba.fmph.traceability_tutor.config;
+package uniba.fmph.traceability_tutor.config.security.oauth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

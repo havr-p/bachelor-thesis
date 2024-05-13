@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/github", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/git", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GitHubResource {
 
 
@@ -26,7 +26,7 @@ public class GitHubResource {
 
     @GetMapping("/repositories")
     public List<Repository> getPublicRepos() throws IOException {
-        String url = "https://api.github.com/user/repos?type=owner&since=2023-01-01T00:00:00Z";
+        String url = "/user/repos?type=owner&since=2023-01-01T00:00:00Z";
         return webClient.get()
                 .uri(url)
                 .retrieve()

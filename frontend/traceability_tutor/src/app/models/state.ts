@@ -1,20 +1,12 @@
-import {Injectable} from "@angular/core";
-import {Project} from "./project";
-import {ProjectDTO, RelationshipType, UserDTO} from "../../../gen/model";
-import {Item} from "../items/Item";
-import {Release} from "./release";
-import {
-  AUTH_TOKEN,
-  CURRENT_PROJECT_KEY,
-  CURRENT_USER,
-  EDITOR_STATE_KEY,
-  LocalStorageService
-} from "../services/local-storage/local-storage.service";
-import {ValidationService} from "../services/validation/validation.service";
-import {ItemProps} from "../types";
-import {Connection} from "../connection";
-import {AuthControllerService} from "../../../gen/services/auth-controller";
-import {Router} from "@angular/router";
+import { Injectable } from '@angular/core';
+import { Project } from "./project";
+import { ProjectDTO, RelationshipType, ReleaseDTO } from "../../../gen/model";
+import { Item } from "../items/Item";
+import { Release } from "./release";
+import { EDITOR_STATE_KEY, CURRENT_PROJECT_KEY, LocalStorageService } from "../services/local-storage/local-storage.service";
+import { ValidationService } from "../services/validation/validation.service";
+import { ItemProps } from "../types";
+import { Connection } from "../connection";
 
 export interface EditorState {
   nodes: ItemProps[],
@@ -29,24 +21,17 @@ export class StateManager {
   private currentProject: Project | undefined;
   private currentRelease: Release | undefined;
   private editorState: EditorState | undefined;
-  public currentUser!: UserDTO | undefined;
 
-  constructor(private validationService: ValidationService, private localStorageService: LocalStorageService, private authService: AuthControllerService, private router: Router) {
-  }
+  constructor(
+    private validationService: ValidationService,
+    private localStorageService: LocalStorageService
+  ) {}
 
   createProject(projectDTO: ProjectDTO): Project {
     const project = new Project(projectDTO);
     this.projects.set(project.id!, project);
     this.currentProject = project;
     return project;
-  }
-
-  saveCurrentUser() {
-    this.localStorageService.saveData(CURRENT_USER, this.currentUser);
-  }
-
-  restoreCurrentUser(): UserDTO {
-    return this.localStorageService.getData(CURRENT_USER);
   }
 
   saveEditorState() {
@@ -59,13 +44,10 @@ export class StateManager {
 
   addRelease(projectId: number, commitHash: string, semanticId?: string): Release {
     const project = this.projects.get(projectId);
-    if (!project) throw new Error('Project not found');
-
-    const release = new Release({
-      project: project.id!,
-      releaseCommitId: commitHash,
-      semanticId: semanticId ?? `0.0.${commitHash}`
-    });
+    if (!project) {
+      throw new Error('Project not found');
+    }
+    const release = new Release({ project: project.id!, releaseCommitId: commitHash, semanticId: semanticId ?? `0.0.${commitHash}` });
     project.addRelease(release);
     return release;
   }
@@ -75,45 +57,14 @@ export class StateManager {
       console.error('Invalid connection attempt between items');
       return false;
     }
-
     if (this.validationService.doesCreateCycle(fromItem, toItem)) {
       console.error('Connection would create a cycle');
       return false;
     }
-
     return true;
   }
 
-  // editItem(itemId: number, updates: any, suppressWarnings: boolean = false): Requirement {
-  //   const requirement = this.findItemById(itemId);
-  //   if (!requirement) throw new Error('Requirement not found');
-  //
-  //   const warnings = this.validationService.validateItemEdits(item, updates);
-  //   if (warnings.length > 0 && !suppressWarnings) {
-  //     warnings.forEach(warning => console.warn(warning));
-  //   }
-
-  // editItem(itemId: number, updates: any, suppressWarnings: boolean = false): Requirement {
-  //   const requirement = this.findItemById(itemId);
-  //   if (!requirement) throw new Error('Requirement not found');
-  //
-  //   const warnings = this.validationService.validateItemEdits(item, updates);
-  //   if (warnings.length > 0 && !suppressWarnings) {
-  //     warnings.forEach(warning => console.warn(warning));
-  //   }
-
-  //requirement.update(updates);
-  //return requirement;
-  //}
-
-  logout() {
-    this.localStorageService.removeData(AUTH_TOKEN);
-    this.router.navigateByUrl('/auth');
-  }
-
-
   openProject(project: ProjectDTO) {
-
+    // Implementation to open a project
   }
 }
-

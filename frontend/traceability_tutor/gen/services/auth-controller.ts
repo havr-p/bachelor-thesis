@@ -37,7 +37,7 @@ export class AuthControllerService {
     signUpDTO: SignUpDTO, options?: HttpClientOptions
   ): Observable<TData> {
     return this.http.post<TData>(
-      `/api/register`,
+      `/api/signup`,
       signUpDTO, options
     );
   }
@@ -51,15 +51,8 @@ export class AuthControllerService {
     );
   }
 
-  renewToken<TData = string>(
-    id: number, options?: HttpClientOptions
-  ): Observable<TData> {
-    return this.http.get<TData>(
-      `/api/renewToken/${id}`, options
-    );
-  }
+
 }
 
 export type RegisterClientResult = NonNullable<UserDTO>
 export type LoginClientResult = NonNullable<UserDTO>
-export type RenewTokenClientResult = NonNullable<string>

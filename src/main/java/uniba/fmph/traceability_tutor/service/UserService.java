@@ -1,22 +1,18 @@
 package uniba.fmph.traceability_tutor.service;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uniba.fmph.traceability_tutor.exception.UserNotFoundException;
 import uniba.fmph.traceability_tutor.domain.Project;
 import uniba.fmph.traceability_tutor.domain.User;
 import uniba.fmph.traceability_tutor.mapper.UserMapper;
-import uniba.fmph.traceability_tutor.model.CredentialsDTO;
-import uniba.fmph.traceability_tutor.model.SignUpDTO;
 import uniba.fmph.traceability_tutor.model.UserDTO;
 import uniba.fmph.traceability_tutor.repos.ProjectRepository;
 import uniba.fmph.traceability_tutor.repos.UserRepository;
-import uniba.fmph.traceability_tutor.util.AppException;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
-import java.nio.CharBuffer;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,28 +69,6 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-//    public UserDTO login(CredentialsDTO credentials) {
-//        User user = userRepository.findByEmail(credentials.email()).orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
-//        if (passwordEncoder.matches(CharBuffer.wrap(credentials.password()), user.getPassword())) {
-//            return userMapper.toUserDTO(user);
-//        }
-//        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
-//    }
-//
-//    public UserDTO register(SignUpDTO userDto) {
-//        Optional<User> optionalUser = userRepository.findByEmail(userDto.email());
-//
-//        if (optionalUser.isPresent()) {
-//            throw new AppException("User already exists", HttpStatus.BAD_REQUEST);
-//        }
-//
-//        User user = userMapper.signUpToUser(userDto);
-//        user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.password())));
-//
-//        User savedUser = userRepository.save(user);
-//
-//        return userMapper.toUserDTO(savedUser);
-//    }
 
     public ReferencedWarning getReferencedWarning(final Long id) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
@@ -107,6 +81,40 @@ public class UserService {
             return referencedWarning;
         }
         return null;
+    }
+
+
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public boolean hasUserWithUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean hasUserWithEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public User validateAndGetUserByUsername(String username) {
+        return getUserByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", username)));
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 
 }

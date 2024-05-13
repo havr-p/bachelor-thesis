@@ -11,6 +11,8 @@ import {DialogModule} from "primeng/dialog";
 import {DockComponent} from "../dock/dock.component";
 import {EventService} from "../../services/event/event.service";
 import {BaseEvent, EditorEventType, EventSource, ProjectEventType} from "../../types";
+import {AuthService} from "../../services/auth/auth.service";
+import {of, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-project-menu',
@@ -29,7 +31,11 @@ import {BaseEvent, EditorEventType, EventSource, ProjectEventType} from "../../t
 })
 export class ProjectMenuComponent implements OnInit {
 
-  constructor(private stateManager: StateManager, private localStorageService: LocalStorageService, private projectService: ProjectResourceService, private eventService: EventService) {
+  constructor(private stateManager: StateManager,
+              private localStorageService: LocalStorageService,
+              private projectService: ProjectResourceService,
+              private eventService: EventService,
+              private authService: AuthService) {
   }
 
   projects: ProjectDTO[] = [];
@@ -38,11 +44,13 @@ export class ProjectMenuComponent implements OnInit {
 
 
   ngOnInit(): void {
-    if (this.stateManager.currentUser)
-    this.projectService.getUserProjects(this.stateManager.currentUser.id).subscribe(projects => {
+    this.authService.currentUser.pipe(
+      // Ensure the user is defined before proceeding
+      switchMap(user => user ? this.projectService.getUserProjects(user.id) : of([]))
+    ).subscribe(projects => {
       this.projects = projects;
+      console.log(this.projects); // This log will now reflect the updated projects array
     });
-    console.log(this.projects)
     this.eventService.event$.subscribe(
       async (event: BaseEvent<EventSource, ProjectEventType>) => {
         if (event.source === EventSource.PROJECT_MENU) {

@@ -22,10 +22,11 @@ public class UserDTO {
     private String email;
 
     private String gitHubLogin;
+    private String gitHubId;
+    private String avatarUrl;
 
 
 
     @Builder.Default
-    private Role role = Role.ROLE_USER;
-
+    private String role = "USER";
 }

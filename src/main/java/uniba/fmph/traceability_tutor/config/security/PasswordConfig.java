@@ -1,4 +1,4 @@
-package uniba.fmph.traceability_tutor.config;
+package uniba.fmph.traceability_tutor.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

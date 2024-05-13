@@ -1,44 +1,32 @@
-package uniba.fmph.traceability_tutor.config;
+package uniba.fmph.traceability_tutor.config.security;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.client.OAuth2LoginConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.server.csrf.ServerCsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.server.csrf.XorServerCsrfTokenRequestAttributeHandler;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import reactor.core.publisher.Mono;
-import uniba.fmph.traceability_tutor.service.GitHubService;
-
-import java.io.IOException;
+import uniba.fmph.traceability_tutor.config.security.oauth.CustomAuthenticationSuccessHandler;
+import uniba.fmph.traceability_tutor.config.security.oauth.CustomOAuth2UserService;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final GitHubService gitHubService;
-    private final FrontendOAuth2SuccessHandler successHandler;
+    private final CustomOAuth2UserService customOauth2UserService;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final TokenAuthenticationFilter tokenAuthenticationFilter;
 
 
     public static final String[] AUTH_WHITELIST = {
@@ -58,13 +46,19 @@ public class SecurityConfig {
             "/api/login", "/api/register", "/api/user", "/api/logout", "/",
             "/index.html", "/error", "/webjars/**",
     };
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         CookieCsrfTokenRepository csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
         http
                 .authorizeHttpRequests((requests) -> requests
+
                         .requestMatchers(HttpMethod.POST, "/api/login", "/api/register").permitAll()
+                        .requestMatchers("/public/**", "/auth/**", "/oauth2/**").permitAll()
                         .requestMatchers("/", "/error", "/webjars/**").permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated())
@@ -74,18 +68,21 @@ public class SecurityConfig {
 //                        .csrfTokenRepository(csrfTokenRepository)
 //                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
 //                )
-                .csrf(AbstractHttpConfigurer::disable)
-                .logout(l -> l
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/") // This redirects to the Angular base URL
-                        .permitAll()
-                )
-                .oauth2Login(oauth2 -> oauth2.successHandler(successHandler));
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(customAuthenticationSuccessHandler)
+                        .userInfoEndpoint(customizer -> customizer.userService(customOauth2UserService)))
+                .logout(l -> l.logoutSuccessUrl("/").permitAll())
+                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable);
 
                 
         return http.build();
     }
-
+    public static final String ADMIN = "ADMIN";
+    public static final String USER = "USER";
 
 
 }

@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import uniba.fmph.traceability_tutor.config.security.oauth.OAuth2Provider;
 
 import java.time.OffsetDateTime;
 import java.util.Collection;
@@ -45,26 +46,24 @@ public class User {
     )
     private Long id;
 
+    private String username;
+    private String password;
+    private String name;
+
     @Column
     private String email;
 
     @Column
     private String githubLogin;
+    private Long githubId;
+    private String avatarUrl;
 
+
+    private String role;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    @Builder.Default
-    private Role role = Role.ROLE_USER;
-
-    @Column
-    private String provider; // currently only GitHub
-
-    @Column
-    private String githubAccessToken; //in case Oauth apps - valid until not revoked
-
-    @Column(nullable = false, unique = true)
-    private String githubId;
+    private OAuth2Provider provider; // currently only GitHub
+    private String providerId;
 
 
 

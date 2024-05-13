@@ -4,6 +4,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {EventService} from "../../../services/event/event.service";
 import {ProjectResourceService} from "../../../../../gen/services/project-resource";
 import {StateManager} from "../../../models/state";
+import {AuthService} from "../../../services/auth/auth.service";
 
 @Component({
   selector: 'app-create-project-form',
@@ -18,21 +19,33 @@ export class CreateProjectFormComponent {
     repoUrl: new FormControl('', [Validators.required])
   });
 
-  constructor(private eventService: EventService, private projectService: ProjectResourceService, private stateManager: StateManager) {
+  constructor(private eventService: EventService,
+              private projectService: ProjectResourceService,
+              private stateManager: StateManager,
+              private authService: AuthService) {
   }
 
   onSubmit() {
+    // Проверяем, аутентифицирован ли пользователь
+    if (!this.authService.isAuthenticated()) {
+      this.eventService.notify("Please log in to create a project", 'error');
+      return; // Прекращаем выполнение функции, если пользователь не аутентифицирован
+    }
+
     console.log('Form Submitted!', this.projectForm.value);
-    if (this.projectForm.value)
+    if (this.projectForm.valid) {
       this.projectService.createProject({
-        owner: this.stateManager.currentUser!.id!,
+        owner: this.authService.currentUserValue?.id!,
         repoUrl: this.projectForm.value.repoUrl!,
         name: this.projectForm.value.name!
       }).subscribe({
-          next: (response) => {
-            this.eventService.notify("Project was created", 'success');
-          }
+        next: (response) => {
+          this.eventService.notify("Project was created successfully", 'success');
+        },
+        error: (error) => {
+          this.eventService.notify("Failed to create project", 'error');
         }
-      )
+      });
+    }
   }
 }

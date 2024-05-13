@@ -7,12 +7,16 @@
 import type {Role} from './role';
 
 export interface UserDTO {
+  accessToken: string;
   /**
    * @minLength 0
    * @maxLength 255
    */
-  gitHubLogin: string;
+  email?: string;
   id: number;
-  role?: Role;
-  token?: string; //currently not used
+  name?: string;
+  role?: Role
+  tokenExpiry: Date;
+  username: string;
+
 }

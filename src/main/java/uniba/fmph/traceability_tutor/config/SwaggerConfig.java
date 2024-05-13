@@ -2,9 +2,11 @@ package uniba.fmph.traceability_tutor.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.*;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springdoc.core.customizers.OperationCustomizer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +18,9 @@ public class SwaggerConfig {
         // see https://springdoc.org/#how-can-i-apply-enumasref-true-to-all-enums
         io.swagger.v3.core.jackson.ModelResolver.enumsAsRef = true;
     }
+
+    @Value("${spring.application.name}")
+    private String applicationName;
 
     @Bean
     public OpenAPI openApiSpec() {
@@ -31,7 +36,8 @@ public class SwaggerConfig {
                         .addProperty("message", new StringSchema())
                         .addProperty("property", new StringSchema())
                         .addProperty("rejectedValue", new ObjectSchema())
-                        .addProperty("path", new StringSchema())));
+                        .addProperty("path", new StringSchema())))
+                .info(new Info().title(applicationName));
     }
 
     @Bean
@@ -45,5 +51,6 @@ public class SwaggerConfig {
             return operation;
         };
     }
+    public static final String BEARER_KEY_SECURITY_SCHEME = "bearer-key";
 
 }

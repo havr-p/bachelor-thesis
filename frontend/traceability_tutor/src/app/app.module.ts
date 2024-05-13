@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppComponent} from './app.component';
@@ -35,8 +35,10 @@ import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {APIInterceptor} from "./interceptors/api-interceptor";
 import {AppErrorHandler} from "./interceptors/app-error-handler";
+import {EventService} from "./services/event/event.service";
 
 @NgModule({
+  bootstrap: [AppComponent],
   declarations: [
     AppComponent,
     CustomSocketComponent,
@@ -45,6 +47,9 @@ import {AppErrorHandler} from "./interceptors/app-error-handler";
     RequirementItemComponent,
     EditorWrapperComponent,
     PageNotFoundComponent,
+  ],
+  exports: [
+    DockComponent
   ],
   imports: [
     BrowserModule,
@@ -79,16 +84,14 @@ import {AppErrorHandler} from "./interceptors/app-error-handler";
     //   useClass: AuthInterceptor,
     //   multi: true
     // },
+
     {
       provide: HTTP_INTERCEPTORS,
       useClass: APIInterceptor,
       multi: true,
     },
-    AppErrorHandler
-  ],
-  bootstrap: [AppComponent],
-  exports: [
-    DockComponent
+    //{ provide: ErrorHandler, useClass: AppErrorHandler },
+    //EventService
   ]
 })
 export class AppModule {

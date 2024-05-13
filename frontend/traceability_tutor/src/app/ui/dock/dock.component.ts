@@ -10,6 +10,7 @@ import {MenuModule} from "primeng/menu";
 import {ButtonModule} from "primeng/button";
 import {MenuItem, MenuItemCommandEvent} from "primeng/api";
 import {DockManager} from "./dock-manager";
+import {AuthService} from "../../services/auth/auth.service";
 
 @Component({
   selector: 'app-dock',
@@ -27,33 +28,32 @@ export class DockComponent implements OnInit {
   @Input() mode: 'projects' | 'releases' | 'editor' = 'editor';
   id = 1;
 
-  constructor(private dockManager: DockManager, private stateManager: StateManager) {
+  constructor(private dockManager: DockManager, private stateManager: StateManager, private authService: AuthService) {
   }
 
 
 
 
   ngOnInit() {
-    const userMenuItems: MenuItem[] = [
-      {
-        label: this.stateManager.currentUser!.gitHubLogin,
-        styleClass: 'user-menu',
-        icon: 'pi pi-user',
-        items: [
-          {
-            label: 'Logout',
-            command: () => {
-              this.stateManager.logout();
-            },
-            icon: 'pi pi-sign-out',
-          },
-        ],
-      },
-    ];
     const menuItems = this.dockManager.buildMenuItems(this.mode);
     this.items.push(...menuItems);
-    this.items.push(...userMenuItems);
+    this.authService.currentUser.subscribe(user => {
+      const userMenuItems: MenuItem[] = [
+        {
+          label: user?.name,  // Fallback label if username is not defined
+          styleClass: 'user-menu',
+          icon: 'pi pi-user',
+          items: [{
+            label: 'Logout',
+            command: () => {
+              this.authService.logout();
+            },
+            icon: 'pi pi-sign-out',
+          }],
+        }
+      ];
+      this.items.push(...userMenuItems);
+    });
   }
-
 
 }
