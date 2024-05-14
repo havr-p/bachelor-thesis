@@ -1,0 +1,13 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()" class="formgrid form-container grid p-fluid">
+  <div class="flex flex-column gap-2 field col">
+    <label for="email">Email</label>
+    <input type="text" name="email" class="form-field mb-2" id="email" formControlName="email" pInputText autocomplete="on"/>
+  </div>
+    <div class="flex flex-column gap-2 field col">
+      <label for="password">Password</label>
+    <p-password id="password" formControlName="password" [feedback]="false" [toggleMask]="true" autocomplete="on"/>
+    </div>
+
+
+  <button type="submit" class="btn btn-primary btn-block mb-4 mt-2" [disabled]="!loginForm.valid">Sign in</button>
+</form>

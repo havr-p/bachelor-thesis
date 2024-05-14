@@ -23,7 +23,6 @@ import {ReteModule} from 'rete-angular-plugin/17';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ToastrModule} from 'ngx-toastr';
 import {AuthComponent} from "./ui/auth/auth.component";
-import {LoginFormComponent} from './ui/forms/login-form/login-form.component';
 import {TabViewModule} from "primeng/tabview";
 import {InputTextModule} from "primeng/inputtext";
 import {EditorComponent} from "./ui/editor/editor.component";
@@ -73,7 +72,6 @@ import {EventService} from "./services/event/event.service";
     AuthComponent,
     TabViewModule,
     InputTextModule,
-    LoginFormComponent,
     CreateProjectFormComponent,
     AppRoutingModule,
     DockComponent

@@ -88,25 +88,18 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public boolean hasUserWithUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
 
     public boolean hasUserWithEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    public User validateAndGetUserByUsername(String username) {
-        return getUserByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", username)));
+    public User validateAndGetUserByEmail(String email) {
+        return getUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with email %s not found", email)));
     }
 
     public User saveUser(User user) {

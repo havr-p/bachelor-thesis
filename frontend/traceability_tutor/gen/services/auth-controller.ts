@@ -33,20 +33,20 @@ export class AuthControllerService {
   ) {
   }
 
-  register<TData = UserDTO>(
+  register<TData = string>(
     signUpDTO: SignUpDTO, options?: HttpClientOptions
   ): Observable<TData> {
     return this.http.post<TData>(
-      `/api/signup`,
+      `/auth/signup`,
       signUpDTO, options
     );
   }
 
-  login<TData = UserDTO>(
+  login<TData = string>(
     credentialsDTO: CredentialsDTO, options?: HttpClientOptions
   ): Observable<TData> {
     return this.http.post<TData>(
-      `/api/login`,
+      `/auth/authenticate`,
       credentialsDTO, options
     );
   }

@@ -24,3 +24,16 @@
   text-decoration: none !important;
 }
 
+.formgrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 7px;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+}
+
+.field.col {
+  width: 100%;
+}
+

@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class LoginRequest {
 
-    @Schema(example = "user")
+    @Schema(example = "user@mail.com")
     @NotBlank
-    private String username;
+    private String email;
 
     @Schema(example = "user")
     @NotBlank

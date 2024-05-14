@@ -42,7 +42,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User upsertUser(CustomUserDetails customUserDetails) {
-        Optional<User> userOptional = userService.getUserByUsername(customUserDetails.getUsername());
+        Optional<User> userOptional = userService.getUserByEmail(customUserDetails.getUsername());
         User user;
         if (userOptional.isEmpty()) {
             user = new User();

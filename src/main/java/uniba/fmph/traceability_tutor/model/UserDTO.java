@@ -20,11 +20,8 @@ public class UserDTO {
     @Size(max = 255)
     @Email
     private String email;
-
-    private String gitHubLogin;
-    private String gitHubId;
-    private String avatarUrl;
-
+    private String name;
+    private String username;
 
 
     @Builder.Default

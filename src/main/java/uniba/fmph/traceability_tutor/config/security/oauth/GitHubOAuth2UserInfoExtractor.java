@@ -15,7 +15,6 @@ public class GitHubOAuth2UserInfoExtractor implements OAuth2UserInfoExtractor {
     @Override
     public CustomUserDetails extractUserInfo(OAuth2User oAuth2User) {
         CustomUserDetails customUserDetails = new CustomUserDetails();
-        customUserDetails.setUsername(retrieveAttr("login", oAuth2User));
         customUserDetails.setName(retrieveAttr("name", oAuth2User));
         customUserDetails.setEmail(retrieveAttr("email", oAuth2User));
         customUserDetails.setAvatarUrl(retrieveAttr("avatar_url", oAuth2User));

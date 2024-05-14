@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,7 +33,7 @@ public class UserResource {
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping("/me")
     public UserDTO getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
-        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        User user = userService.validateAndGetUserByEmail(currentUser.getUsername());
         return userMapper.toUserDTO(user);
     }
 

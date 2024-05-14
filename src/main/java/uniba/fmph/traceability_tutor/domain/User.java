@@ -49,7 +49,6 @@ public class User {
     private String username;
     private String password;
     private String name;
-
     @Column
     private String email;
 
@@ -62,7 +61,7 @@ public class User {
     private String role;
 
     @Enumerated(EnumType.STRING)
-    private OAuth2Provider provider; // currently only GitHub
+    private OAuth2Provider provider; // currently only local and GitHub
     private String providerId;
 
 

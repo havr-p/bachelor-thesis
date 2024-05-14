@@ -13,7 +13,6 @@ import java.util.Map;
 public class CustomUserDetails implements OAuth2User, UserDetails {
 
     private Long id;
-    private String username;
     private String password;
     private String name;
     private String email;
@@ -23,6 +22,11 @@ public class CustomUserDetails implements OAuth2User, UserDetails {
     private Map<String, Object> attributes;
     private String gitHubLogin;
     private Long gitHubId;
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 
     @Override
     public boolean isAccountNonExpired() {

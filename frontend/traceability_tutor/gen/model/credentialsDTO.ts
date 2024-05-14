@@ -6,6 +6,6 @@
  */
 
 export interface CredentialsDTO {
-  email?: string;
-  password?: string;
+  email: string;
+  password: string;
 }
