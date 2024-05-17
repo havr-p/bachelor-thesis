@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {LocalStorageService} from "../local-storage/local-storage.service";
 import {CredentialsDTO, SignUpDTO, UserDTO} from "../../../../gen/model";
-import {AuthControllerService} from "../../../../gen/services/auth-controller";
+import {AuthControllerService, AuthResponse} from "../../../../gen/services/auth-controller";
 import {parseUserFromJwt} from "../../misc/helpers";
 import {EventService} from "../event/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -16,10 +16,10 @@ export class AuthService {
   public currentUser: Observable<UserDTO | null>;
 
   constructor(
-    private router: Router,
     private localStorageService: LocalStorageService,
-    private authController: AuthControllerService,
     private eventService: EventService,
+    private authController: AuthControllerService,
+    private router: Router,
   ) {
     this.currentUserSubject = new BehaviorSubject<UserDTO | null>(this.localStorageService.getData('user'));
     this.currentUser = this.currentUserSubject.asObservable();
@@ -34,27 +34,31 @@ export class AuthService {
     this.currentUserSubject.next(user);
   }
   public localLogin(credentials: CredentialsDTO) {
-        this.authController.login(credentials).subscribe({
-          next: accessToken => {
-            const user = parseUserFromJwt(accessToken);
-            const authenticatedUser = {user, accessToken}
-            this.localStorageService.saveData("user", authenticatedUser);
-          },
-          error: (err: HttpErrorResponse) => {
-            if (err.status === 400) this.eventService.notify("User with given credentials was not found.", 'error');
-          }
-        });
+    this.authController.login(credentials).subscribe({
+      next: authResponse => {
+        this.handleAuthorization(authResponse);
+        this.eventService.notify('Login successful!', 'success');
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 400) {
+          this.eventService.notify('User with given credentials was not found.', 'error');
+        }
+      }
+    });
+  }
+
+  private handleAuthorization(authResponse: AuthResponse) {
+    const accessToken = authResponse.accessToken;
+    const user = parseUserFromJwt(accessToken);
+    const authenticatedUser = {...user, accessToken} as UserDTO;
+    this.localStorageService.saveData('user', authenticatedUser);
+    this.currentUserSubject.next(authenticatedUser);  // Update the BehaviorSubject
   }
 
   public signup(signupDTO: SignUpDTO) {
     this.authController.register(signupDTO).subscribe({
-      next: token => {
-        console.log(typeof token); // Should print "string"
-        console.log(token); // Directly log the token string
-
-        const user = parseUserFromJwt(token);
-        const authenticatedUser = { user, accessToken: token };
-        this.localStorageService.saveData('user', authenticatedUser);
+      next: authResponse => {
+        this.handleAuthorization(authResponse);
         this.eventService.notify('Registration of new user was successful! You can sign in now.', 'success');
       },
       error: err => {

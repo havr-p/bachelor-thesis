@@ -38,7 +38,7 @@ public class TokenProvider {
         List<String> roles = user.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+                .toList();
 
         byte[] signingKey = jwtSecret.getBytes();
         System.out.println("signingKey: " + jwtExpirationMinutes);
@@ -59,7 +59,7 @@ public class TokenProvider {
                 .claim("name", user.getName())
                 .claim("preferred_username", user.getUsername())
                 .claim("email", user.getEmail())
-                .claim("user_id", user.getId())
+                .claim("id", user.getId())
                 .compact();
     }
 

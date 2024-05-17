@@ -7,7 +7,7 @@
 import type {Role} from './role';
 
 export interface UserDTO {
-  accessToken: string;
+  accessToken?: string;
   /**
    * @minLength 0
    * @maxLength 255

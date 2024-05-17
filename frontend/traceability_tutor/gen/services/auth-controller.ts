@@ -26,6 +26,10 @@ type HttpClientOptions = {
 };
 
 
+export interface AuthResponse {
+  accessToken: string;
+}
+
 @Injectable({providedIn: 'root'})
 export class AuthControllerService {
   constructor(
@@ -33,16 +37,17 @@ export class AuthControllerService {
   ) {
   }
 
-  register<TData = string>(
+  register<TData = AuthResponse>(
     signUpDTO: SignUpDTO, options?: HttpClientOptions
   ): Observable<TData> {
+    console.log("passing", signUpDTO);
     return this.http.post<TData>(
       `/auth/signup`,
       signUpDTO, options
     );
   }
 
-  login<TData = string>(
+  login<TData = AuthResponse>(
     credentialsDTO: CredentialsDTO, options?: HttpClientOptions
   ): Observable<TData> {
     return this.http.post<TData>(

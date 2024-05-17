@@ -41,7 +41,7 @@ export class DockComponent implements OnInit {
       console.log("user in dock", user)
       const userMenuItems: MenuItem[] = [
         {
-          label: user?.username,
+          label: user?.name,
           styleClass: 'user-menu',
           icon: 'pi pi-user',
           items: [{

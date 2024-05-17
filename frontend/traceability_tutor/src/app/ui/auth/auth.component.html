@@ -1,15 +1,14 @@
-
 <div class="card container py-4 px-4">
   <h1>Traceability tutor</h1>
-  <div *ngIf="!(authService.currentUser | async); else loggedInTemplate">
+  <div *ngIf="!currentUser; else loggedInTemplate">
     <div class="auth-container">
-      <p-tabView>
+      <p-tabView [activeIndex]="activeIndex">
         <p-tabPanel header="Login">
-          <app-login class="form-container" (onSubmitLoginEvent)="this.handleLocalLogin($event)"></app-login>
+          <app-login class="form-container" (onSubmitLoginEvent)="handleLocalLogin($event)"></app-login>
           <p-button label="Sign in with GitHub" icon="pi pi-github" (onClick)="handleGithubLogin()"></p-button>
         </p-tabPanel>
         <p-tabPanel header="Sign Up">
-          <app-signup class="form-container" (onSubmitRegisterEvent)="this.handleSignUp($event)"></app-signup>
+          <app-signup class="form-container" (onSubmitRegisterEvent)="handleSignUp($event)"></app-signup>
         </p-tabPanel>
       </p-tabView>
     </div>
@@ -17,11 +16,10 @@
 
   <ng-template #loggedInTemplate>
     <div class="container authenticated flex gap-3">
-      <p>Logged in as: {{ this.authService.currentUserValue?.name }}</p>
+      <p>Logged in as: {{ currentUser?.name }}</p>
       <p>You may now proceed to projects:</p>
       <p-button label="Go to projects" (onClick)="onProjectsClick()" class="pr-4"></p-button>
       <p-button (onClick)="logout()" icon="pi pi-sign-out" label="Logout"></p-button>
     </div>
   </ng-template>
 </div>
-

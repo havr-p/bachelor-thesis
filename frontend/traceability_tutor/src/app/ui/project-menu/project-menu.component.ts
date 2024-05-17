@@ -47,6 +47,7 @@ export class ProjectMenuComponent implements OnInit {
 
 
   ngOnInit(): void {
+    console.log(this.authService.currentUserValue);
     this.authService.currentUser.pipe(
       // Ensure the user is defined before proceeding
       switchMap(user => user ? this.projectService.getUserProjects(user.id) : of([]))

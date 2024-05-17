@@ -18,7 +18,8 @@ import {NavigationService} from "../../../services/navigation.service";
   export class CreateProjectFormComponent {
     projectForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
-      repoUrl: new FormControl('', [Validators.required])
+      repoUrl: new FormControl('', [Validators.required]),
+      repoAccessToken: new FormControl('', [Validators.required, ]),
     });
 
     constructor(private eventService: EventService,

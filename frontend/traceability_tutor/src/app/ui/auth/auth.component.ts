@@ -30,8 +30,9 @@ import {TabViewModule} from "primeng/tabview";
 })
 export class AuthComponent implements OnInit {
   authenticated: boolean = false;
-  user: UserDTO | null = null;
+  currentUser: UserDTO | null = null;
   isError: boolean = false;
+  activeIndex = 0;
 
   constructor(
     protected router: Router,
@@ -40,12 +41,9 @@ export class AuthComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to currentUser to react to changes
     this.authService.currentUser.subscribe(user => {
-      this.user = user;
-      this.authenticated = !!user;
+      this.currentUser = user;
     });
-    console.log(this.user);
   }
 
 
@@ -64,11 +62,13 @@ export class AuthComponent implements OnInit {
   }
 
   handleSignUp($event: SignUpDTO) {
+    console.log($event);
     this.authService.signup($event);
   }
 
   onProjectsClick() {
     this.router.navigateByUrl('/projects');
   }
+
 
 }

@@ -47,12 +47,14 @@ export class SignupComponent implements OnInit{
   onSubmitRegister(): void {
     const pass = this.registerForm!.get('signupPassword')?.value;
     const confirm = this.registerForm!.get('confirmPassword')?.value;
-    if (this.registerForm?.valid && pass == confirm)
-    this.onSubmitRegisterEvent.emit({
-      name: this.registerForm.get('name')?.value,
-      email: this.registerForm.get('signupEmail')?.value,
-      password: this.registerForm.get('signupPassword')?.value,
-    });
+    if (this.registerForm?.valid && pass == confirm) {
+      this.onSubmitRegisterEvent.emit({
+        name: this.registerForm.get('name')?.value,
+        email: this.registerForm.get('signupEmail')?.value,
+        password: this.registerForm.get('signupPassword')?.value,
+      });
+      this.registerForm?.reset();
+    }
     else {
       this.eventService.notify("Password should be minimum 6 characters long. " +
         "Please make sure that you entered the same password twice", 'warning');

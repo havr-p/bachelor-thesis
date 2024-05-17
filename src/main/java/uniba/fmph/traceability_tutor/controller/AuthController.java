@@ -2,9 +2,7 @@ package uniba.fmph.traceability_tutor.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,13 +32,13 @@ public class AuthController {
     private final UserMapper userMapper;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         String token = authenticateAndGetToken(loginRequest.getEmail(), loginRequest.getPassword());
-        return ResponseEntity.ok(token);
+        return new AuthResponse(token);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public AuthResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         if (userService.hasUserWithEmail(signUpRequest.getEmail())) {
             throw new DuplicatedUserInfoException(String.format("Email %s already been used", signUpRequest.getEmail()));
         }
@@ -48,7 +46,7 @@ public class AuthController {
         userService.saveUser(mapSignUpRequestToUser(signUpRequest));
 
         String token = authenticateAndGetToken(signUpRequest.getEmail(), signUpRequest.getPassword());
-        return ResponseEntity.ok(token);
+        return new AuthResponse(token);
     }
 
     private String authenticateAndGetToken(String username, String password) {

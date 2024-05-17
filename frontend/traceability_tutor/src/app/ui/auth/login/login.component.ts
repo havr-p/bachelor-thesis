@@ -38,6 +38,7 @@ export class LoginComponent {
         password: this.loginForm.get('password')?.value!,
       };
       this.onSubmitLoginEvent.emit(credentials);
+      this.loginForm.reset();
     } else {
       this.eventService.notify("Both fields are required", 'error');
     }
