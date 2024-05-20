@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Set;
 
 
@@ -59,5 +60,8 @@ public class Project {
 
     @Column(nullable = false)
     private OffsetDateTime lastOpened;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Level> levels;
 
 }

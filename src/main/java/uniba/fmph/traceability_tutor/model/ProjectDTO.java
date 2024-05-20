@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 
 @Getter
@@ -27,6 +28,9 @@ public class ProjectDTO {
 
     @NotNull
     private Long owner;
+
+    private List<LevelDTO> levels;
+
 
     private OffsetDateTime lastOpened;
     private OffsetDateTime dateCreated;
