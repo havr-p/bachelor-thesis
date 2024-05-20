@@ -1,0 +1,433 @@
+{
+  "requirements": [
+    {
+      "id": "REQ-001",
+      "level": "Business",
+      "name": "Quality Education on Software Design Principles",
+      "statement": "The system shall support the educational objectives by providing examples of software design principles.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-002",
+      "level": "Business",
+      "name": "Quality Education on Software Analysis",
+      "statement": "The system shall include features that support teaching software analysis.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-003",
+      "level": "Business",
+      "name": "Quality Education on Requirements Traceability",
+      "statement": "The system shall include features that support teaching requirements traceability.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-004",
+      "level": "Business",
+      "name": "Visual Examples of Requirements Traceability",
+      "statement": "The system shall include visual representations of real-world requirements traceability examples.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-005",
+      "level": "Business",
+      "name": "User-Friendly Tool for Requirements Traceability",
+      "statement": "The system shall be user-friendly and visually demonstrate the principles of requirements traceability.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-006",
+      "level": "Stakeholder",
+      "name": "Support Common SW Development Models",
+      "statement": "The system shall support various software development methodologies, including waterfall, iterative-incremental, and agile.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-007",
+      "level": "Stakeholder",
+      "name": "Custom Item Types",
+      "statement": "The system shall enable users to define custom item types.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-008",
+      "level": "Stakeholder",
+      "name": "Custom User Levels",
+      "statement": "The system shall enable users to define custom user levels.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-009",
+      "level": "Stakeholder",
+      "name": "Custom Levels for Requirements",
+      "statement": "The system shall allow users to define levels for requirements, each characterized by a color.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-010",
+      "level": "Solution",
+      "name": "Display Different Versions of Traceability Hierarchy",
+      "statement": "The system shall manage and display different versions of the traceability hierarchy.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-011",
+      "level": "Solution",
+      "name": "Inform User About Traceability Issues",
+      "statement": "The system shall provide warnings about potential issues in the traceability hierarchy.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-012",
+      "level": "Solution",
+      "name": "Visual Management of Traceability Hierarchy",
+      "statement": "The system shall support visual adding, editing, and removing of hierarchy items and their relationships.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-013",
+      "level": "Solution",
+      "name": "Display Traceability Hierarchy",
+      "statement": "The system shall visually display the traceability hierarchy.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-014",
+      "level": "Solution",
+      "name": "Display Lineage of Hierarchy Item",
+      "statement": "The system shall enable the user to see the backward and forward lineage of any hierarchy item.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-015",
+      "level": "Solution",
+      "name": "Automatic Derivation of Relationships from Git Commits",
+      "statement": "The system shall automatically derive relationships from git commits mentioning requirements IDs.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-016",
+      "level": "Solution",
+      "name": "Enforce Item Type Selection",
+      "statement": "The system shall enforce the selection of an item type for each new hierarchy item.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-017",
+      "level": "Solution",
+      "name": "Enforce User Level Selection",
+      "statement": "The system shall enforce the selection of a user level for each new requirement.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-018",
+      "level": "Solution",
+      "name": "Support Internal Levels Within User Level Hierarchy",
+      "statement": "The system shall support defining internal levels within a user level hierarchy.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-019",
+      "level": "Solution",
+      "name": "Arrange Nodes Within Traceability Hierarchy",
+      "statement": "The system shall enable rearranging nodes in the traceability graph for better visualization.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-020",
+      "level": "Solution",
+      "name": "Create a Project",
+      "statement": "The system shall enable users to create a project by specifying the project name, repository URL, and access token.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-021",
+      "level": "Solution",
+      "name": "Delete a Project",
+      "statement": "The system shall enable users to delete an existing project.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-022",
+      "level": "Solution",
+      "name": "Add a New Release to a Project",
+      "statement": "The system shall enable users to add a new release to an existing project.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-023",
+      "level": "Solution",
+      "name": "Delete a Release from a Project",
+      "statement": "The system shall enable users to delete an existing release from a project.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-024",
+      "level": "Solution",
+      "name": "View Archived Releases",
+      "statement": "The system shall enable users to view, but not edit, archived releases.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-025",
+      "level": "Solution",
+      "name": "Add an Item to the Current Project",
+      "statement": "The system shall enable users to add new items to the current project.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-026",
+      "level": "Solution",
+      "name": "Delete an Item from the Current Project",
+      "statement": "The system shall enable users to delete items from the current project.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-027",
+      "level": "Solution",
+      "name": "Edit an Item in the Current Project",
+      "statement": "The system shall enable users to edit items in the current project.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-028",
+      "level": "Solution",
+      "name": "Validate Repository During Project Creation",
+      "statement": "The system shall validate that the repository URL is valid and accessible with the provided access token.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-029",
+      "level": "Solution",
+      "name": "Validate Relationships to Avoid Cycles",
+      "statement": "The system shall prevent the creation of relationships that would introduce cycles in the traceability graph.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-030",
+      "level": "Solution",
+      "name": "Validate Status Changes of Items",
+      "statement": "The system shall enforce specific conditions when changing the status of items.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-031",
+      "level": "Solution",
+      "name": "Validate Item Edits and Provide Warnings",
+      "statement": "The system shall notify users of potential issues when editing items.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-032",
+      "level": "Solution",
+      "name": "Warn on Editing Requirement with Child Items",
+      "statement": "The system shall warn users when editing a requirement with child items without updating the child items.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-033",
+      "level": "Solution",
+      "name": "Warn on Changing Status of Requirement with SourceArtifact Children",
+      "statement": "The system shall warn users when changing the status of a requirement with SourceArtifact children without updating the status of the SourceArtifact items.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-034",
+      "level": "Solution",
+      "name": "Suppress Warnings Option",
+      "statement": "The system shall provide an option to suppress warnings when editing items or changing their status.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-035",
+      "level": "Solution",
+      "name": "Handle Iterations/Increments",
+      "statement": "The system shall specify how to handle iterations and increments.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-036",
+      "level": "Business",
+      "name": "Provide Real-World Examples",
+      "statement": "The system shall provide real-world examples of requirements traceability in a visual way.",
+      "status": "OPEN"
+    },
+    {
+      "id": "REQ-037",
+      "level": "Business",
+      "name": "Employ User-Friendly SW Tool",
+      "statement": "The system shall employ an easy-to-use software tool that demonstrates basic principles of requirements traceability.",
+      "status": "OPEN"
+    }
+  ],
+  "relationships": [
+    {
+      "id": 1,
+      "description": "Support common models and methodologies",
+      "endItem": "REQ-006",
+      "startItem": "REQ-001",
+      "type": "DERIVES"
+    },
+    {
+      "id": 2,
+      "description": "Dependencies for custom user levels",
+      "endItem": "REQ-008",
+      "startItem": "REQ-007",
+      "type": "DERIVES"
+    },
+    {
+      "id": 3,
+      "description": "Dependencies for custom levels for requirements",
+      "endItem": "REQ-009",
+      "startItem": "REQ-008",
+      "type": "DERIVES"
+    },
+    {
+      "id": 4,
+      "description": "Specify handling of iterations/increments",
+      "endItem": "REQ-010",
+      "startItem": "REQ-011",
+      "type": "DERIVES"
+    },
+    {
+      "id": 5,
+      "description": "Define exact attributes and properties for hierarchy items",
+      "endItem": "REQ-012",
+      "startItem": "REQ-013",
+      "type": "DERIVES"
+    },
+    {
+      "id": 6,
+      "description": "Display different versions of traceability hierarchy",
+      "endItem": "REQ-019",
+      "startItem": "REQ-010",
+      "type": "DERIVES"
+    },
+    {
+      "id": 7,
+      "description": "Display traceability hierarchy",
+      "endItem": "REQ-012",
+      "startItem": "REQ-013",
+      "type": "DERIVES"
+    },
+    {
+      "id": 8,
+      "description": "Dependencies for creating a project",
+      "endItem": "REQ-020",
+      "startItem": "REQ-028",
+      "type": "DERIVES"
+    },
+    {
+      "id": 9,
+      "description": "Warn on editing requirement with child items",
+      "endItem": "REQ-032",
+      "startItem": "REQ-031",
+      "type": "DERIVES"
+    },
+    {
+      "id": 10,
+      "description": "Warn on changing status of requirement with SourceArtifact children",
+      "endItem": "REQ-033",
+      "startItem": "REQ-031",
+      "type": "DERIVES"
+    },
+    {
+      "id": 11,
+      "description": "Suppress warnings option",
+      "endItem": "REQ-034",
+      "startItem": "REQ-031",
+      "type": "DERIVES"
+    },
+    {
+      "id": 12,
+      "description": "Handle Iterations/Increments",
+      "endItem": "REQ-035",
+      "startItem": "REQ-006",
+      "type": "DERIVES"
+    },
+    {
+      "id": 13,
+      "description": "Custom Item Types Handling",
+      "endItem": "REQ-007",
+      "startItem": "REQ-035",
+      "type": "DERIVES"
+    },
+    {
+      "id": 14,
+      "description": "Display Traceability Hierarchy",
+      "endItem": "REQ-013",
+      "startItem": "REQ-012",
+      "type": "DERIVES"
+    },
+    {
+      "id": 15,
+      "description": "Visual Management of Traceability Hierarchy",
+      "endItem": "REQ-012",
+      "startItem": "REQ-010",
+      "type": "DERIVES"
+    },
+    {
+      "id": 16,
+      "description": "Inform User About Traceability Issues",
+      "endItem": "REQ-011",
+      "startItem": "REQ-005",
+      "type": "DERIVES"
+    },
+    {
+      "id": 17,
+      "description": "Display Different Versions of Traceability Hierarchy",
+      "endItem": "REQ-010",
+      "startItem": "REQ-012",
+      "type": "DERIVES"
+    },
+    {
+      "id": 18,
+      "description": "Arrange Nodes Within Traceability Hierarchy",
+      "endItem": "REQ-019",
+      "startItem": "REQ-012",
+      "type": "DERIVES"
+    },
+    {
+      "id": 19,
+      "description": "Support Internal Levels Within User Level Hierarchy",
+      "endItem": "REQ-018",
+      "startItem": "REQ-009",
+      "type": "DERIVES"
+    },
+    {
+      "id": 20,
+      "description": "Enforce Item Type Selection",
+      "endItem": "REQ-016",
+      "startItem": "REQ-007",
+      "type": "DERIVES"
+    },
+    {
+      "id": 21,
+      "description": "Provide Quality Education on Software Analysis",
+      "endItem": "REQ-002",
+      "startItem": "REQ-001",
+      "type": "DERIVES"
+    },
+    {
+      "id": 22,
+      "description": "Provide Quality Education on Requirements Traceability",
+      "endItem": "REQ-003",
+      "startItem": "REQ-002",
+      "type": "DERIVES"
+    },
+    {
+      "id": 23,
+      "description": "Provide Visual Examples of Requirements Traceability",
+      "endItem": "REQ-004",
+      "startItem": "REQ-003",
+      "type": "DERIVES"
+    },
+    {
+      "id": 24,
+      "description": "Employ User-Friendly SW Tool",
+      "endItem": "REQ-005",
+      "startItem": "REQ-004",
+      "type": "DERIVES"
+    }
+  ]
+}
