@@ -4,4 +4,6 @@
  * traceability-tutor
  */
 
-export type ApiFieldErrorRejectedValue = { [key: string]: any };
+export interface AuthResponse {
+  accessToken?: string;
+}

@@ -1,30 +1,15 @@
 import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 
 import {AutoArrangePlugin, Presets as ArrangePresets,} from 'rete-auto-arrange-plugin';
-import {ContextMenuExtra, ContextMenuPlugin} from 'rete-context-menu-plugin';
-import {MinimapExtra, MinimapPlugin} from 'rete-minimap-plugin';
 
-import {ClassicPreset, GetSchemes, NodeEditor} from 'rete';
-import {Area2D, AreaExtensions, AreaPlugin} from 'rete-area-plugin';
-import {ConnectionPlugin, Presets as ConnectionPresets,} from 'rete-connection-plugin';
-
-import {AngularArea2D, AngularPlugin, Presets as AngularPresets,} from 'rete-angular-plugin/17';
-
-import {CustomSocketComponent} from '../../customization/custom-socket/custom-socket.component';
-import {CustomConnectionComponent} from '../../customization/custom-connection/custom-connection.component';
-
-import {addCustomBackground} from '../../customization/custom-background';
-import {Requirement} from '../../models/requirement';
-import {BaseEvent, EditorEventType, EventSource, ItemProps, Schemes,} from '../../types';
-import {structures} from 'rete-structures';
-import {Connection} from '../../connection';
+import {ClassicPreset, NodeEditor} from 'rete';
+import {AreaExtensions} from 'rete-area-plugin';
+import {BaseEvent, EditorEventType, EventSource, Schemes,} from '../../types';
 import {MenuItem} from 'primeng/api';
 import {RequirementItem} from '../../items/requirement-item';
-import {RequirementItemComponent} from '../items/requirement-item/requirement-item.component';
 import {EventService} from 'src/app/services/event/event.service';
 import {LocalStorageService} from '../../services/local-storage/local-storage.service';
 import {Item} from '../../items/Item';
-import {getDOMSocketPosition} from 'rete-render-utils';
 import {StateManager} from "../../models/state";
 import {AuthService} from "../../services/auth/auth.service";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";

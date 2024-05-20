@@ -6,7 +6,8 @@ import {
   EditorEventType,
   EventSource,
   ItemViewEvent,
-  ItemViewEventType, ProjectEvent,
+  ItemViewEventType,
+  ProjectEvent,
   ProjectEventType,
 } from '../../types';
 import {IndividualConfig, ToastrService} from 'ngx-toastr';

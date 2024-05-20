@@ -10,7 +10,7 @@ import {CreateProjectFormComponent} from "../forms/create-project.form/create-pr
 import {DialogModule} from "primeng/dialog";
 import {DockComponent} from "../dock/dock.component";
 import {EventService} from "../../services/event/event.service";
-import {BaseEvent, EditorEventType, EventSource, ProjectEventType} from "../../types";
+import {BaseEvent, EventSource, ProjectEventType} from "../../types";
 import {AuthService} from "../../services/auth/auth.service";
 import {of, switchMap} from "rxjs";
 import {NavigationService} from "../../services/navigation.service";
@@ -50,7 +50,7 @@ export class ProjectMenuComponent implements OnInit {
     console.log(this.authService.currentUserValue);
     this.authService.currentUser.pipe(
       // Ensure the user is defined before proceeding
-      switchMap(user => user ? this.projectService.getUserProjects(user.id) : of([]))
+      switchMap(user => user ? this.projectService.getUserProjects(user.id!) : of([]))
     ).subscribe(projects => {
       this.projects = projects;
       console.log(this.projects); // This log will now reflect the updated projects array

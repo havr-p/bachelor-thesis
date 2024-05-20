@@ -5,7 +5,6 @@ import {EventService} from "../../../services/event/event.service";
 import {ProjectResourceService} from "../../../../../gen/services/project-resource";
 import {StateManager} from "../../../models/state";
 import {AuthService} from "../../../services/auth/auth.service";
-import {Router} from "@angular/router";
 import {NavigationService} from "../../../services/navigation.service";
 
 @Component({

@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {EditorComponent} from "./ui/editor/editor.component";
 import {AuthComponent} from "./ui/auth/auth.component";
 import {PageNotFoundComponent} from "./ui/page-not-found/page-not-found.component";
 import {ProjectMenuComponent} from "./ui/project-menu/project-menu.component";

@@ -1,12 +1,16 @@
-import { Injectable } from '@angular/core';
-import { Project } from "./project";
-import { ProjectDTO, RelationshipType, ReleaseDTO } from "../../../gen/model";
-import { Item } from "../items/Item";
-import { Release } from "./release";
-import { EDITOR_STATE_KEY, CURRENT_PROJECT_KEY, LocalStorageService } from "../services/local-storage/local-storage.service";
-import { ValidationService } from "../services/validation/validation.service";
-import { ItemProps } from "../types";
-import { Connection } from "../connection";
+import {Injectable} from '@angular/core';
+import {Project} from "./project";
+import {ProjectDTO, RelationshipType} from "../../../gen/model";
+import {Item} from "../items/Item";
+import {Release} from "./release";
+import {
+  CURRENT_PROJECT_KEY,
+  EDITOR_STATE_KEY,
+  LocalStorageService
+} from "../services/local-storage/local-storage.service";
+import {ValidationService} from "../services/validation/validation.service";
+import {ItemProps} from "../types";
+import {Connection} from "../connection";
 
 export interface EditorState {
   nodes: ItemProps[],

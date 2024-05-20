@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../../services/auth/auth.service";
+import {AuthService, User} from "../../services/auth/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {parseUserFromJwt} from "../../misc/helpers";
 import {EventService} from "../../services/event/event.service";
-import {UserDTO} from "../../../../gen/model";
 
 @Component({
   selector: 'app-oauth2-redirect',
@@ -36,10 +35,10 @@ export class OAuth2RedirectComponent implements OnInit{
 
   private handleLogin(accessToken: string): void {
     const data = parseUserFromJwt(accessToken);
-    const user: UserDTO = {
+    const user: User = {
       accessToken: accessToken,
-      tokenExpiry: data.exp,
-      username: data.preferred_username,
+      email: data.email,
+        username: data.preferred_username,
       id: data.user_id,
     }
     this.authService.saveAndSetUser(user);

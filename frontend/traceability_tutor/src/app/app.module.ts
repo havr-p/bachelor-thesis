@@ -1,4 +1,5 @@
-import {ErrorHandler, NgModule} from '@angular/core';
+import {TuiRootModule} from "@taiga-ui/core";
+import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppComponent} from './app.component';
@@ -33,8 +34,6 @@ import {PageNotFoundComponent} from './ui/page-not-found/page-not-found.componen
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {APIInterceptor} from "./interceptors/api-interceptor";
-import {AppErrorHandler} from "./interceptors/app-error-handler";
-import {EventService} from "./services/event/event.service";
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -74,8 +73,9 @@ import {EventService} from "./services/event/event.service";
     InputTextModule,
     CreateProjectFormComponent,
     AppRoutingModule,
-    DockComponent
-  ],
+    DockComponent,
+    TuiRootModule
+],
   providers: [
      {
        provide: HTTP_INTERCEPTORS,

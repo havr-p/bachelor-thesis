@@ -7,5 +7,9 @@
     <label for="repoUrl">Repository URL:</label>
     <input type="text" pInputText id="repoUrl" formControlName="repoUrl" class="input-text">
   </div>
+  <div class="form-field">
+    <label for="repoUrl">Repository access token:</label>
+    <input type="text" pInputText id="repoAccessToken" formControlName="repoAccessToken" class="input-text">
+  </div>
   <button type="submit" [disabled]="!projectForm.valid" class="submit-btn">Create Project</button>
 </form>

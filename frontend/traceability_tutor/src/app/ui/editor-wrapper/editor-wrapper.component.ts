@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {DockMode} from "../dock/dock-manager";
 import {NavigationService} from "../../services/navigation.service";
-import {Dock} from "primeng/dock";
 
 @Component({
   selector: 'app-editor-wrapper',

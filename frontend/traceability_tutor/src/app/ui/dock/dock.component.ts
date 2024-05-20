@@ -1,14 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FileUploadEvent} from 'primeng/fileupload';
-import {Requirement} from '../../models/requirement';
-import {RequirementsService} from '../../services/requirements/requirements.service';
-import {EventService} from '../../services/event/event.service';
-import {LocalStorageService} from '../../services/local-storage/local-storage.service';
 import {StateManager} from "../../models/state";
 import {MenubarModule} from "primeng/menubar";
 import {MenuModule} from "primeng/menu";
 import {ButtonModule} from "primeng/button";
-import {MenuItem, MenuItemCommandEvent} from "primeng/api";
+import {MenuItem} from "primeng/api";
 import {DockManager, DockMode} from "./dock-manager";
 import {AuthService} from "../../services/auth/auth.service";
 

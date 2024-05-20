@@ -1,4 +1,4 @@
-import {ErrorHandler, forwardRef, Inject, Injectable, Injector} from "@angular/core";
+import {ErrorHandler, Injectable, Injector} from "@angular/core";
 import {EventService} from "../services/event/event.service";
 
 @Injectable({

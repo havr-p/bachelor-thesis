@@ -18,3 +18,6 @@ refresh pre git tagy - pomocou tlacidla
 repozitar - pridat repozitar ktory nemoze menit
 repozitar - dovolit zmenit iba ak pouzivatel tam nema ziadne tagy
 spytat sa pouzivatela, ci naozaj chce pridat repozitar bez tagov v formate, ktory vyuzivame
+
+odkazat na SAFE a knizku, pridat testy aj na feature level
+pridat vetu ze "bolo to rozvinute v SAFe frameworku"
