@@ -6,13 +6,14 @@ import {ProjectResourceService} from "../../../../../gen/services/project-resour
 import {StateManager} from "../../../models/state";
 import {AuthService} from "../../../services/auth/auth.service";
 import {NavigationService} from "../../../services/navigation.service";
+import {LevelListComponent} from "./level-list/level-list.component";
 
 @Component({
   selector: 'app-create-project-form',
   templateUrl: './create-project.form.component.html',
   styleUrl: './create-project.form.component.scss',
   standalone: true,
-  imports: [ReactiveFormsModule, InputTextModule]
+  imports: [ReactiveFormsModule, InputTextModule, LevelListComponent]
 })
   export class CreateProjectFormComponent {
     projectForm = new FormGroup({
