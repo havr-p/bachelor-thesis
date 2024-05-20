@@ -1,19 +1,10 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule, ValidationErrors,
-  ValidatorFn,
-  Validators
-} from "@angular/forms";
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
-import {SignUpDTO} from "../../../../../gen/model";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {PasswordModule} from "primeng/password";
 import {EventService} from "../../../services/event/event.service";
+import {SignUpRequest} from "../../../../../gen/model";
 
 @Component({
   selector: 'app-signup',
@@ -42,7 +33,7 @@ export class SignupComponent implements OnInit{
     });
   }
 
-  @Output() onSubmitRegisterEvent = new EventEmitter<SignUpDTO>();
+  @Output() onSubmitRegisterEvent = new EventEmitter<SignUpRequest>();
 
   onSubmitRegister(): void {
     const pass = this.registerForm!.get('signupPassword')?.value;
