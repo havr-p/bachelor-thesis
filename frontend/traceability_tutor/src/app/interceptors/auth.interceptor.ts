@@ -1,10 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {catchError, firstValueFrom, lastValueFrom, map, Observable, switchMap, throwError} from 'rxjs';
+import {catchError, map, Observable, switchMap, throwError} from 'rxjs';
 import {Router} from '@angular/router';
-import {AUTH_TOKEN} from "../services/local-storage/local-storage.service";
-import {UserDTO} from "../../../gen/model";
-import {StateManager} from "../models/state";
 import {AuthService} from "../services/auth/auth.service";
 
 @Injectable({
@@ -44,7 +41,7 @@ export class AuthInterceptor implements HttpInterceptor {
   private handleErrorRes(error: HttpErrorResponse): Observable<never> {
     console.log("error in auth interceptor", error)
     if (error.status === 401) {
-      this.router.navigateByUrl("/auth", {replaceUrl: true});
+      this.authService.logout();
     }
     return throwError(() => error);
   }

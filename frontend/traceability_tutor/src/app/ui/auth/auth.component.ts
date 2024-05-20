@@ -1,17 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {LocalStorageService, AUTH_TOKEN, CURRENT_USER} from '../../services/local-storage/local-storage.service';
-import {CredentialsDTO, SignUpDTO, UserDTO} from '../../../../gen/model';
 import {AsyncPipe, NgIf} from "@angular/common";
 import {ButtonModule} from "primeng/button";
 import {environment} from "../../../environments/environment";
-import {StateManager} from "../../models/state";
 import {getSocialLoginUrl} from "../../misc/helpers";
-import {AuthService} from "../../services/auth/auth.service";
+import {AuthService, User} from "../../services/auth/auth.service";
 import {SignupComponent} from "./signup/signup.component";
 import {LoginComponent} from "./login/login.component";
 import {TabViewModule} from "primeng/tabview";
+import {LoginRequest, SignUpRequest} from "../../../../gen/model";
 
 
 @Component({
@@ -30,7 +27,7 @@ import {TabViewModule} from "primeng/tabview";
 })
 export class AuthComponent implements OnInit {
   authenticated: boolean = false;
-  currentUser: UserDTO | null = null;
+  currentUser: User | null = null;
   isError: boolean = false;
   activeIndex = 0;
 
@@ -56,12 +53,12 @@ export class AuthComponent implements OnInit {
     window.location.href = environment.apiUrl + getSocialLoginUrl('github');
   }
 
-  handleLocalLogin($event: CredentialsDTO) {
+  handleLocalLogin($event: LoginRequest) {
     console.log('handle local Login')
     this.authService.localLogin($event);
   }
 
-  handleSignUp($event: SignUpDTO) {
+  handleSignUp($event: SignUpRequest) {
     console.log($event);
     this.authService.signup($event);
   }

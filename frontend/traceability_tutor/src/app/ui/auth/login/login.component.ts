@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
-import {CredentialsDTO} from "../../../../../gen/model";
 import {FloatLabelModule} from "primeng/floatlabel";
 import {PasswordModule} from "primeng/password";
 import {EventService} from "../../../services/event/event.service";
+import {LoginRequest} from "../../../../../gen/model";
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ import {EventService} from "../../../services/event/event.service";
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  @Output() onSubmitLoginEvent = new EventEmitter<CredentialsDTO>(false);
+  @Output() onSubmitLoginEvent = new EventEmitter<LoginRequest>(false);
 
   loginForm = new FormGroup({
       email: new FormControl('', [Validators.required]),
@@ -33,7 +33,7 @@ export class LoginComponent {
 
   onSubmitLogin(): void {
     if (this.loginForm.valid) {
-      const credentials: CredentialsDTO = {
+      const credentials: LoginRequest = {
         email: this.loginForm.get('email')?.value!,
         password: this.loginForm.get('password')?.value!,
       };
