@@ -1,6 +1,8 @@
 package uniba.fmph.traceability_tutor.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
@@ -17,6 +19,8 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class Project {
 
     @Id
@@ -61,7 +65,18 @@ public class Project {
     @Column(nullable = false)
     private OffsetDateTime lastOpened;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Level> levels;
+
+    public Project() {
+
+    }
+
+    public void setProjectItems(Set<Item> projectItems) {
+        if (projectItems != null) {
+            this.projectItems.clear();
+            this.projectItems.addAll(projectItems);
+        }
+    }
 
 }
