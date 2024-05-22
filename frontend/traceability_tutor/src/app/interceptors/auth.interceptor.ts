@@ -13,9 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log("LOG in interceptor");
     if (this.authService.isAuthenticated()) {
-      console.log("adding token");
 
       return this.bearerAuth().pipe(
         switchMap(authHeader => {
