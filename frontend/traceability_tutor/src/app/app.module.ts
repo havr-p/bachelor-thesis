@@ -1,4 +1,3 @@
-import {TuiRootModule} from "@taiga-ui/core";
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
@@ -74,7 +73,6 @@ import {APIInterceptor} from "./interceptors/api-interceptor";
     CreateProjectFormComponent,
     AppRoutingModule,
     DockComponent,
-    TuiRootModule
 ],
   providers: [
      {
