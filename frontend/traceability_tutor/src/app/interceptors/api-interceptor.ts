@@ -9,7 +9,6 @@ export class APIInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    console.log("I am in http")
     const apiReq = req.clone({url: `${environment.apiUrl}${req.url}`});
     return next.handle(apiReq);
   }
