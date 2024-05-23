@@ -64,6 +64,6 @@ app:
   cors:
     allowed-origins:
       http://localhost:4200,
-      https://bachelor-thesis-alpha.vercel.app
+      https://traceability-tutor.vercel.app
 
 jasypt.encryptor.password: qJoLwyubGeBWjH8kPMCkBFWPTKJ6gn6kCGQXfyk4sAm7DD7LUPjzcKNhUaPEAb9z
