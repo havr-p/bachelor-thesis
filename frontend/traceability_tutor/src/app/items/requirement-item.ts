@@ -3,6 +3,7 @@ import {getColorByLevel} from '../utils';
 import {Item} from './Item';
 import {ClassicPreset} from 'rete';
 import {HistoryAction, ItemType} from "../../../gen/model";
+import {StateManager} from "../models/state";
 
 export class RequirementItem extends ClassicPreset.Node {
   width = 400;

@@ -1,4 +1,3 @@
-import {RequirementsService} from "../../services/requirements/requirements.service";
 import {EventService} from "../../services/event/event.service";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {StateManager} from "../../models/state";
@@ -15,7 +14,6 @@ export type DockMode = 'projects' | 'releases' | 'editor' | 'editor-release'
 })
 export class DockManager  {
   constructor(
-    private requirementsService: RequirementsService,
     private eventService: EventService,
     private localStorageService: LocalStorageService,
     private stateManager: StateManager,
@@ -62,11 +60,27 @@ export class DockManager  {
 
         },
         {
-          label: 'Clear editor',
-          command: () => {
-            this.localStorageService.clearData();
-            this.eventService.publishEditorEvent(EditorEventType.CLEAR);
-          },
+          label: 'Data...',
+          items: [
+            {
+              label: 'Clear editor',
+              command: () => {
+                this.eventService.publishEditorEvent(EditorEventType.CLEAR);
+              },
+            },
+            {
+              label: 'Import',
+              command: () => {
+                this.eventService.publishEditorEvent(EditorEventType.IMPORT);
+              },
+            },
+            {
+              label: 'Export',
+              command: () => {
+                this.eventService.publishEditorEvent(EditorEventType.EXPORT);
+              },
+            },
+          ],
         },
         {
           label: 'Projects menu',

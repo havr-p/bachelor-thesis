@@ -1,170 +1,36 @@
- [
-{
-"id": 1,
-"description": "Support common models and methodologies",
-"endItem": 6,
-"startItem": 1,
-"type": "DERIVES"
-},
-{
-"id": 2,
-"description": "Dependencies for custom user levels",
-"endItem": 8,
-"startItem": 7,
-"type": "DERIVES"
-},
-{
-"id": 3,
-"description": "Dependencies for custom levels for requirements",
-"endItem": 9,
-"startItem": 8,
-"type": "DERIVES"
-},
-{
-"id": 4,
-"description": "Specify handling of iterations/increments",
-"endItem": 10,
-"startItem": 11,
-"type": "DERIVES"
-},
-{
-"id": 5,
-"description": "Define exact attributes and properties for hierarchy items",
-"endItem": 12,
-"startItem": 13,
-"type": "DERIVES"
-},
-{
-"id": 6,
-"description": "Display different versions of traceability hierarchy",
-"endItem": 19,
-"startItem": 10,
-"type": "DERIVES"
-},
-{
-"id": 7,
-"description": "Display traceability hierarchy",
-"endItem": 12,
-"startItem": 13,
-"type": "DERIVES"
-},
-{
-"id": 8,
-"description": "Dependencies for creating a project",
-"endItem": 20,
-"startItem": 28,
-"type": "DERIVES"
-},
-{
-"id": 9,
-"description": "Warn on editing requirement with child items",
-"endItem": 32,
-"startItem": 31,
-"type": "DERIVES"
-},
-{
-"id": 10,
-"description": "Warn on changing status of requirement with SourceArtifact children",
-"endItem": 33,
-"startItem": 31,
-"type": "DERIVES"
-},
-{
-"id": 11,
-"description": "Suppress warnings option",
-"endItem": 34,
-"startItem": 31,
-"type": "DERIVES"
-},
-{
-"id": 12,
-"description": "Handle Iterations/Increments",
-"endItem": 35,
-"startItem": 6,
-"type": "DERIVES"
-},
-{
-"id": 13,
-"description": "Custom Item Types Handling",
-"endItem": 7,
-"startItem": 35,
-"type": "DERIVES"
-},
-{
-"id": 14,
-"description": "Display Traceability Hierarchy",
-"endItem": 13,
-"startItem": 12,
-"type": "DERIVES"
-},
-{
-"id": 15,
-"description": "Visual Management of Traceability Hierarchy",
-"endItem": 12,
-"startItem": 10,
-"type": "DERIVES"
-},
-{
-"id": 16,
-"description": "Inform User About Traceability Issues",
-"endItem": 11,
-"startItem": 5,
-"type": "DERIVES"
-},
-{
-"id": 17,
-"description": "Display Different Versions of Traceability Hierarchy",
-"endItem": 10,
-"startItem": 12,
-"type": "DERIVES"
-},
-{
-"id": 18,
-"description": "Arrange Nodes Within Traceability Hierarchy",
-"endItem": 19,
-"startItem": 12,
-"type": "DERIVES"
-},
-{
-"id": 19,
-"description": "Support Internal Levels Within User Level Hierarchy",
-"endItem": 18,
-"startItem": 9,
-"type": "DERIVES"
-},
-{
-"id": 20,
-"description": "Enforce Item Type Selection",
-"endItem": 16,
-"startItem": 7,
-"type": "DERIVES"
-},
-{
-"id": 21,
-"description": "Provide Quality Education on Software Analysis",
-"endItem": 2,
-"startItem": 1,
-"type": "DERIVES"
-},
-{
-"id": 22,
-"description": "Provide Quality Education on Requirements Traceability",
-"endItem": 3,
-"startItem": 2,
-"type": "DERIVES"
-},
-{
-"id": 23,
-"description": "Provide Visual Examples of Requirements Traceability",
-"endItem": 4,
-"startItem": 3,
-"type": "DERIVES"
-},
-{
-"id": 24,
-"description": "Employ User-Friendly SW Tool",
-"endItem": 5,
-"startItem": 4,
-"type": "DERIVES"
-}
+[
+  {"id": 1, "description": "Provide Quality Education on Software Analysis", "endItem": 2, "startItem": 1, "type": "DERIVES"},
+  {"id": 2, "description": "Provide Quality Education on Requirements Traceability", "endItem": 3, "startItem": 2, "type": "DERIVES"},
+  {"id": 3, "description": "Provide Visual Examples of Requirements Traceability", "endItem": 4, "startItem": 3, "type": "DERIVES"},
+  {"id": 4, "description": "Employ User-Friendly SW Tool", "endItem": 5, "startItem": 4, "type": "DERIVES"},
+  {"id": 5, "description": "Support Common SW Development Models", "endItem": 6, "startItem": 1, "type": "DERIVES"},
+  {"id": 6, "description": "Custom Item Types", "endItem": 7, "startItem": 6, "type": "DERIVES"},
+  {"id": 7, "description": "Custom User Levels", "endItem": 8, "startItem": 7, "type": "DERIVES"},
+  {"id": 8, "description": "Custom Levels for Requirements", "endItem": 9, "startItem": 8, "type": "DERIVES"},
+  {"id": 9, "description": "Display Different Versions of Traceability Hierarchy", "endItem": 10, "startItem": 9, "type": "DERIVES"},
+  {"id": 10, "description": "Inform User About Traceability Issues", "endItem": 11, "startItem": 10, "type": "DERIVES"},
+  {"id": 11, "description": "Visual Management of Traceability Hierarchy", "endItem": 12, "startItem": 10, "type": "DERIVES"},
+  {"id": 12, "description": "Display Traceability Hierarchy", "endItem": 13, "startItem": 12, "type": "DERIVES"},
+  {"id": 13, "description": "Display Lineage of Hierarchy Item", "endItem": 14, "startItem": 13, "type": "DERIVES"},
+  {"id": 14, "description": "Automatic Derivation of Relationships from Git Commits", "endItem": 15, "startItem": 13, "type": "DERIVES"},
+  {"id": 15, "description": "Enforce Item Type Selection", "endItem": 16, "startItem": 7, "type": "DERIVES"},
+  {"id": 16, "description": "Enforce User Level Selection", "endItem": 17, "startItem": 8, "type": "DERIVES"},
+  {"id": 17, "description": "Support Internal Levels Within User Level Hierarchy", "endItem": 18, "startItem": 9, "type": "DERIVES"},
+  {"id": 18, "description": "Arrange Nodes Within Traceability Hierarchy", "endItem": 19, "startItem": 12, "type": "DERIVES"},
+  {"id": 19, "description": "Create a Project", "endItem": 20, "startItem": 9, "type": "DERIVES"},
+  {"id": 20, "description": "Delete a Project", "endItem": 21, "startItem": 20, "type": "DERIVES"},
+  {"id": 21, "description": "Add a New Release to a Project", "endItem": 22, "startItem": 20, "type": "DERIVES"},
+  {"id": 22, "description": "Delete a Release from a Project", "endItem": 23, "startItem": 22, "type": "DERIVES"},
+  {"id": 23, "description": "View Archived Releases", "endItem": 24, "startItem": 23, "type": "DERIVES"},
+  {"id": 24, "description": "Add an Item to the Current Project", "endItem": 25, "startItem": 20, "type": "DERIVES"},
+  {"id": 25, "description": "Delete an Item from the Current Project", "endItem": 26, "startItem": 25, "type": "DERIVES"},
+  {"id": 26, "description": "Edit an Item in the Current Project", "endItem": 27, "startItem": 25, "type": "DERIVES"},
+  {"id": 27, "description": "Validate Repository During Project Creation", "endItem": 28, "startItem": 20, "type": "DERIVES"},
+  {"id": 28, "description": "Validate Relationships to Avoid Cycles", "endItem": 29, "startItem": 25, "type": "DERIVES"},
+  {"id": 29, "description": "Validate Status Changes of Items", "endItem": 30, "startItem": 25, "type": "DERIVES"},
+  {"id": 30, "description": "Validate Item Edits and Provide Warnings", "endItem": 31, "startItem": 25, "type": "DERIVES"},
+  {"id": 31, "description": "Warn on Editing Requirement with Child Items", "endItem": 32, "startItem": 31, "type": "DERIVES"},
+  {"id": 32, "description": "Warn on Changing Status of Requirement with SourceArtifact Children", "endItem": 33, "startItem": 31, "type": "DERIVES"},
+  {"id": 33, "description": "Suppress Warnings Option", "endItem": 34, "startItem": 31, "type": "DERIVES"},
+  {"id": 34, "description": "Handle Iterations/Increments", "endItem": 35, "startItem": 6, "type": "DERIVES"}
 ]

@@ -47,6 +47,8 @@ export async function createEditor(
           searchBar: false,
           list: [
             {
+              key: '1',
+              label: 'Show lineage',
               //fixme maybe we can use parent-child relationship to show lineage
               handler: () => {
                 const incomingConnections = graph
@@ -62,8 +64,6 @@ export async function createEditor(
                     });
                   });
               },
-              key: '1',
-              label: 'Show lineage',
             },
             {
               label: 'Hide lineage',
@@ -160,14 +160,6 @@ export async function createEditor(
           return CustomSocketComponent;
         },
       },
-      socketPositionWatcher: getDOMSocketPosition({
-        offset({x, y}, nodeId, side, key) {
-          return {
-            x: x + 6 * (side === 'input' ? -1 : 1),
-            y: y,
-          };
-        },
-      }),
     }),
   );
   angularRender.addPreset(AngularPresets.minimap.setup());

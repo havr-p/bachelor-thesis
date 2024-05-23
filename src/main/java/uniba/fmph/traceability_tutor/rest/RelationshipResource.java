@@ -1,5 +1,6 @@
 package uniba.fmph.traceability_tutor.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -8,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uniba.fmph.traceability_tutor.model.CreateRelationshipDTO;
+import uniba.fmph.traceability_tutor.model.ItemDTO;
 import uniba.fmph.traceability_tutor.model.RelationshipDTO;
 import uniba.fmph.traceability_tutor.service.RelationshipService;
 
@@ -58,6 +60,14 @@ public class RelationshipResource {
     public ResponseEntity<Void> deleteRelationship(@PathVariable(name = "id") final Long id) {
         relationshipService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /*Relationships will be edited even without release. Every edit operation requires work on server,
+    so server will always store actual and valid state of relationships*/
+    @Operation(security = {@SecurityRequirement(name = BEARER_SECURITY_SCHEME)})
+    @GetMapping("/project/{id}")
+    public ResponseEntity<List<RelationshipDTO>> getProjectEditableRelationships(@PathVariable(name = "id") final Long projectId) {
+        return ResponseEntity.ok(relationshipService.getProjectEditableRelationships(projectId));
     }
 
 }

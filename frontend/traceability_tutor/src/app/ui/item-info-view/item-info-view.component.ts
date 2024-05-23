@@ -11,7 +11,6 @@ import {InputTextModule} from 'primeng/inputtext';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {EventService} from 'src/app/services/event/event.service';
 import {ValidationService} from '../../services/validation/validation.service';
-import {RequirementsService} from '../../services/requirements/requirements.service';
 import {ItemType, RelationshipDTO} from "../../../../gen/model";
 
 @Component({
@@ -42,7 +41,6 @@ export class ItemInfoViewComponent {
   constructor(
     private eventService: EventService,
     private validationService: ValidationService,
-    private requirementsService: RequirementsService,
   ) {
   }
 
@@ -56,7 +54,7 @@ export class ItemInfoViewComponent {
         //this.item.data as Requirement,
       );
       if (isValid) {
-        this.requirementsService.updateRequirement(this.item.data);
+        //this.requirementsService.updateRequirement(this.item.data);
         // .subscribe({
         //   next: (response) => {
         //     this.eventService.notify(

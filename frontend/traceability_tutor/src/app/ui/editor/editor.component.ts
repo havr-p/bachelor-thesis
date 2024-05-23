@@ -15,13 +15,15 @@ import {AuthService} from "../../services/auth/auth.service";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";
 import {ActivatedRoute, Router} from "@angular/router";
 import {createEditor} from "./create-editor";
-import {lastValueFrom, map, switchMap} from "rxjs";
-import {ItemDTO, ItemType, ProjectDTO, ReleaseDTO} from "../../../../gen/model";
+import {concatMap, map, switchMap} from "rxjs";
+import {ItemDTO, ProjectDTO, RelationshipDTO, ReleaseDTO} from "../../../../gen/model";
 import {Project} from "../../models/project";
 import {Release} from "../../models/release";
 import {ReleaseResourceService} from "../../../../gen/services/release-resource";
 import {ItemResourceService} from "../../../../gen/services/item-resource";
 import {mapGenericModel} from "../../models/itemMapper";
+import {Connection} from "../../connection";
+import {RelationshipResourceService} from "../../../../gen/services/relationship-resource";
 
 const socket = new ClassicPreset.Socket('socket');
 
@@ -39,31 +41,6 @@ export class EditorComponent
   arrange: any;
   sidebarVisible = false;
   openedItem!: Item;
-
-  nodeActions: MenuItem[] = [
-    {
-      label: 'Edit',
-      icon: 'pi pi-fw pi-pencil',
-      command: () => {
-        console.log('Edit');
-      },
-      tooltipOptions: {
-        tooltipLabel: 'Edit node',
-        tooltipPosition: 'bottom',
-      },
-    },
-    {
-      label: 'Delete',
-      icon: 'pi pi-fw pi-trash',
-      command: () => {
-        console.log('Delete');
-      },
-      tooltipOptions: {
-        tooltipLabel: 'Delete node',
-        tooltipPosition: 'bottom',
-      },
-    },
-  ];
   //todo disable vertical scroll
   loading = false;
 
@@ -75,19 +52,17 @@ export class EditorComponent
     private injector: Injector,
     private route: ActivatedRoute,
     private eventService: EventService,
-    private localStorageService: LocalStorageService,
     private state: StateManager,
-    private authService: AuthService,
     private projectService: ProjectResourceService,
     private releaseService: ReleaseResourceService,
     private router: Router,
     private itemService: ItemResourceService,
+    private relationshipService: RelationshipResourceService,
   ) {
   }
 
   async ngAfterViewInit() {
     const el = this.container.nativeElement;
-
     if (el) {
       this.loading = true;
       createEditor(el, this.injector, this.eventService).then(
@@ -101,6 +76,23 @@ export class EditorComponent
 
           this.area.use(this.arrange);
 
+          this.route.paramMap.subscribe(params => {
+            const projectId = Number(params.get('projectId'));
+            if (projectId) {
+              console.log("projectId", projectId)
+              console.log('editor', this.editor.getNodes());
+              this.loadEditableItems(projectId).subscribe({
+                next: () => {
+                  this.loadEditableRelationships(projectId);
+                  this.arrangeNodes();
+                }
+              })
+            } else {
+              console.error('Project ID not found');
+            }
+          });
+
+
         },
       );
       this.loading = false;
@@ -108,18 +100,6 @@ export class EditorComponent
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const projectId = Number(params.get('projectId'));
-      if (projectId) {
-        console.log("projectId", projectId)
-        this.loadProjectEditableItems(projectId);
-      } else {
-        console.error('Project ID not found');
-      }
-    });
-
-
-
     this.eventService.event$.subscribe(
       async (event: BaseEvent<EventSource, EditorEventType>) => {
         if (event.source === EventSource.EDITOR) {
@@ -141,14 +121,17 @@ export class EditorComponent
             case EditorEventType.TO_PROJECTS_MENU:
               await this.router.navigateByUrl('/projects');
               break;
+            case EditorEventType.EXPORT:
+              this.export();
+              break;
           }
         }
       },
     );
   }
 
-  private loadProjectEditableItems(projectId: number) {
-    this.projectService.getProject(projectId).pipe(
+  private loadEditableItems(projectId: number) {
+    return this.projectService.getProject(projectId).pipe(
       switchMap((projectDTO: ProjectDTO) => {
         const project = new Project(projectDTO);
         return this.releaseService.getAllReleases({ params: { projectId: projectId } }).pipe(
@@ -165,20 +148,32 @@ export class EditorComponent
             return this.itemService.getProjectEditableItems(project.id).pipe(
               map((items: ItemDTO[]) => ({ project, items }))
             );
-          })
+          }),
         );
       })
-    ).subscribe({
-      next: ({ project, items }) => {
+    ).pipe(
+      concatMap(async ({project, items}) => {
         console.log('Project with editable items:', project, items);
-        this.addItems(items).then(() => {
+        try {
+          await this.addItems(items);
           console.log('Items added successfully');
-        }).catch(error => {
+        } catch (error) {
           console.error('Failed to add items:', error);
-        });
+          throw error;
+        }
+      })
+    );
+  }
+
+
+  private loadEditableRelationships(projectId: number) {
+    console.log('nodes', this.editor.getNodes());
+    this.relationshipService.getProjectEditableRelationships(projectId).pipe().subscribe({
+      next: async (relationships: RelationshipDTO[]) => {
+        console.log('Editable relationships:', relationships);
       },
       error: (error) => {
-        console.error('Failed to load project:', error);
+        console.error('Failed to load relationships:', error);
       }
     });
   }
@@ -189,7 +184,15 @@ export class EditorComponent
   async addNode(node: any) {
     node.addOutput(node.id, new ClassicPreset.Output(socket));
     node.addInput(node.id, new ClassicPreset.Input(socket));
-    await this.editor.addNode(node);
+     if (!await this.editor.addNode(node)) throw new Error("Error while adding node");
+  }
+
+  async addConnection(relationship: RelationshipDTO) {
+    const startItem = this.editor.getNode(relationship.startItem.toString());
+    const endItem = this.editor.getNode(relationship.endItem.toString());
+    await this.editor.addConnection(
+      new Connection(startItem, startItem.id, endItem, endItem.id)
+    );
   }
 
 
@@ -228,13 +231,10 @@ export class EditorComponent
       options: {
         'elk.spacing.nodeNode': 200,
         'elk.layered.spacing.nodeNodeBetweenLayers': 200,
-        'elk.alignment': 'RIGHT',
+        'elk.alignment': 'DOWN',
         'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //LINEAR_SEGMENTS, BRANDES_KOEPF
-        //'elk.graphviz.concentrate': true,
         'elk.direction': 'RIGHT', //we want DOWN but need to configure sockets,
         'elk.edge.type': 'DIRECTED',
-        //'elk.layered.wrapping.strategy': 'MULTI_EDGE',
-        //'elk.layered.crossingMinimization.hierarchicalSweepiness': -1,
         'elk.radial.centerOnRoot': true,
         'elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
       },
@@ -244,7 +244,48 @@ export class EditorComponent
 
   private async addItems(items: ItemDTO[]) {
     for (const item of items) {
-      const data = mapGenericModel(item);
+      try {
+        const data = mapGenericModel(item);
+        await this.addNode(new RequirementItem(data!));
+      } catch (error) {
+
+      }
     }
   }
+
+  private export() {
+    let nodesData = [];
+    let connectionData = [];
+
+    for (const node of this.editor.getNodes()) {
+      if (node instanceof RequirementItem) {
+        nodesData.push(node.data);
+      }
+    }
+
+    for (const connection of this.editor.getConnections()) {
+      connectionData.push({
+        id: connection.id,
+        startItem: Number(connection.source),
+        endItem: Number(connection.target)
+      });
+    }
+
+    const exportData = {
+      items: nodesData,
+      relationships: connectionData
+    };
+
+    const jsonString = JSON.stringify(exportData, null, 4);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'editor-data.json';
+    a.click();
+
+    URL.revokeObjectURL(url);
+  }
+
 }

@@ -82,6 +82,13 @@ export class RelationshipResourceService {
       createRelationshipDTO,options
     );
   }
+ getProjectEditableRelationships<TData = RelationshipDTO[]>(
+    id: number, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/relationships/project/${id}`,options
+    );
+  }
 };
 
 export type GetRelationshipClientResult = NonNullable<RelationshipDTO>
@@ -89,3 +96,4 @@ export type UpdateRelationshipClientResult = NonNullable<number>
 export type DeleteRelationshipClientResult = NonNullable<void>
 export type GetAllRelationshipsClientResult = NonNullable<RelationshipDTO[]>
 export type CreateRelationshipClientResult = NonNullable<number>
+export type GetProjectEditableRelationshipsClientResult = NonNullable<RelationshipDTO[]>

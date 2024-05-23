@@ -6,6 +6,7 @@ import uniba.fmph.traceability_tutor.domain.Item;
 import uniba.fmph.traceability_tutor.domain.Relationship;
 import uniba.fmph.traceability_tutor.domain.Release;
 import uniba.fmph.traceability_tutor.model.CreateRelationshipDTO;
+import uniba.fmph.traceability_tutor.model.ItemDTO;
 import uniba.fmph.traceability_tutor.model.RelationshipDTO;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
@@ -99,4 +100,9 @@ public class RelationshipService {
         return relationship;
     }
 
+    public List<RelationshipDTO> getProjectEditableRelationships(Long projectId) {
+        return relationshipRepository.findNonReleaseByProjectId(projectId).stream()
+                .map(item -> mapToDTO(item, new RelationshipDTO()))
+                .toList();
+    }
 }
