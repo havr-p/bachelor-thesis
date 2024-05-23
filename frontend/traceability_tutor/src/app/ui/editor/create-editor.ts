@@ -12,9 +12,9 @@ import {AngularArea2D, AngularPlugin, Presets as AngularPresets} from "rete-angu
 import {RequirementItemComponent} from "../items/requirement-item/requirement-item.component";
 import {CustomConnectionComponent} from "../../customization/custom-connection/custom-connection.component";
 import {CustomSocketComponent} from "../../customization/custom-socket/custom-socket.component";
-import {getDOMSocketPosition} from "rete-render-utils";
 import {addCustomBackground} from "../../customization/custom-background";
 import {Connection} from "../../connection";
+import { AutoArrangePlugin, Presets as ArrangePresets } from "rete-auto-arrange-plugin";
 
 type Schemes = GetSchemes<
   ItemProps,
@@ -176,24 +176,20 @@ export async function createEditor(
   area.use(minimap);
   area.use(contextMenu);
 
-  AreaExtensions.simpleNodesOrder(area);
-
-  //await editor.addConnection(new ClassicPreset.Connection(a, 'a', b, 'a'));
-
   setTimeout(() => {
     AreaExtensions.zoomAt(area, editor.getNodes());
   }, 300);
 
-  //const arrange = new AutoArrangePlugin<Schemes>();
+  const arrange = new AutoArrangePlugin<Schemes>();
 
-  //arrange.addPreset(ArrangePresets.classic.setup());
+  arrange.addPreset(ArrangePresets.classic.setup());
 
-  //area.use(arrange);
+  area.use(arrange);
 
   return {
     destroy: () => area.destroy(),
     editor: editor,
     area: area,
-    //  arrange: arrange,
+    arrange: arrange,
   };
 }

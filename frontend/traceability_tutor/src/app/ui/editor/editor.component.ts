@@ -65,26 +65,21 @@ export class EditorComponent
     const el = this.container.nativeElement;
     if (el) {
       this.loading = true;
-      createEditor(el, this.injector, this.eventService).then(
-        async ({destroy, editor, area}) => {
+       await createEditor(el, this.injector, this.eventService).then(
+         ({destroy, editor, area, arrange}) => {
           this.destroyEditor = destroy;
           this.editor = editor;
           this.area = area;
-          this.arrange = new AutoArrangePlugin<Schemes>();
-
-          this.arrange.addPreset(ArrangePresets.classic.setup());
-
-          this.area.use(this.arrange);
-
+          this.arrange = arrange;
           this.route.paramMap.subscribe(params => {
             const projectId = Number(params.get('projectId'));
             if (projectId) {
               console.log("projectId", projectId)
               console.log('editor', this.editor.getNodes());
               this.loadEditableItems(projectId).subscribe({
-                next: () => {
+                next: async () => {
                   this.loadEditableRelationships(projectId);
-                  this.arrangeNodes();
+                  await arrange.layout();
                 }
               })
             } else {
@@ -171,6 +166,21 @@ export class EditorComponent
     this.relationshipService.getProjectEditableRelationships(projectId).pipe().subscribe({
       next: async (relationships: RelationshipDTO[]) => {
         console.log('Editable relationships:', relationships);
+        for (const relationship of relationships) {
+            this.addConnection(relationship);
+        }
+        await this.arrange.layout({
+          options: {
+            'elk.spacing.nodeNode': 200,
+            'elk.layered.spacing.nodeNodeBetweenLayers': 200,
+            'elk.alignment': 'DOWN',
+            'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //LINEAR_SEGMENTS, BRANDES_KOEPF
+            'elk.direction': 'RIGHT', //we want DOWN but need to configure sockets,
+            'elk.edge.type': 'DIRECTED',
+            'elk.radial.centerOnRoot': true,
+            'elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
+          },
+        });
       },
       error: (error) => {
         console.error('Failed to load relationships:', error);
@@ -208,9 +218,6 @@ export class EditorComponent
   }
 
   private async arrangeNodes() {
-    this.arrange.addPreset(ArrangePresets.classic.setup());
-
-    this.area.use(this.arrange);
 
     // for (let node of this.editor.getNodes()) {
     //   //console.log(node);
@@ -231,7 +238,7 @@ export class EditorComponent
       options: {
         'elk.spacing.nodeNode': 200,
         'elk.layered.spacing.nodeNodeBetweenLayers': 200,
-        'elk.alignment': 'DOWN',
+        'elk.alignment': 'RIGHT',
         'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //LINEAR_SEGMENTS, BRANDES_KOEPF
         'elk.direction': 'RIGHT', //we want DOWN but need to configure sockets,
         'elk.edge.type': 'DIRECTED',

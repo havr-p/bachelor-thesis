@@ -36,9 +36,6 @@ export class RequirementItemComponent implements OnChanges, OnInit {
 
   @HostBinding('style.background-color') backgroundColor: string = '#fff';
 
-  @HostBinding('style.border') get borderColorStyle(): string {
-    return this.data.selected ? '4px solid red' : this.data.borderStyle;
-  }
 
   constructor(
     private cdr: ChangeDetectorRef,
