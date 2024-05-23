@@ -84,6 +84,23 @@ export class EditorComponent
     }
   }
 
+  private loadProjectFromPath() {
+    this.route.paramMap.subscribe(params => {
+      const projectId = Number(params.get('projectId'));
+      if (projectId) {
+        console.log("projectId", projectId)
+        console.log('editor', this.editor.getNodes());
+        this.loadEditableItems(projectId).subscribe({
+          next: async () => {
+            this.loadEditableRelationships(projectId);
+          }
+        })
+      } else {
+        console.error('Project ID not found');
+      }
+    });
+  }
+
   private applyPipes(editor: NodeEditor<Schemes>) {
     editor.addPipe((c) => {
       const graph = structures(editor);
