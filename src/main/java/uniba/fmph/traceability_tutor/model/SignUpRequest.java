@@ -19,5 +19,6 @@ public class SignUpRequest {
 
     @Schema(example = "user@mail.com")
     @Email
+    @NotBlank
     private String email;
 }

@@ -14,13 +14,16 @@ import uniba.fmph.traceability_tutor.domain.Role;
 @AllArgsConstructor
 @Builder
 public class UserDTO {
-
+    @NotBlank
     private Long id;
 
     @Size(max = 255)
     @Email
+    @NotBlank
     private String email;
+    @NotBlank
     private String name;
+    @NotBlank
     private String username;
 
 

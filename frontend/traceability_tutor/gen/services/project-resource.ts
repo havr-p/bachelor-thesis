@@ -47,7 +47,6 @@ export class ProjectResourceService {
   ) {} getProject<TData = ProjectDTO>(
     id: number, options?: HttpClientOptions
   ): Observable<TData>  {
-        console.log("i am in service");
     return this.http.get<TData>(
       `/api/projects/${id}`,options
     );

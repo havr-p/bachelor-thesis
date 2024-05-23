@@ -24,7 +24,7 @@ public class CreateProjectDTO {
     @Size(max = 255)
     private String name;
 
-
+    @NotNull
     private List<LevelDTO> levels;
 
     @NotBlank

@@ -8,7 +8,7 @@ import type { LevelDTO } from './levelDTO';
 export interface CreateProjectDTO {
   /** Access token for project from code hosting platform (currently only GitHub) */
   accessToken: string;
-  levels?: LevelDTO[];
+  levels: LevelDTO[];
   /**
    * @minLength 0
    * @maxLength 255
