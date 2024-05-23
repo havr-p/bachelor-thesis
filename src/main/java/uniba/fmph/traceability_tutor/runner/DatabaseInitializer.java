@@ -42,8 +42,9 @@ public class DatabaseInitializer implements CommandLineRunner {
             new User("admin@test.com", "admin", "admin", SecurityConfig.ADMIN, OAuth2Provider.LOCAL),
             new User("user@test.com", "user", "user", SecurityConfig.USER, OAuth2Provider.LOCAL)
     );
+    private static final String TRACEABILITY_TUTOR_PROJECT_NAME = "Traceability Tutor";
     private static final Project TRACEABILITY_TUTOR_PROJECT = Project.builder().lastOpened(OffsetDateTime.now())
-            .name("Traceability Tutor")
+            .name(TRACEABILITY_TUTOR_PROJECT_NAME)
             .repoUrl("https://github.com/havr-p/traceability-tutor.git")
             .build();
     private static final List<Level> BABOK_LEVELS = Arrays.asList(
@@ -145,7 +146,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     private Project createDemoProjectInDb(User user) {
         TRACEABILITY_TUTOR_PROJECT.setLevels(BABOK_LEVELS);
-        String projectName =  TRACEABILITY_TUTOR_PROJECT.getName()
+        String projectName =  TRACEABILITY_TUTOR_PROJECT_NAME
                 + " # " + (projectRepository.countByOwner(user) + 1);
         TRACEABILITY_TUTOR_PROJECT.setName(projectName);
         TRACEABILITY_TUTOR_PROJECT.setOwner(user);

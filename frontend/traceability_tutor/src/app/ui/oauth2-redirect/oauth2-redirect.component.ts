@@ -40,6 +40,7 @@ export class OAuth2RedirectComponent implements OnInit{
       email: data.email,
         username: data.preferred_username,
       id: data.user_id,
+      name: data.name,
     }
     this.authService.saveAndSetUser(user);
   }
