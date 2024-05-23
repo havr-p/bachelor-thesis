@@ -108,5 +108,302 @@
       "level": "Solution"
     },
     "status": "OPEN"
+  },
+  {
+    "id": 11,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Inform User About Traceability Issues",
+      "statement": "The system shall provide warnings about potential issues in the traceability hierarchy.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 12,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Visual Management of Traceability Hierarchy",
+      "statement": "The system shall support visual adding, editing, and removing of hierarchy items and their relationships.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 13,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Display Traceability Hierarchy",
+      "statement": "The system shall visually display the traceability hierarchy.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 14,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Display Lineage of Hierarchy Item",
+      "statement": "The system shall enable the user to see the backward and forward lineage of any hierarchy item.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 15,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Automatic Derivation of Relationships from Git Commits",
+      "statement": "The system shall automatically derive relationships from git commits mentioning requirements IDs.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 16,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Enforce Item Type Selection",
+      "statement": "The system shall enforce the selection of an item type for each new hierarchy item.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 17,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Enforce User Level Selection",
+      "statement": "The system shall enforce the selection of a user level for each new requirement.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 18,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Support Internal Levels Within User Level Hierarchy",
+      "statement": "The system shall support defining internal levels within a user level hierarchy.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 19,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Arrange Nodes Within Traceability Hierarchy",
+      "statement": "The system shall enable rearranging nodes in the traceability graph for better visualization.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 20,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Create a Project",
+      "statement": "The system shall enable users to create a project by specifying the project name, repository URL, and access token.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 21,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Delete a Project",
+      "statement": "The system shall enable users to delete an existing project.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 22,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Add a New Release to a Project",
+      "statement": "The system shall enable users to add a new release to an existing project.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 23,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Delete a Release from a Project",
+      "statement": "The system shall enable users to delete an existing release from a project.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 24,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "View Archived Releases",
+      "statement": "The system shall enable users to view, but not edit, archived releases.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 25,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Add an Item to the Current Project",
+      "statement": "The system shall enable users to add new items to the current project.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 26,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Delete an Item from the Current Project",
+      "statement": "The system shall enable users to delete items from the current project.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 27,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Edit an Item in the Current Project",
+      "statement": "The system shall enable users to edit items in the current project.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 28,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Validate Repository During Project Creation",
+      "statement": "The system shall validate that the repository URL is valid and accessible with the provided access token.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 29,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Validate Relationships to Avoid Cycles",
+      "statement": "The system shall prevent the creation of relationships that would introduce cycles in the traceability graph.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 30,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Validate Status Changes of Items",
+      "statement": "The system shall enforce specific conditions when changing the status of items.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 31,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Validate Item Edits and Provide Warnings",
+      "statement": "The system shall notify users of potential issues when editing items.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 32,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Warn on Editing Requirement with Child Items",
+      "statement": "The system shall warn users when editing a requirement with child items without updating the child items.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 33,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Warn on Changing Status of Requirement with SourceArtifact Children",
+      "statement": "The system shall warn users when changing the status of a requirement with SourceArtifact children without updating the status of the SourceArtifact items.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 34,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Suppress Warnings Option",
+      "statement": "The system shall provide an option to suppress warnings when editing items or changing their status.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 35,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Handle Iterations/Increments",
+      "statement": "The system shall specify how to handle iterations and increments.",
+      "level": "Solution"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 36,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Provide Real-World Examples",
+      "statement": "The system shall provide real-world examples of requirements traceability in a visual way.",
+      "level": "Business"
+    },
+    "status": "OPEN"
+  },
+  {
+    "id": 37,
+    "projectId": 100,
+    "itemType": "REQUIREMENT",
+    "data": {
+      "name": "Employ User-Friendly SW Tool",
+      "statement": "The system shall employ an easy-to-use software tool that demonstrates basic principles of requirements traceability.",
+      "level": "Business"
+    },
+    "status": "OPEN"
   }
 ]

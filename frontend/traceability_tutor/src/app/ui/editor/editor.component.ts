@@ -167,13 +167,13 @@ export class EditorComponent
       next: async (relationships: RelationshipDTO[]) => {
         console.log('Editable relationships:', relationships);
         for (const relationship of relationships) {
-            this.addConnection(relationship);
+            await this.addConnection(relationship);
         }
         await this.arrange.layout({
           options: {
-            'elk.spacing.nodeNode': 200,
-            'elk.layered.spacing.nodeNodeBetweenLayers': 200,
-            'elk.alignment': 'DOWN',
+            'elk.spacing.nodeNode': 500,
+            'elk.layered.spacing.nodeNodeBetweenLayers': 600,
+            'elk.alignment': 'RIGHT',
             'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //LINEAR_SEGMENTS, BRANDES_KOEPF
             'elk.direction': 'RIGHT', //we want DOWN but need to configure sockets,
             'elk.edge.type': 'DIRECTED',
@@ -192,8 +192,8 @@ export class EditorComponent
 
 
   async addNode(node: any) {
-    node.addOutput(node.id, new ClassicPreset.Output(socket));
-    node.addInput(node.id, new ClassicPreset.Input(socket));
+    node.addOutput(node.id, new ClassicPreset.Output(socket, undefined, true));
+    node.addInput(node.id, new ClassicPreset.Input(socket, undefined, true));
      if (!await this.editor.addNode(node)) throw new Error("Error while adding node");
   }
 
