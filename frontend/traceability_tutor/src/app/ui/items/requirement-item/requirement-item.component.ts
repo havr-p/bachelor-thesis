@@ -15,7 +15,7 @@ import {EventService} from '../../../services/event/event.service';
   templateUrl: './requirement-item.component.html',
   styleUrls: ['./requirement-item.component.sass'],
   host: {
-    'data-testid': 'item',
+    'data-testid': 'node',
   },
 })
 export class RequirementItemComponent implements OnChanges, OnInit {
