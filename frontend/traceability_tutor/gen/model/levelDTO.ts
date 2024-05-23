@@ -6,6 +6,5 @@
 
 export interface LevelDTO {
   color?: string;
-  id?: number;
   name?: string;
 }

@@ -18,6 +18,7 @@ import {
   Observable
 } from 'rxjs'
 import type {
+  CreateItemDTO,
   ItemDTO
 } from '../model'
 
@@ -73,12 +74,19 @@ export class ItemResourceService {
       `/api/items`,options
     );
   }
- createItem<TData = number>(
-    itemDTO: ItemDTO, options?: HttpClientOptions
+ createItem<TData = ItemDTO>(
+    createItemDTO: CreateItemDTO, options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.post<TData>(
       `/api/items`,
-      itemDTO,options
+      createItemDTO,options
+    );
+  }
+ getProjectEditableItems<TData = ItemDTO[]>(
+    id: number, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/items/project/${id}`,options
     );
   }
 };
@@ -87,4 +95,5 @@ export type GetItemClientResult = NonNullable<ItemDTO>
 export type UpdateItemClientResult = NonNullable<number>
 export type DeleteItemClientResult = NonNullable<void>
 export type GetAllItemsClientResult = NonNullable<ItemDTO[]>
-export type CreateItemClientResult = NonNullable<number>
+export type CreateItemClientResult = NonNullable<ItemDTO>
+export type GetProjectEditableItemsClientResult = NonNullable<ItemDTO[]>

@@ -10,7 +10,7 @@ export class ValidationService {
   constructor() {
   }
 
-  validateRequirement(requirement: Requirement) {
+  validateRequirement(requirement?: Requirement) {
     return true;
   }
 

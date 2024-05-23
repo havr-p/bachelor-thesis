@@ -25,6 +25,8 @@ export enum EditorEventType {
   EXPORT = 'export',
   IMPORT = 'import',
   CLEAR = 'clear',
+  TO_PROJECTS_MENU = 'to projects menu',
+  SAVE_ITERATION ='save iteration',
 }
 
 export enum ProjectEventType {
@@ -32,6 +34,7 @@ export enum ProjectEventType {
   REMOVE = 'remove',
   EDIT = 'edit',
   SELECT = 'select',
+  SETUP_DEMO = "setup demo",
 }
 
 export enum ItemViewEventType {
@@ -80,10 +83,5 @@ export class ProjectEvent extends BaseEvent<
   }
 }
 
-export enum ItemType {
-  REQUIREMENT = 'Requirement',
-  SOURCE = 'Source',
-  TEST = 'Test',
-}
 
 export type ItemDataType = Requirement; // | Source

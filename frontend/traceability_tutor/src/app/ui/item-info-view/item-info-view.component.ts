@@ -7,14 +7,12 @@ import {NgForOf, NgSwitch, NgSwitchCase, NgSwitchDefault,} from '@angular/common
 import {InplaceModule} from 'primeng/inplace';
 import {FormsModule} from '@angular/forms';
 import {Item} from '../../items/Item';
-import {ItemType} from '../../types';
 import {InputTextModule} from 'primeng/inputtext';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {EventService} from 'src/app/services/event/event.service';
 import {ValidationService} from '../../services/validation/validation.service';
 import {RequirementsService} from '../../services/requirements/requirements.service';
-import {Requirement} from '../../models/requirement';
-import {RelationshipDTO} from "../../../../gen/model";
+import {ItemType, RelationshipDTO} from "../../../../gen/model";
 
 @Component({
   selector: 'app-item-info-view',
@@ -38,7 +36,7 @@ import {RelationshipDTO} from "../../../../gen/model";
 })
 export class ItemInfoViewComponent {
   @Input() item!: Item;
-  @Input() relationships!: RelationshipDTO
+  @Input() relationships!: RelationshipDTO[]
   @Output() toggleVisible = new EventEmitter<boolean>();
 
   constructor(
@@ -50,13 +48,12 @@ export class ItemInfoViewComponent {
 
   dataChanges: any;
 
-  protected readonly ItemType = ItemType;
   dataChanged = false;
 
   saveChanges() {
     if (this.dataChanged) {
       const isValid = this.validationService.validateRequirement(
-        this.item.data as Requirement,
+        //this.item.data as Requirement,
       );
       if (isValid) {
         this.requirementsService.updateRequirement(this.item.data);
@@ -89,4 +86,7 @@ export class ItemInfoViewComponent {
   cancelChanges() {
     this.toggleVisible.emit(false);
   }
+
+  protected readonly ItemType = ItemType;
+  protected readonly JSON = JSON;
 }

@@ -3,7 +3,7 @@ import {environment} from '../../../environments/environment';
 import {Requirement} from '../../models/requirement';
 import {HttpResponse} from 'msw';
 import {HttpClient} from '@angular/common/http';
-
+import * as demoRequirements from '../../../assets/tt-reqs.json'
 @Injectable({
   providedIn: 'root',
 })
@@ -11,14 +11,6 @@ export class RequirementsService {
   constructor(private http: HttpClient) {
   }
 
-  async fetchRequirements(): Promise<Requirement[]> {
-    const response = await fetch(`${environment.apiUrl}/requirements/all`);
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return await response.json();
-  }
 
   updateRequirement(requirement: any) {
     console.log('i will save', requirement);
@@ -28,4 +20,6 @@ export class RequirementsService {
       statusText: 'ok',
     });
   }
+
+
 }

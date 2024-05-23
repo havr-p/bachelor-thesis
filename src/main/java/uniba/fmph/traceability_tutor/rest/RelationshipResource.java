@@ -1,19 +1,24 @@
 package uniba.fmph.traceability_tutor.rest;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uniba.fmph.traceability_tutor.model.CreateRelationshipDTO;
 import uniba.fmph.traceability_tutor.model.RelationshipDTO;
 import uniba.fmph.traceability_tutor.service.RelationshipService;
 
 import java.util.List;
 
+import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY_SCHEME;
+
 
 @RestController
 @RequestMapping(value = "/api/relationships", produces = MediaType.APPLICATION_JSON_VALUE)
+@SecurityRequirement(name = BEARER_SECURITY_SCHEME)
 public class RelationshipResource {
 
     private final RelationshipService relationshipService;
@@ -36,7 +41,7 @@ public class RelationshipResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createRelationship(
-            @RequestBody @Valid final RelationshipDTO relationshipDTO) {
+            @RequestBody @Valid final CreateRelationshipDTO relationshipDTO) {
         final Long createdId = relationshipService.create(relationshipDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }

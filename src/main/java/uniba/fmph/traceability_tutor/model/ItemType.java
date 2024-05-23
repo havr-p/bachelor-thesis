@@ -4,7 +4,7 @@ package uniba.fmph.traceability_tutor.model;
 public enum ItemType {
 
     REQUIREMENT,
-    SOURCE,
+    CODE,
     TEST,
     DESIGN
 

@@ -1,5 +1,6 @@
 package uniba.fmph.traceability_tutor.service;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.Item;
@@ -16,8 +17,11 @@ import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.util.List;
 
+import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY_SCHEME;
+
 
 @Service
+@SecurityRequirement(name = BEARER_SECURITY_SCHEME)
 public class ReleaseService {
 
     private final ReleaseRepository releaseRepository;

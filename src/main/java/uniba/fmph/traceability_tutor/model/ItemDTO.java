@@ -1,9 +1,11 @@
 package uniba.fmph.traceability_tutor.model;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UUID;
 
 import java.util.Map;
 
@@ -12,7 +14,15 @@ import java.util.Map;
 @Setter
 public class ItemDTO {
 
+    @NotNull
     private Long id;
+
+    @NotBlank
+    private Long projectId;
+
+    @NotBlank
+    @UUID
+    String internalProjectUUID;
 
     @NotNull
     private ItemType itemType;
@@ -23,18 +33,8 @@ public class ItemDTO {
     @Size(max = 255)
     private String status;
 
-    @NotNull
-    @Size(max = 255)
-    private String name;
-
-    @NotNull
-    private String projectInternalUid;
-
     private HistoryAction historyAction;
 
-    @NotNull
-    private Long project;
-
-    private Long release;
+    private Long releaseId;
 
 }

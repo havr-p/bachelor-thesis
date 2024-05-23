@@ -47,11 +47,9 @@ public class Item {
     @Column
     private String status;
 
-    @Column(nullable = false)
-    private String name;
 
     @Column(nullable = false)
-    private String projectInternalUid;
+    private String internalProjectUUID;
 
     @Column
     @Enumerated(EnumType.STRING)

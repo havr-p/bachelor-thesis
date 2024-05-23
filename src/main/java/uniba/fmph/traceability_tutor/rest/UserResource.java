@@ -19,7 +19,7 @@ import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.util.List;
 
-import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
+import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY_SCHEME;
 
 
 @RestController
@@ -30,7 +30,7 @@ public class UserResource {
     private final UserService userService;
     private UserMapper userMapper;
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @Operation(security = {@SecurityRequirement(name = BEARER_SECURITY_SCHEME)})
     @GetMapping("/me")
     public UserDTO getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByEmail(currentUser.getUsername());

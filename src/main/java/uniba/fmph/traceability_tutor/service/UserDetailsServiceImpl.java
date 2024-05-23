@@ -32,8 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         customUserDetails.setPassword(user.getPassword());
         customUserDetails.setName(user.getName());
         customUserDetails.setEmail(user.getEmail());
-        customUserDetails.setGitHubId(user.getGithubId());
-        customUserDetails.setGitHubLogin(user.getGithubLogin());
         customUserDetails.setAuthorities(authorities);
         return customUserDetails;
     }

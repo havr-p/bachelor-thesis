@@ -16,13 +16,21 @@ import java.io.IOException;
 @Configuration
 public class GitHubConfig {
     @Bean
-    @Qualifier("github")
-    WebClient webClient(ClientRegistrationRepository clientRegistrations,
+    @Qualifier("github_oauth2")
+    WebClient webClientOAuth2(ClientRegistrationRepository clientRegistrations,
                         OAuth2AuthorizedClientRepository authorizedClients) {
         var oauth = new ServletOAuth2AuthorizedClientExchangeFilterFunction(clientRegistrations, authorizedClients);
         oauth.setDefaultClientRegistrationId(CommonOAuth2Provider.GITHUB.name().toLowerCase());
         return WebClient.builder()
                 .apply(oauth.oauth2Configuration())
+                .baseUrl("https://api.github.com")
+                .build();
+    }
+
+    @Bean
+    @Qualifier("github")
+    WebClient webClient() {
+        return WebClient.builder()
                 .baseUrl("https://api.github.com")
                 .build();
     }

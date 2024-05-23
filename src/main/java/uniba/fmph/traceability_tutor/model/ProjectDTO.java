@@ -1,5 +1,6 @@
 package uniba.fmph.traceability_tutor.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ProjectDTO {
-
+    @NotNull
     private Long id;
 
     @NotBlank
@@ -28,10 +29,9 @@ public class ProjectDTO {
 
     @NotNull
     private Long owner;
-
+    @NotNull
     private List<LevelDTO> levels;
-
-
+    @NotNull
     private OffsetDateTime lastOpened;
     private OffsetDateTime dateCreated;
     private OffsetDateTime lastModified;

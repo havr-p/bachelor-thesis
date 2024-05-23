@@ -7,10 +7,10 @@ import type { LevelDTO } from './levelDTO';
 
 export interface ProjectDTO {
   dateCreated?: Date;
-  id?: number;
+  id: number;
   lastModified?: Date;
-  lastOpened?: Date;
-  levels?: LevelDTO[];
+  lastOpened: Date;
+  levels: LevelDTO[];
   /**
    * @minLength 0
    * @maxLength 255

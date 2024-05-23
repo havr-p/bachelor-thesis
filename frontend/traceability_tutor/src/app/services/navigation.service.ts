@@ -18,4 +18,9 @@ export class NavigationService {
 
     this.router.navigateByUrl(url, extras);
   }
+
+  navigateToProjectMenu() {
+    const url ="/projects";
+    this.router.navigateByUrl(url);
+  }
 }

@@ -18,6 +18,7 @@ import {
   Observable
 } from 'rxjs'
 import type {
+  CreateRelationshipDTO,
   RelationshipDTO
 } from '../model'
 
@@ -74,11 +75,11 @@ export class RelationshipResourceService {
     );
   }
  createRelationship<TData = number>(
-    relationshipDTO: RelationshipDTO, options?: HttpClientOptions
+    createRelationshipDTO: CreateRelationshipDTO, options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.post<TData>(
       `/api/relationships`,
-      relationshipDTO,options
+      createRelationshipDTO,options
     );
   }
 };

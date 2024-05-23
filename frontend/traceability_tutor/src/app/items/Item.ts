@@ -1,8 +1,8 @@
-import {ItemDataType, ItemType} from '../types';
+import {ItemDTO} from "../../../gen/model";
 
-export interface Item {
+export interface Item extends ItemDTO{
   width: number;
   height: number;
-  type: ItemType | undefined;
-  data: ItemDataType;
+  backgroundColor: string;
+  borderStyle: string;
 }

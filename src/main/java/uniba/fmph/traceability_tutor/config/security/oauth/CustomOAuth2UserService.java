@@ -51,7 +51,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user.setEmail(customUserDetails.getEmail());
             user.setProvider(customUserDetails.getProvider());
             user.setRole(SecurityConfig.USER);
-            user.setGithubLogin(customUserDetails.getGitHubLogin());
         } else {
             user = userOptional.get();
             user.setEmail(customUserDetails.getEmail());

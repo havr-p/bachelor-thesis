@@ -1,26 +1,16 @@
 package uniba.fmph.traceability_tutor.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import uniba.fmph.traceability_tutor.config.security.oauth.OAuth2Provider;
 
 import java.time.OffsetDateTime;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 
 @Entity
@@ -64,10 +54,6 @@ public class User {
     private OAuth2Provider provider; // currently only local and GitHub
     private String providerId;
 
-
-
-
-
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;
@@ -75,5 +61,14 @@ public class User {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
+    public User(String email, String name, String password, String role, OAuth2Provider provider) {
+        this.username = email;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.role = role;
+        this.provider = provider;
+    }
 
 }

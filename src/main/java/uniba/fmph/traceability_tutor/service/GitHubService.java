@@ -1,6 +1,7 @@
 package uniba.fmph.traceability_tutor.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.Setter;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,7 +10,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 
+import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY_SCHEME;
+
 @Service
+@SecurityRequirement(name = BEARER_SECURITY_SCHEME)
 public class GitHubService {
 private final WebClient webClient;
 

@@ -2,7 +2,7 @@ import {RequirementsService} from "../../services/requirements/requirements.serv
 import {EventService} from "../../services/event/event.service";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {StateManager} from "../../models/state";
-import {MenuItem} from "primeng/api";
+import {MenuItem, MenuItemCommandEvent} from "primeng/api";
 import {EditorEventType, ProjectEventType} from "../../types";
 import {Requirement} from "../../models/requirement";
 import {Injectable} from "@angular/core";
@@ -34,13 +34,6 @@ export class DockManager  {
     if (mode === 'editor') {
       items = [
         {
-          label: 'Load demo project',
-          command: async () => {
-            const data = await this.loadAll();
-            this.eventService.publishEditorEvent(EditorEventType.DEMO, data);
-          },
-        },
-        {
           label: 'Add node',
           styleClass: 'menuItem',
           items: [
@@ -49,23 +42,35 @@ export class DockManager  {
               tooltip: 'Use this command to create a new requirement node',
               tooltipPosition: 'bottom',
               command: async () => {
-                const data: Requirement = {
-                  id: '1',
-                  level: 'stakeholder',
-                  name: 'New Requirement',
-                  statement: 'New Requirement Description',
-                };
+                const data = undefined;
                 this.eventService.publishEditorEvent(EditorEventType.ADD, data);
               },
             },
           ],
         },
         {
-          label: 'Clear',
+          label: 'Iteration',
+          items: [
+            {
+              label: 'Save as iteration',
+              command: () => {
+                console.log("Save iteration");
+                this.eventService.publishEditorEvent(EditorEventType.SAVE_ITERATION)
+              },
+            },
+          ],
+
+        },
+        {
+          label: 'Clear editor',
           command: () => {
             this.localStorageService.clearData();
             this.eventService.publishEditorEvent(EditorEventType.CLEAR);
           },
+        },
+        {
+          label: 'Projects menu',
+          routerLink: '/projects',
         },
       ];
     } else if (mode === 'projects') {
@@ -77,17 +82,15 @@ export class DockManager  {
             this.eventService.publishProjectMenuEvent(ProjectEventType.CREATE)
           }
         },
+        {
+          label: 'Setup demo project',
+          command: () => {
+            this.eventService.publishProjectMenuEvent(ProjectEventType.SETUP_DEMO)
+          }
+        }
       ]
     }
     return items;
   }
 
-  private async loadAll(): Promise<Requirement[]> {
-    try {
-      return await this.requirementsService.fetchRequirements();
-    } catch (error) {
-      console.error('Error fetching requirements:', error);
-      return [];
-    }
-  }
 }

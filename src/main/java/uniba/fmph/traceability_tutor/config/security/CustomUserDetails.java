@@ -16,12 +16,9 @@ public class CustomUserDetails implements OAuth2User, UserDetails {
     private String password;
     private String name;
     private String email;
-    private String avatarUrl;
     private OAuth2Provider provider;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
-    private String gitHubLogin;
-    private Long gitHubId;
 
     @Override
     public String getUsername() {

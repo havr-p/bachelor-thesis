@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uniba.fmph.traceability_tutor.exception.ProjectWithNameExistsException;
+import uniba.fmph.traceability_tutor.model.CreateProjectDTO;
 import uniba.fmph.traceability_tutor.model.ProjectDTO;
 import uniba.fmph.traceability_tutor.service.ProjectService;
 import uniba.fmph.traceability_tutor.util.ReferencedException;
@@ -37,8 +39,11 @@ public class ProjectResource {
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createProject(@RequestBody @Valid final ProjectDTO projectDTO) {
-        final Long createdId = projectService.create(projectDTO);
+    public ResponseEntity<Long> createProject(@RequestBody @Valid final CreateProjectDTO createProjectDTO) {
+        if (projectService.existsByUserAndName(createProjectDTO.getName())) {
+            throw new ProjectWithNameExistsException("Project with name \"" + createProjectDTO.getName() + "\" already exists.");
+        }
+        final Long createdId = projectService.create(createProjectDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
@@ -69,6 +74,11 @@ public class ProjectResource {
     @GetMapping("/user/{id}")
     public ResponseEntity<List<ProjectDTO>> getUserProjects(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.of(Optional.ofNullable(projectService.findByOwner(id)));
+    }
+
+    @GetMapping("/demo")
+    public ResponseEntity<Long> setupDemoProject() {
+       return new ResponseEntity<>(projectService.createDemoProject(), HttpStatus.CREATED);
     }
 
 

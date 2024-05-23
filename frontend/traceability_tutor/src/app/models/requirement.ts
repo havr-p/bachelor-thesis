@@ -1,12 +1,12 @@
-interface ParentReference {
-  parentId: string;
-  parentRole: string;
+import {ItemDTO} from "../../../gen/model";
+
+
+export interface Requirement extends ItemDTO{
+  data: RequirementData;
 }
 
-export interface Requirement {
-  id: string;
+export type RequirementData = {
   level: string;
   name: string;
   statement: string;
-  status?: string;
 }

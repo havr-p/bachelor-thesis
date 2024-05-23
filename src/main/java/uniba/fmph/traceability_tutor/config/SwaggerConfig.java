@@ -1,5 +1,7 @@
 package uniba.fmph.traceability_tutor.config;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -10,8 +12,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY_SCHEME;
+
 
 @Configuration
+@SecurityScheme(
+        name = BEARER_SECURITY_SCHEME,
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 public class SwaggerConfig {
     static {
         // use Reusable Enums for Swagger generation:
@@ -51,6 +61,6 @@ public class SwaggerConfig {
             return operation;
         };
     }
-    public static final String BEARER_KEY_SECURITY_SCHEME = "bearer-key";
+    public static final String BEARER_SECURITY_SCHEME = "bearer-key";
 
 }

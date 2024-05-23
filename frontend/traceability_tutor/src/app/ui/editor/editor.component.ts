@@ -13,13 +13,15 @@ import {Item} from '../../items/Item';
 import {StateManager} from "../../models/state";
 import {AuthService} from "../../services/auth/auth.service";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {createEditor} from "./create-editor";
-import {map, switchMap} from "rxjs";
-import {ProjectDTO, ReleaseDTO} from "../../../../gen/model";
+import {lastValueFrom, map, switchMap} from "rxjs";
+import {ItemDTO, ItemType, ProjectDTO, ReleaseDTO} from "../../../../gen/model";
 import {Project} from "../../models/project";
 import {Release} from "../../models/release";
 import {ReleaseResourceService} from "../../../../gen/services/release-resource";
+import {ItemResourceService} from "../../../../gen/services/item-resource";
+import {mapGenericModel} from "../../models/itemMapper";
 
 const socket = new ClassicPreset.Socket('socket');
 
@@ -78,6 +80,8 @@ export class EditorComponent
     private authService: AuthService,
     private projectService: ProjectResourceService,
     private releaseService: ReleaseResourceService,
+    private router: Router,
+    private itemService: ItemResourceService,
   ) {
   }
 
@@ -107,7 +111,8 @@ export class EditorComponent
     this.route.paramMap.subscribe(params => {
       const projectId = Number(params.get('projectId'));
       if (projectId) {
-        this.loadProject(projectId);
+        console.log("projectId", projectId)
+        this.loadProjectEditableItems(projectId);
       } else {
         console.error('Project ID not found');
       }
@@ -133,13 +138,16 @@ export class EditorComponent
             case EditorEventType.CLEAR:
               await this.editor.clear();
               break;
+            case EditorEventType.TO_PROJECTS_MENU:
+              await this.router.navigateByUrl('/projects');
+              break;
           }
         }
       },
     );
   }
 
-  private loadProject(projectId: number) {
+  private loadProjectEditableItems(projectId: number) {
     this.projectService.getProject(projectId).pipe(
       switchMap((projectDTO: ProjectDTO) => {
         const project = new Project(projectDTO);
@@ -150,13 +158,24 @@ export class EditorComponent
               project.addRelease(release);
             });
             return project;
+          }),
+          switchMap((project: Project) => {
+            console.log('Project loaded with releases', project);
+            this.state.currentProject = project;
+            return this.itemService.getProjectEditableItems(project.id).pipe(
+              map((items: ItemDTO[]) => ({ project, items }))
+            );
           })
         );
       })
     ).subscribe({
-      next: (project) => {
-        this.state.currentProject = project;
-        console.log('Project loaded with releases', project);
+      next: ({ project, items }) => {
+        console.log('Project with editable items:', project, items);
+        this.addItems(items).then(() => {
+          console.log('Items added successfully');
+        }).catch(error => {
+          console.error('Failed to add items:', error);
+        });
       },
       error: (error) => {
         console.error('Failed to load project:', error);
@@ -166,16 +185,13 @@ export class EditorComponent
 
 
 
+
   async addNode(node: any) {
     node.addOutput(node.id, new ClassicPreset.Output(socket));
     node.addInput(node.id, new ClassicPreset.Input(socket));
     await this.editor.addNode(node);
   }
 
-  get openedItemTitle(): string {
-    if (this.openedItem) return this.openedItem.data.name;
-    return 'item not defined';
-  }
 
   ngOnDestroy(): void {
     if (this.destroyEditor) {
@@ -185,6 +201,7 @@ export class EditorComponent
 
   private async processDemoEvent(data: any) {
     console.log("demo event");
+    console.log('demo data', data);
   }
 
   private async arrangeNodes() {
@@ -225,4 +242,9 @@ export class EditorComponent
     await AreaExtensions.zoomAt(this.area, this.editor.getNodes());
   }
 
+  private async addItems(items: ItemDTO[]) {
+    for (const item of items) {
+      const data = mapGenericModel(item);
+    }
+  }
 }

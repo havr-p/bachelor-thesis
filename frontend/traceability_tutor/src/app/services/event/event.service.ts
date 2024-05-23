@@ -36,7 +36,8 @@ export class EventService {
     this.eventSource.next(new ProjectEvent(type, data));
   }
 
-  notify(message: string, type: 'success' | 'error' | 'info' | 'warning', title?: string, override?: Partial<IndividualConfig>) {
+  notify(message: string, type: 'success' | 'error' | 'info' | 'warning', title?: string,
+         override: Partial<IndividualConfig> = {enableHtml: true}) {
     switch (type) {
       case 'success':
         this.toastr.success(message, title, override);

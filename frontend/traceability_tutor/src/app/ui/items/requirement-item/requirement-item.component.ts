@@ -26,7 +26,6 @@ export class RequirementItemComponent implements OnChanges, OnInit {
   seed = 0;
 
   @HostBinding('class.selected') get selected() {
-    // console.log(this.data.selected, this.data.label);
     return this.data.selected;
   }
 
@@ -67,5 +66,4 @@ export class RequirementItemComponent implements OnChanges, OnInit {
     return ai - bi;
   }
 
-  protected readonly localStorage = localStorage;
 }

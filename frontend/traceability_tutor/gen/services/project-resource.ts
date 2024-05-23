@@ -18,6 +18,7 @@ import {
   Observable
 } from 'rxjs'
 import type {
+  CreateProjectDTO,
   ProjectDTO
 } from '../model'
 
@@ -46,6 +47,7 @@ export class ProjectResourceService {
   ) {} getProject<TData = ProjectDTO>(
     id: number, options?: HttpClientOptions
   ): Observable<TData>  {
+        console.log("i am in service");
     return this.http.get<TData>(
       `/api/projects/${id}`,options
     );
@@ -81,11 +83,11 @@ export class ProjectResourceService {
     );
   }
  createProject<TData = number>(
-    projectDTO: ProjectDTO, options?: HttpClientOptions
+    createProjectDTO: CreateProjectDTO, options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.post<TData>(
       `/api/projects`,
-      projectDTO,options
+      createProjectDTO,options
     );
   }
  getUserProjects<TData = ProjectDTO[]>(
@@ -93,6 +95,13 @@ export class ProjectResourceService {
   ): Observable<TData>  {
     return this.http.get<TData>(
       `/api/projects/user/${id}`,options
+    );
+  }
+ setupDemoProject<TData = number>(
+     options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/projects/demo`,options
     );
   }
 };
@@ -104,3 +113,4 @@ export type UpdateLastOpenedClientResult = NonNullable<number>
 export type GetAllProjectsClientResult = NonNullable<ProjectDTO[]>
 export type CreateProjectClientResult = NonNullable<number>
 export type GetUserProjectsClientResult = NonNullable<ProjectDTO[]>
+export type SetupDemoProjectClientResult = NonNullable<number>

@@ -1,26 +1,18 @@
 package uniba.fmph.traceability_tutor.service;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import uniba.fmph.traceability_tutor.domain.Item;
-import uniba.fmph.traceability_tutor.domain.Project;
-import uniba.fmph.traceability_tutor.domain.Release;
-import uniba.fmph.traceability_tutor.domain.User;
+import uniba.fmph.traceability_tutor.config.security.SecretsManager;
+import uniba.fmph.traceability_tutor.domain.*;
+import uniba.fmph.traceability_tutor.mapper.LevelMapper;
 import uniba.fmph.traceability_tutor.mapper.ProjectMapper;
-import uniba.fmph.traceability_tutor.mapper.UserMapper;
+import uniba.fmph.traceability_tutor.model.CreateProjectDTO;
 import uniba.fmph.traceability_tutor.model.ProjectDTO;
-import uniba.fmph.traceability_tutor.repos.ItemRepository;
-import uniba.fmph.traceability_tutor.repos.ProjectRepository;
-import uniba.fmph.traceability_tutor.repos.ReleaseRepository;
-import uniba.fmph.traceability_tutor.repos.UserRepository;
-import uniba.fmph.traceability_tutor.util.AppException;
+import uniba.fmph.traceability_tutor.model.UserSecretType;
+import uniba.fmph.traceability_tutor.repos.*;
+import uniba.fmph.traceability_tutor.runner.DatabaseInitializer;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
@@ -38,15 +30,22 @@ public class ProjectService {
     private final ItemRepository itemRepository;
     private final ReleaseRepository releaseRepository;
     private final ProjectMapper projectMapper;
+    private final LevelMapper levelMapper;
+    private final SecretsManager secretsManager;
+    private final DatabaseInitializer databaseInitializer;
 
     public ProjectService(ProjectRepository projectRepository, UserRepository userRepository,
                           ItemRepository itemRepository, ReleaseRepository releaseRepository,
-                          ProjectMapper projectMapper) {
+                          ProjectMapper projectMapper, LevelMapper levelMapper, SecretsManager secretsManager,
+                          DatabaseInitializer databaseInitializer) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.releaseRepository = releaseRepository;
         this.projectMapper = projectMapper;
+        this.levelMapper = levelMapper;
+        this.secretsManager = secretsManager;
+        this.databaseInitializer = databaseInitializer;
     }
 
     public List<ProjectDTO> findAll() {
@@ -56,18 +55,36 @@ public class ProjectService {
     }
 
     public ProjectDTO get(Long id) {
-        return projectRepository.findById(id)
+        var project = projectRepository.findById(id)
                 .map(projectMapper::toDto)
                 .orElseThrow(() -> new NotFoundException("Project not found with id: " + id));
+        return project;
     }
 
-    public Long create(ProjectDTO projectDTO) {
+    public Long create(CreateProjectDTO projectDTO) {
         Project project = projectMapper.toEntity(projectDTO);
         User owner = getCurrentUser();
         project.setOwner(owner);
-        project.setLastOpened(OffsetDateTime.now()); // Set the last opened time when creating
-        return projectRepository.save(project).getId();
+        project.setLastOpened(OffsetDateTime.now());
+
+        if (projectDTO.getLevels() != null) {
+            List<Level> levels = projectDTO.getLevels().stream()
+                    .map(levelDTO -> {
+                        Level level = projectMapper.toLevel(levelDTO);
+                        level.setProject(project);
+                        return level;
+                    })
+                    .toList();
+            project.setLevels(levels);
+        }
+
+        Project savedProject = projectRepository.save(project);
+
+        secretsManager.storeSecret(owner, UserSecretType.GITHUB_ACCESS_TOKEN, projectDTO.getAccessToken(), savedProject);
+
+        return savedProject.getId();
     }
+
 
     public void update(final Long id, final ProjectDTO projectDTO) {
         Project project = projectRepository.findById(id)
@@ -117,18 +134,27 @@ public class ProjectService {
     public List<ProjectDTO> findByOwner(final Long id) {
         Optional<User> owner = userRepository.findById(id);
         if (owner.isPresent()) {
-            return projectRepository.findAllByOwner(owner.get(), Sort.by(Sort.Direction.DESC, "lastOpened")).stream()
+            var result = projectRepository.findAllByOwner(owner.get(), Sort.by(Sort.Direction.DESC, "lastOpened")).stream()
                     .map(projectMapper::toDto)
-                    .collect(Collectors.toList());
+                    .toList();
+            return result;
         }
         else throw new NotFoundException("User not found with id: " + id);
     }
 
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long githubId = Long.getLong(authentication.getName()); // Assuming the username is the GitHub ID for simplicity
-        return userRepository.findByGithubId(githubId)
-                .orElseThrow(() -> new NotFoundException("User not found with GitHub ID: " + githubId));
+        String email = authentication.getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
     }
 
+    public boolean existsByUserAndName(String projectName) {
+        return projectRepository.existsByOwnerAndName(getCurrentUser(), projectName);
+    }
+
+    public Long createDemoProject() {
+        var user = this.getCurrentUser();
+        return databaseInitializer.createDemoProject(user);
+    }
 }

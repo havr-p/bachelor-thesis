@@ -14,6 +14,9 @@ import {BaseEvent, EventSource, ProjectEventType} from "../../types";
 import {AuthService} from "../../services/auth/auth.service";
 import {of, switchMap} from "rxjs";
 import {NavigationService} from "../../services/navigation.service";
+import {OrderListModule} from "primeng/orderlist";
+import {log} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-project-menu',
@@ -27,15 +30,15 @@ import {NavigationService} from "../../services/navigation.service";
     CreateProjectFormComponent,
     DialogModule,
     DockComponent,
-    DatePipe
+    DatePipe,
+    OrderListModule,
+    RouterLink
   ],
   standalone: true
 })
 export class ProjectMenuComponent implements OnInit {
 
-  constructor(private stateManager: StateManager,
-              private localStorageService: LocalStorageService,
-              private projectService: ProjectResourceService,
+  constructor(private projectService: ProjectResourceService,
               private eventService: EventService,
               private authService: AuthService,
               private navigationService: NavigationService) {
@@ -48,26 +51,57 @@ export class ProjectMenuComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.authService.currentUserValue);
-    this.authService.currentUser.pipe(
-      // Ensure the user is defined before proceeding
-      switchMap(user => user ? this.projectService.getUserProjects(user.id!) : of([]))
-    ).subscribe(projects => {
-      this.projects = projects;
-      console.log(this.projects); // This log will now reflect the updated projects array
-    });
+    this.fetchUserProjects();
     this.eventService.event$.subscribe(
       async (event: BaseEvent<EventSource, ProjectEventType>) => {
         if (event.source === EventSource.PROJECT_MENU) {
           switch (event.type) {
             case ProjectEventType.CREATE:
               this.createNewProjectDialogVisible = true;
+              break;
+            case ProjectEventType.SETUP_DEMO:
+              this.setupDemo();
+              break;
           }
         }
 
       });
   }
 
+  private fetchUserProjects() {
+    this.authService.currentUser.pipe(
+      switchMap(user => user ? this.projectService.getUserProjects(user.id!) : of([]))
+    ).subscribe(projects => {
+      this.projects = projects;
+    });
+  }
+
   openProject(project: ProjectDTO) {
+    this.projectService.updateLastOpened(project.id!).subscribe({
+      next: value => {
+        console.log('update last opened', value )},
+      error: err => {
+        console.log(err)}
+    });
+    //   .subscribe((projectId => {
+    //   let project = this.projects.find(p => p.id === projectId);
+    //   project?.lastOpened
+    // }))
     this.navigationService.navigateToEditor(project.id!);
+  }
+
+  private setupDemo() {
+    this.projectService.setupDemoProject().subscribe({
+        next: projectId => {
+          console.log("Demo project created with id " + projectId);
+          this.fetchUserProjects();
+          this.navigationService.navigateToProjectMenu();
+          this.eventService.notify("Your demo project was created! You can now access it via project menu.", 'success');
+        },
+      error: err => {
+          this.eventService.notify("Error occured during demo project creation: <br>" + err.error.message, 'error');
+      }
+      }
+    )
   }
 }

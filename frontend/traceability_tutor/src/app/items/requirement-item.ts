@@ -1,24 +1,36 @@
-import {Requirement} from '../models/requirement';
+import {Requirement, RequirementData} from '../models/requirement';
 import {getColorByLevel} from '../utils';
 import {Item} from './Item';
 import {ClassicPreset} from 'rete';
-import {ItemType} from '../types';
+import {HistoryAction, ItemType} from "../../../gen/model";
 
-export class RequirementItem extends ClassicPreset.Node implements Item {
+export class RequirementItem extends ClassicPreset.Node {
   width = 400;
   height = 200;
   type = ItemType.REQUIREMENT;
   backgroundColor: string;
-  borderStyle: string;
-  data: Requirement;
+  borderStyle: string = '2px solid black';
+  data: RequirementData;
+  itemType: ItemType;
+  name: string;
+  projectId: number;
+  internalProjectUUID: string;
+  releaseId?: number;
+  status?: string;
+  historyAction?: HistoryAction;
 
   constructor(requirement: Requirement) {
-    super(requirement.name);
-    //console.log(requirement);
-    this.id = requirement.id;
-    this.borderStyle = '2px solid #000000';
-    this.backgroundColor = getColorByLevel(requirement.level);
+    super(requirement.data.name);
+    this.data = requirement.data;
+    this.id = requirement.id.toString();
+    this.internalProjectUUID = requirement.internalProjectUUID;
+    this.itemType = requirement.itemType;
+    this.name = requirement.data.name;
+    this.projectId = requirement.projectId;
+    this.releaseId = requirement.releaseId;
+    this.status = requirement.status;
+    this.historyAction = requirement.historyAction;
+    this.backgroundColor = getColorByLevel(requirement.data.level);
     this.selected = false;
-    this.data = requirement;
   }
 }

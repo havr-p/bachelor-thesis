@@ -10,16 +10,11 @@ import type { ItemType } from './itemType';
 export interface ItemDTO {
   data: ItemDTOData;
   historyAction?: HistoryAction;
-  id?: number;
+  id: number;
+  internalProjectUUID: string;
   itemType: ItemType;
-  /**
-   * @minLength 0
-   * @maxLength 255
-   */
-  name: string;
-  project: number;
-  projectInternalUid: string;
-  release?: number;
+  projectId: number;
+  releaseId?: number;
   /**
    * @minLength 0
    * @maxLength 255

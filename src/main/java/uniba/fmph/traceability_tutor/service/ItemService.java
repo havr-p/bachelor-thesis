@@ -1,11 +1,13 @@
 package uniba.fmph.traceability_tutor.service;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.Item;
 import uniba.fmph.traceability_tutor.domain.Project;
 import uniba.fmph.traceability_tutor.domain.Relationship;
 import uniba.fmph.traceability_tutor.domain.Release;
+import uniba.fmph.traceability_tutor.model.CreateItemDTO;
 import uniba.fmph.traceability_tutor.model.ItemDTO;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.ProjectRepository;
@@ -15,9 +17,13 @@ import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.util.List;
+import java.util.UUID;
+
+import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY_SCHEME;
 
 
 @Service
+@SecurityRequirement(name = BEARER_SECURITY_SCHEME)
 public class ItemService {
 
     private final ItemRepository itemRepository;
@@ -47,16 +53,16 @@ public class ItemService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final ItemDTO itemDTO) {
-        final Item item = new Item();
-        mapToEntity(itemDTO, item);
-        return itemRepository.save(item).getId();
+    public ItemDTO create(final CreateItemDTO createItemDTO) {
+        ItemDTO dto = new ItemDTO();
+        mapToDTO(itemRepository.save(mapToEntity(createItemDTO)), dto);
+        return dto;
     }
 
     public void update(final Long id, final ItemDTO itemDTO) {
-        final Item item = itemRepository.findById(id)
+        Item item = itemRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(itemDTO, item);
+        item = mapToEntity(itemDTO);
         itemRepository.save(item);
     }
 
@@ -69,27 +75,40 @@ public class ItemService {
         itemDTO.setItemType(item.getItemType());
         itemDTO.setData(item.getData());
         itemDTO.setStatus(item.getStatus());
-        itemDTO.setName(item.getName());
-        itemDTO.setProjectInternalUid(item.getProjectInternalUid());
+        itemDTO.setInternalProjectUUID(item.getInternalProjectUUID());
         itemDTO.setHistoryAction(item.getHistoryAction());
-        itemDTO.setProject(item.getProject() == null ? null : item.getProject().getId());
-        itemDTO.setRelease(item.getRelease() == null ? null : item.getRelease().getId());
+        itemDTO.setProjectId(item.getProject() == null ? null : item.getProject().getId());
+        itemDTO.setReleaseId(item.getRelease() == null ? null : item.getRelease().getId());
         return itemDTO;
     }
 
-    private Item mapToEntity(final ItemDTO itemDTO, final Item item) {
+    private Item mapToEntity(final ItemDTO itemDTO) {
+        Item item = new Item();
         item.setItemType(itemDTO.getItemType());
         item.setData(itemDTO.getData());
         item.setStatus(itemDTO.getStatus());
-        item.setName(itemDTO.getName());
-        item.setProjectInternalUid(itemDTO.getProjectInternalUid());
+        item.setInternalProjectUUID(itemDTO.getInternalProjectUUID());
         item.setHistoryAction(itemDTO.getHistoryAction());
-        final Project project = itemDTO.getProject() == null ? null : projectRepository.findById(itemDTO.getProject())
+        final Project project = itemDTO.getProjectId() == null ? null : projectRepository.findById(itemDTO.getProjectId())
                 .orElseThrow(() -> new NotFoundException("project not found"));
         item.setProject(project);
-        final Release release = itemDTO.getRelease() == null ? null : releaseRepository.findById(itemDTO.getRelease())
+        final Release release = itemDTO.getReleaseId() == null ? null : releaseRepository.findById(itemDTO.getReleaseId())
                 .orElseThrow(() -> new NotFoundException("release not found"));
         item.setRelease(release);
+        return item;
+    }
+
+    public Item mapToEntity(final CreateItemDTO createItemDTO) {
+        Item item = new Item();
+        var data = createItemDTO.getData();
+        item.setItemType(createItemDTO.getItemType());
+        item.setData(data);
+        item.setStatus(createItemDTO.getStatus());
+        // UUID will be the same in all iterations
+        item.setInternalProjectUUID(UUID.randomUUID().toString());
+        final Project project = createItemDTO.getProjectId() == null ? null : projectRepository.findById(createItemDTO.getProjectId())
+                .orElseThrow(() -> new NotFoundException("Project with id " + createItemDTO.getProjectId() + "was not found when creating the new item."));
+        item.setProject(project);
         return item;
     }
 
@@ -112,4 +131,9 @@ public class ItemService {
         return null;
     }
 
+    public List<ItemDTO> getProjectEditableItems(Long projectId) {
+        return itemRepository.findNonReleaseByProjectId(projectId).stream()
+                .map(item -> mapToDTO(item, new ItemDTO()))
+                .toList();
+    }
 }

@@ -1,6 +1,8 @@
 package uniba.fmph.traceability_tutor.config.security;
 
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,7 +13,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.oauth2.client.OAuth2LoginConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
@@ -23,7 +24,12 @@ import uniba.fmph.traceability_tutor.config.security.oauth.CustomOAuth2UserServi
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@EnableEncryptableProperties
 public class SecurityConfig {
+
+    public static final String ADMIN = "ADMIN";
+    public static final String USER = "USER";
+
     private final CustomOAuth2UserService customOauth2UserService;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
@@ -37,14 +43,13 @@ public class SecurityConfig {
             "/configuration/ui",
             "/configuration/security",
             "/swagger-ui.html",
-            "/webjars/**",
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",
             "/swagger-ui/**",
             // other public endpoints of your API may be appended to this array
             //auth endpoints
             "/api/login", "/api/register", "/api/user", "/api/logout", "/",
-            "/index.html", "/error", "/webjars/**",
+            "/index.html", "/error",
     };
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -56,8 +61,6 @@ public class SecurityConfig {
         CookieCsrfTokenRepository csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
         http
                 .authorizeHttpRequests((requests) -> requests
-
-                        .requestMatchers(HttpMethod.POST, "/api/login", "/api/register").permitAll()
                         .requestMatchers("/public/**", "/auth/**", "/oauth2/**").permitAll()
                         .requestMatchers("/", "/error", "/webjars/**").permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
@@ -81,8 +84,6 @@ public class SecurityConfig {
                 
         return http.build();
     }
-    public static final String ADMIN = "ADMIN";
-    public static final String USER = "USER";
 
 
 }

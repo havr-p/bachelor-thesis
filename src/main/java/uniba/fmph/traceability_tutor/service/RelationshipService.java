@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.Item;
 import uniba.fmph.traceability_tutor.domain.Relationship;
 import uniba.fmph.traceability_tutor.domain.Release;
+import uniba.fmph.traceability_tutor.model.CreateRelationshipDTO;
 import uniba.fmph.traceability_tutor.model.RelationshipDTO;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
@@ -41,17 +42,15 @@ public class RelationshipService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final RelationshipDTO relationshipDTO) {
+    public Long create(final CreateRelationshipDTO relationshipDTO) {
         final Relationship relationship = new Relationship();
-        mapToEntity(relationshipDTO, relationship);
-        return relationshipRepository.save(relationship).getId();
+        return relationshipRepository.save(mapToEntity(relationshipDTO, relationship)).getId();
     }
 
     public void update(final Long id, final RelationshipDTO relationshipDTO) {
         final Relationship relationship = relationshipRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(relationshipDTO, relationship);
-        relationshipRepository.save(relationship);
+        relationshipRepository.save(mapToEntity(relationshipDTO, relationship));
     }
 
     public void delete(final Long id) {
@@ -68,6 +67,19 @@ public class RelationshipService {
         relationshipDTO.setEndItem(relationship.getEndItem() == null ? null : relationship.getEndItem().getId());
         relationshipDTO.setRelease(relationship.getRelease() == null ? null : relationship.getRelease().getId());
         return relationshipDTO;
+    }
+
+    private Relationship mapToEntity(final CreateRelationshipDTO relationshipDTO,
+                                     final Relationship relationship) {
+        relationship.setType(relationshipDTO.getType());
+        relationship.setDescription(relationshipDTO.getDescription());
+        final Item startItem = relationshipDTO.getStartItem() == null ? null : itemRepository.findById(relationshipDTO.getStartItem())
+                .orElseThrow(() -> new NotFoundException("StartItem not found"));
+        relationship.setStartItem(startItem);
+        final Item endItem = relationshipDTO.getEndItem() == null ? null : itemRepository.findById(relationshipDTO.getEndItem())
+                .orElseThrow(() -> new NotFoundException("EndItem not found"));
+        relationship.setEndItem(endItem);
+        return relationship;
     }
 
     private Relationship mapToEntity(final RelationshipDTO relationshipDTO,

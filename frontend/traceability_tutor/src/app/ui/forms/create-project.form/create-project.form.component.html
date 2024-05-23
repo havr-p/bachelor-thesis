@@ -2,17 +2,71 @@
   <div class="form-field">
     <label for="name">Project Name:</label>
     <input type="text" pInputText id="name" formControlName="name" class="input-text">
+    <p>
+      <small class="text-danger" *ngIf="form['name'].errors?.['required'] && form['name'].touched">
+        Project name is required.
+      </small>
+    </p>
   </div>
   <div class="form-field">
-    <label for="repoUrl">Repository URL:</label>
+    <label for="repoUrl">Repository URL (from GitHub):</label>
     <input type="text" pInputText id="repoUrl" formControlName="repoUrl" class="input-text">
+    <p>
+      <small class="text-danger" *ngIf="form['repoUrl'].errors?.['required'] && form['repoUrl'].touched">
+        Repository URL is required.
+      </small>
+    </p>
   </div>
   <div class="form-field">
-    <label for="repoUrl">Repository access token:</label>
-    <input type="text" pInputText id="repoAccessToken" formControlName="repoAccessToken" class="input-text">
+    <label for="accessToken">Repository Access Token:</label>
+    <input type="text" pInputText id="accessToken" formControlName="accessToken" class="input-text">
+    <p>
+      <small class="text-danger" *ngIf="form['accessToken'].errors?.['required'] && form['accessToken'].touched">
+        Access token is required.
+      </small>
+    </p>
   </div>
-  <button type="submit" [disabled]="!projectForm.valid" class="submit-btn">Create Project</button>
-
-  <app-level-list></app-level-list>
-
+  <div #container>
+    <p-orderList #orderList
+                 [value]="levelsArray" [dragdrop]="true" [listStyle]="{ height: '20rem' }" header="Project Levels">
+      <ng-template pTemplate="header">
+        <p>Project levels</p>
+        <span class="font-normal">Arrange the levels in the desired order of hierarchy.<br> <span class="text-warning font-semibold">You will not be able to change the levels once the project has been created.</span> </span>
+        <p *ngIf="levels.errors?.['minLevels']" class="text-danger">
+          Error: at least 3 levels are required.
+        </p>
+        <p *ngIf="levels.errors?.['missingCode']" class="text-danger">
+          Error: level for code items with name "Code" is required.
+        </p>
+        <p *ngIf="levels.errors?.['missingTest']" class="text-danger">
+          Error: level for test items with name "Test" is required.
+        </p>
+        <p *ngIf="levels.errors?.['duplicateNames']" class="text-danger">
+          Error: level names must be unique.
+        </p>
+        <p *ngIf="levels.errors?.['duplicateColors']" class="text-danger">
+          Error: level colors must be unique.
+        </p>
+      </ng-template>
+      <ng-template let-levelCtrl pTemplate="item">
+        <div [formGroup]="levelCtrl" class="flex flex-wrap p-1 align-items-center gap-3 overlay">
+          <input pInputText type="text" (mousedown)="$event.stopPropagation()" formControlName="name"/>
+          <div class="align-content-center justify-content-center">
+            <ngx-colors ngx-colors-trigger style="display: inline-block;" formControlName="color" class="mx-2"></ngx-colors>
+            <p-button icon="pi pi-plus" [rounded]="true" severity="primary" [outlined]="true" styleClass="mx-2 delete-button rounded-5" size="small" (onClick)="addLevel(getIndex(levelCtrl) + 1)"/>
+            <p-button *ngIf="canAddDeleteButton(levelCtrl)" icon="pi pi-times" [rounded]="true" severity="danger" [outlined]="true" styleClass="mx-2 delete-button rounded-5" size="small" (onClick)="deleteLevel(levelCtrl)"/>
+          </div>
+        </div>
+        <p>
+          <small class="text-danger" *ngIf="levelCtrl.errors && levelCtrl.touched">
+            Fill required information about the level.
+          </small>
+        </p>
+      </ng-template>
+    </p-orderList>
+  </div>
+  <div class="flex gap-4 justify-content-center align-content-center">
+    <p-button label="Set default BABOK levels" (click)="setDefaultLevels()" [text]="true" severity="secondary"/>
+    <button type="submit" class="submit-btn">Create Project</button>
+  </div>
 </form>

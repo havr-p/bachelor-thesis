@@ -30,6 +30,14 @@ export class LoginComponent {
 
   constructor(private eventService: EventService) { }
 
+  loginAsTestUser(): void {
+    const credentials = {
+      email: 'admin@test.com',
+      password: 'admin'
+    }
+    this.onSubmitLoginEvent.emit(credentials);
+  }
+
 
   onSubmitLogin(): void {
     if (this.loginForm.valid) {
