@@ -4,7 +4,7 @@ import {AutoArrangePlugin, Presets as ArrangePresets,} from 'rete-auto-arrange-p
 
 import {ClassicPreset, NodeEditor} from 'rete';
 import {AreaExtensions} from 'rete-area-plugin';
-import {BaseEvent, EditorEventType, EventSource, Schemes,} from '../../types';
+import {BaseEvent, ConnProps, EditorEventType, EventSource, ItemProps, Schemes,} from '../../types';
 import {MenuItem} from 'primeng/api';
 import {RequirementItem} from '../../items/requirement-item';
 import {EventService} from 'src/app/services/event/event.service';
@@ -24,8 +24,13 @@ import {ItemResourceService} from "../../../../gen/services/item-resource";
 import {mapGenericModel} from "../../models/itemMapper";
 import {Connection} from "../../connection";
 import {RelationshipResourceService} from "../../../../gen/services/relationship-resource";
+import {structures} from "rete-structures";
+import {Structures} from "rete-structures/_types/types";
+import {findSelf} from "./cycleValidation";
 
 const socket = new ClassicPreset.Socket('socket');
+
+
 
 @Component({
   selector: 'app-editor',
@@ -71,27 +76,28 @@ export class EditorComponent
           this.editor = editor;
           this.area = area;
           this.arrange = arrange;
-          this.route.paramMap.subscribe(params => {
-            const projectId = Number(params.get('projectId'));
-            if (projectId) {
-              console.log("projectId", projectId)
-              console.log('editor', this.editor.getNodes());
-              this.loadEditableItems(projectId).subscribe({
-                next: async () => {
-                  this.loadEditableRelationships(projectId);
-                  await arrange.layout();
-                }
-              })
-            } else {
-              console.error('Project ID not found');
-            }
-          });
-
-
-        },
+          this.loadProjectFromPath();
+           this.applyPipes(editor);
+         },
       );
       this.loading = false;
     }
+  }
+
+  private applyPipes(editor: NodeEditor<Schemes>) {
+    editor.addPipe((c) => {
+      const graph = structures(editor);
+      if (c.type === 'connectioncreate') {
+        for (const node of graph.nodes()) {
+          const found = findSelf(graph, node, graph.predecessors(node.id).nodes());
+          if (found) {
+            alert('Connection removed due to recursion');
+            return;
+          }
+        }
+      }
+      return c;
+    });
   }
 
   ngOnInit(): void {
@@ -159,6 +165,34 @@ export class EditorComponent
       })
     );
   }
+  simulateClicks() {
+    const mousedownEvent = new MouseEvent('mousedown', {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    });
+
+    const mouseupEvent = new MouseEvent('mouseup', {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    });
+
+    const clickEvent = new MouseEvent('dblclick', {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    });
+
+    const nodes = this.container.nativeElement.querySelectorAll('[data-testid="node"]');
+    nodes.forEach((node: Element) => {
+      node.dispatchEvent(mousedownEvent);
+      node.dispatchEvent(mouseupEvent);
+      node.dispatchEvent(clickEvent);
+    });
+  }
+
+
 
 
   private loadEditableRelationships(projectId: number) {
@@ -169,18 +203,8 @@ export class EditorComponent
         for (const relationship of relationships) {
             await this.addConnection(relationship);
         }
-        await this.arrange.layout({
-          options: {
-            'elk.spacing.nodeNode': 500,
-            'elk.layered.spacing.nodeNodeBetweenLayers': 600,
-            'elk.alignment': 'RIGHT',
-            'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //LINEAR_SEGMENTS, BRANDES_KOEPF
-            'elk.direction': 'RIGHT', //we want DOWN but need to configure sockets,
-            'elk.edge.type': 'DIRECTED',
-            'elk.radial.centerOnRoot': true,
-            'elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
-          },
-        });
+       await this.arrangeNodes();
+        //this.simulateClicks();
       },
       error: (error) => {
         console.error('Failed to load relationships:', error);
@@ -201,7 +225,7 @@ export class EditorComponent
     const startItem = this.editor.getNode(relationship.startItem.toString());
     const endItem = this.editor.getNode(relationship.endItem.toString());
     await this.editor.addConnection(
-      new Connection(startItem, startItem.id, endItem, endItem.id)
+      new Connection(startItem, startItem.id, endItem, endItem.id, relationship.description)
     );
   }
 
@@ -236,8 +260,8 @@ export class EditorComponent
     //fixme add connections with help of relationships
     await this.arrange.layout({
       options: {
-        'elk.spacing.nodeNode': 200,
-        'elk.layered.spacing.nodeNodeBetweenLayers': 200,
+        'elk.spacing.nodeNode': 100,
+        'elk.layered.spacing.nodeNodeBetweenLayers': 500,
         'elk.alignment': 'RIGHT',
         'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //LINEAR_SEGMENTS, BRANDES_KOEPF
         'elk.direction': 'RIGHT', //we want DOWN but need to configure sockets,
@@ -272,9 +296,9 @@ export class EditorComponent
 
     for (const connection of this.editor.getConnections()) {
       connectionData.push({
-        id: connection.id,
         startItem: Number(connection.source),
-        endItem: Number(connection.target)
+        endItem: Number(connection.target),
+        description: connection.description,
       });
     }
 
