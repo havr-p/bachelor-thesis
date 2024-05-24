@@ -3,12 +3,12 @@
  * Do not edit manually.
  * traceability-tutor
  */
-import type { ApiFieldErrorRejectedValue } from './apiFieldErrorRejectedValue';
+import type {ApiFieldErrorRejectedValue} from './apiFieldErrorRejectedValue';
 
 export interface ApiFieldError {
-  code?: string;
-  message?: string;
-  path?: string;
-  property?: string;
-  rejectedValue?: ApiFieldErrorRejectedValue;
+    code?: string;
+    message?: string;
+    path?: string;
+    property?: string;
+    rejectedValue?: ApiFieldErrorRejectedValue;
 }

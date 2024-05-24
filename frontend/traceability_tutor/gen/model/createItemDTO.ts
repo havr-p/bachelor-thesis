@@ -3,16 +3,16 @@
  * Do not edit manually.
  * traceability-tutor
  */
-import type { CreateItemDTOData } from './createItemDTOData';
-import type { ItemType } from './itemType';
+import type {CreateItemDTOData} from './createItemDTOData';
+import type {ItemType} from './itemType';
 
 export interface CreateItemDTO {
-  data: CreateItemDTOData;
-  itemType: ItemType;
-  projectId: number;
-  /**
-   * @minLength 0
-   * @maxLength 255
-   */
-  status?: string;
+    data: CreateItemDTOData;
+    itemType: ItemType;
+    projectId: number;
+    /**
+     * @minLength 0
+     * @maxLength 255
+     */
+    status?: string;
 }

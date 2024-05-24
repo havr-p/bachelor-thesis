@@ -1,34 +1,34 @@
 <app-dock mode="projects"></app-dock>
-<p-dataView #dv [value]="projects" [rows]="5" [paginator]="true" [alwaysShowPaginator]="false"
+<p-dataView #dv [alwaysShowPaginator]="false" [paginator]="true" [rows]="5" [value]="projects"
             emptyMessage="You haven't created any projects.">
-  <ng-template pTemplate="list" let-projects>
-    <div class="grid grid-nogutter">
-      <div class="col-12" *ngFor="let project of projects">
-        <a [routerLink]="['/editor', project.id]" class="text-reset">
-        <div class="card mb-3">
-          <div class="row align-items-center p-2">
-            <div class="col-9">
-              <div class="flex flex-column" style="margin-left: 3rem;">
-                <h6 class="mb-1">
-                 {{ project.name }}
-                </h6>
-                <span class="text-muted small">
+    <ng-template let-projects pTemplate="list">
+        <div class="grid grid-nogutter">
+            <div *ngFor="let project of projects" class="col-12">
+                <a [routerLink]="['/editor', project.id]" class="text-reset">
+                    <div class="card mb-3">
+                        <div class="row align-items-center p-2">
+                            <div class="col-9">
+                                <div class="flex flex-column" style="margin-left: 3rem;">
+                                    <h6 class="mb-1">
+                                        {{ project.name }}
+                                    </h6>
+                                    <span class="text-muted small">
                 Last opened: {{ project.lastOpened | date:'MMM dd, yyyy \'at\' HH:mm' }}
               </span>
-              </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
-          </div>
         </div>
-        </a>
-      </div>
-    </div>
-  </ng-template>
+    </ng-template>
 
 </p-dataView>
 
 
-<p-dialog header="Create project" [(visible)]="createNewProjectDialogVisible"
-          [style]="{ width: '75vw', }" [draggable]="true" [resizable]="true">
-  <app-create-project-form></app-create-project-form>
+<p-dialog [(visible)]="createNewProjectDialogVisible" [draggable]="true"
+          [resizable]="true" [style]="{ width: '75vw', }" header="Create project">
+    <app-create-project-form></app-create-project-form>
 
 </p-dialog>

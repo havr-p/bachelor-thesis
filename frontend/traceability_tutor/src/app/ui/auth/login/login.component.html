@@ -1,16 +1,18 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()" class="formgrid form-container grid p-fluid">
-  <div class="flex flex-column gap-2 field col">
-    <label for="email">Email</label>
-    <input type="text" name="email" class="form-field mb-2" id="email" formControlName="email" pInputText autocomplete="on"/>
-  </div>
+<form (ngSubmit)="onSubmitLogin()" [formGroup]="loginForm" class="formgrid form-container grid p-fluid">
     <div class="flex flex-column gap-2 field col">
-      <label for="password">Password</label>
-    <p-password id="password" formControlName="password" [feedback]="false" [toggleMask]="true" autocomplete="on"/>
+        <label for="email">Email</label>
+        <input autocomplete="on" class="form-field mb-2" formControlName="email" id="email" name="email" pInputText
+               type="text"/>
+    </div>
+    <div class="flex flex-column gap-2 field col">
+        <label for="password">Password</label>
+        <p-password [feedback]="false" [toggleMask]="true" autocomplete="on" formControlName="password" id="password"/>
     </div>
 
 
-  <button type="submit" class="btn btn-primary btn-block mb-4 mt-2" [disabled]="!loginForm.valid">Sign in</button>
-  <button type="button" class="btn btn-primary btn-block mb-4 mt-2" (click)="loginAsTestUser()" >Sign in as test user</button>
+    <button [disabled]="!loginForm.valid" class="btn btn-primary btn-block mb-4 mt-2" type="submit">Sign in</button>
+    <button (click)="loginAsTestUser()" class="btn btn-primary btn-block mb-4 mt-2" type="button">Sign in as test user
+    </button>
 </form>
 
 

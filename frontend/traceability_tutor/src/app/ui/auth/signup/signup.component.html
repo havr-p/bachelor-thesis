@@ -1,25 +1,27 @@
-<form [formGroup]="registerForm!" (ngSubmit)="onSubmitRegister()" class="formgrid form-container grid p-fluid">
-  <div class="flex flex-column gap-2 field col">
-    <label for="name">Name</label>
-    <input type="text" id="name" class="form-field" formControlName="name" pInputText>
-  </div>
+<form (ngSubmit)="onSubmitRegister()" [formGroup]="registerForm!" class="formgrid form-container grid p-fluid">
+    <div class="flex flex-column gap-2 field col">
+        <label for="name">Name</label>
+        <input class="form-field" formControlName="name" id="name" pInputText type="text">
+    </div>
 
-  <div class="flex flex-column gap-2 field col">
-  <label for="signupEmail">Email</label>
-    <input type="text" id="signupEmail" class="form-field" formControlName="signupEmail" pInputText>
-  </div>
-  <div class="flex flex-column gap-2 field col">
-  <label for="signupPassword">Password</label>
-    <p-password [toggleMask]="true" [feedback]="false"  class="form-field" id="signupPassword" formControlName="signupPassword" />
-  </div>
+    <div class="flex flex-column gap-2 field col">
+        <label for="signupEmail">Email</label>
+        <input class="form-field" formControlName="signupEmail" id="signupEmail" pInputText type="text">
+    </div>
+    <div class="flex flex-column gap-2 field col">
+        <label for="signupPassword">Password</label>
+        <p-password [feedback]="false" [toggleMask]="true" class="form-field" formControlName="signupPassword"
+                    id="signupPassword"/>
+    </div>
 
-  <div class="flex flex-column gap-2 field col">
-  <label for="confirmPassword">Confirm Password</label>
-    <p-password  [feedback]="false" id="confirmPassword" class="form-field" formControlName="confirmPassword" />
-  </div>
+    <div class="flex flex-column gap-2 field col">
+        <label for="confirmPassword">Confirm Password</label>
+        <p-password [feedback]="false" class="form-field" formControlName="confirmPassword" id="confirmPassword"/>
+    </div>
 
 
-  <button type="submit" class="btn btn-primary btn-block mb-3 mt-2" [disabled]="!registerForm?.valid || registerForm?.hasError('mismatch')">
-    Register
-  </button>
+    <button [disabled]="!registerForm?.valid || registerForm?.hasError('mismatch')" class="btn btn-primary btn-block mb-3 mt-2"
+            type="submit">
+        Register
+    </button>
 </form>

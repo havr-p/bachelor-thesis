@@ -1,48 +1,48 @@
 <ng-container [ngSwitch]="item.itemType">
-  <div *ngSwitchCase="ItemType.REQUIREMENT" class="p-fluid">
-    <div class="grid p-4 gap-3">
-      <div class="col-12 md:col-6 lg:col-4">
-        <strong>ID:</strong> {{ item.internalProjectUUID }}
-      </div>
-      <div class="col-12 md:col-6 lg:col-4">
-        <strong>Level:</strong> {{ item.data['level'] }}
-      </div>
-      <div class="col-12 p-field">
-        <div class="flex flex-column gap-2">
-          <label for="name">Name</label>
-          <input pInputText id="name" aria-describedby="name-help" [(ngModel)]="item.data['name']"/>
-          <small id="name-help"></small>
+    <div *ngSwitchCase="ItemType.REQUIREMENT" class="p-fluid">
+        <div class="grid p-4 gap-3">
+            <div class="col-12 md:col-6 lg:col-4">
+                <strong>ID:</strong> {{ item.internalProjectUUID }}
+            </div>
+            <div class="col-12 md:col-6 lg:col-4">
+                <strong>Level:</strong> {{ item.data['level'] }}
+            </div>
+            <div class="col-12 p-field">
+                <div class="flex flex-column gap-2">
+                    <label for="name">Name</label>
+                    <input [(ngModel)]="item.data['name']" aria-describedby="name-help" id="name" pInputText/>
+                    <small id="name-help"></small>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="statement">Statement</label>
+                    <textarea [(ngModel)]="item.data['statement']" id="statement" pInputTextarea></textarea>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="flex flex-column gap-2">
+                    <label for="status">Status</label>
+                    <p-dropdown (onChange)="dataChanged = true;" [(ngModel)]="item.status" [options]="['Open', 'Closed', 'TBD']"
+                                id="status" placeholder="Select a status"></p-dropdown>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-12">
-        <div class="flex flex-column gap-2">
-          <label for="statement">Statement</label>
-          <textarea id="statement" [(ngModel)]="item.data['statement']" pInputTextarea></textarea>
+        <div class="col-12 mt-2">
+            <label for="relationships">Relationships</label>
+            <div class="flex flex-column gap-2" id="relationships">
+                <ng-container *ngFor="let rel of relationships">
+                    <div class="p-2 bg-gray-100 border-round">{{JSON.stringify(rel)}}</div>
+                </ng-container>
+            </div>
         </div>
-      </div>
-      <div class="col-12">
-        <div class="flex flex-column gap-2">
-          <label for="status">Status</label>
-          <p-dropdown id="status" (onChange)="dataChanged = true;" [options]="['Open', 'Closed', 'TBD']"
-                      [(ngModel)]="item.status" placeholder="Select a status"></p-dropdown>
-        </div>
-      </div>
     </div>
-    <div class="col-12 mt-2">
-      <label for="relationships">Relationships</label>
-      <div id="relationships" class="flex flex-column gap-2">
-        <ng-container *ngFor="let rel of relationships">
-          <div class="p-2 bg-gray-100 border-round">{{JSON.stringify(rel)}}</div>
-        </ng-container>
-      </div>
-    </div>
-  </div>
-  <ng-container *ngSwitchDefault>
-    <p>undefined</p>
-  </ng-container>
+    <ng-container *ngSwitchDefault>
+        <p>undefined</p>
+    </ng-container>
 </ng-container>
 <div class="flex flex-wrap gap-3 justify-content-center mt-5">
-  <p-button label="Save Changes" [outlined]="true" (onClick)="saveChanges()"
-            class="mr-3"></p-button>
-  <p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="cancelChanges()"></p-button>
+    <p-button (onClick)="saveChanges()" [outlined]="true" class="mr-3"
+              label="Save Changes"></p-button>
+    <p-button (onClick)="cancelChanges()" [outlined]="true" label="Cancel" severity="secondary"></p-button>
 </div>

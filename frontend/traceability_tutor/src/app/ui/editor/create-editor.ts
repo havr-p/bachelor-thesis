@@ -12,227 +12,233 @@ import {AngularArea2D, AngularPlugin, Presets as AngularPresets} from "rete-angu
 import {ItemComponent} from "../items/item/item.component";
 import {CustomConnectionComponent} from "../../customization/custom-connection/custom-connection.component";
 import {CustomSocketComponent} from "../../customization/custom-socket/custom-socket.component";
-import {addCustomBackground} from "../../customization/custom-background";
 import {Connection} from "../../connection";
-import { AutoArrangePlugin, Presets as ArrangePresets } from "rete-auto-arrange-plugin";
-import {Subgraph} from "rete-structures/_types/subgraph/types";
-import {Sets} from "rete-structures/_types/sets/types";
-import {Mapping} from "three";
-import {Traverse} from "rete-structures/_types/traverse/types";
+import {AutoArrangePlugin, Presets as ArrangePresets} from "rete-auto-arrange-plugin";
 import {Structures} from "rete-structures/_types/types";
+import {ConnectionPathPlugin, Transformers} from "rete-connection-path-plugin";
 
 type Schemes = GetSchemes<
-  ItemProps,
-  Connection<ItemProps, ItemProps>
+    ItemProps,
+    Connection<ItemProps, ItemProps>
 >;
 type AreaExtra =
-  | Area2D<Schemes>
-  | AngularArea2D<Schemes>
-  | ContextMenuExtra
-  | MinimapExtra;
+    | Area2D<Schemes>
+    | AngularArea2D<Schemes>
+    | ContextMenuExtra
+    | MinimapExtra;
 
 const socket = new ClassicPreset.Socket('socket');
 
-export function unselectAll(graph:  Structures<ItemNode, ConnProps>) {
-  graph.connections().forEach((connection) => {
-    connection.updateData({selected: false});
-  });
-  graph.nodes().forEach((node) => {
-    node.updateData({selected: false});
-  });
+export function unselectAll(graph: Structures<ItemNode, ConnProps>) {
+    graph.connections().filter((connection) => {
+        return !(connection as any).isPseudo;
+    }).forEach((connection) => {
+        connection.updateData({selected: false});
+    });
+    graph.nodes().forEach((node) => {
+        node.updateData({selected: false});
+    });
 }
 
 export async function createEditor(
-  container: HTMLElement,
-  injector: Injector,
-  eventService: EventService,
+    container: HTMLElement,
+    injector: Injector,
+    eventService: EventService,
 ) {
-  const editor = new NodeEditor<Schemes>();
-  const area = new AreaPlugin<Schemes, AreaExtra>(container);
-  const connection = new ConnectionPlugin<Schemes, AreaExtra>();
-  const minimap = new MinimapPlugin<Schemes>();
-  const contextMenu = new ContextMenuPlugin<Schemes>({
-    items: (context, plugin) => {
-      console.log(context);
-      const graph = structures(editor);
-      if (context instanceof ClassicPreset.Connection) {
-          return {
-            searchBar: false,
-            list: [{
+    const editor = new NodeEditor<Schemes>();
+    const area = new AreaPlugin<Schemes, AreaExtra>(container);
+    const connection = new ConnectionPlugin<Schemes, AreaExtra>();
+    const minimap = new MinimapPlugin<Schemes>();
+    const contextMenu = new ContextMenuPlugin<Schemes>({
+        items: (context, plugin) => {
+            const graph = structures(editor);
+            if (context instanceof ClassicPreset.Connection) {
+                return {
+                    searchBar: false,
+                    list: [{
 
-                label: 'Edit connection',
-                key: '4',
-                handler: () => {
-                  eventService.publishEditorEvent(
-                      EditorEventType.SELECT_RELATIONSHIP,
-                      context)
+                        label: 'Edit connection',
+                        key: '4',
+                        handler: () => {
+                            eventService.publishEditorEvent(
+                                EditorEventType.SELECT_RELATIONSHIP,
+                                context)
+                        }
+                    },
+                    ]
                 }
-              },
-            ]}
-      }
-      if (context instanceof ItemNode) {
-        const selectedNodeId = context.id;
-        return {
-          searchBar: false,
-          list: [
-            {
-              key: '1',
-              label: 'Show backward lineage',
-              //fixme maybe we can use parent-child relationship to show lineage
-              handler: () => {
-                const incomingConnections = graph
-                  .connections()
-                  .filter((connection) => connection.target === selectedNodeId);
-                graph
-                  .predecessors(selectedNodeId)
-                  .connections()
-                  .concat(incomingConnections)
-                  .forEach((connection) => {
-                    connection.updateData({
-                      selected: true,
-                    });
-                  });
-                graph.predecessors(selectedNodeId).nodes().forEach(((node) => {
-                  node.updateData({
-                    selected: true
-                  });
-                }));
-                context.updateData({
-                  selected: true
-                });
-              },
-            },
-            {
-              key: '2',
-              label: 'Show forward lineage',
-              //fixme maybe we can use parent-child relationship to show lineage
-              handler: () => {
-                const outgoingConnections = graph
-                    .connections()
-                    .filter((connection) => connection.source === selectedNodeId);
-                graph
-                    .successors(selectedNodeId)
-                    .connections()
-                    .concat(outgoingConnections)
-                    .forEach((connection) => {
-                      connection.updateData({
-                        selected: true,
-                      });
-                    });
-                graph.successors(selectedNodeId).nodes().forEach(((node) => {
-                  node.updateData({
-                    selected: true
-                  });
-                }));
-                context.updateData({
-                  selected: true
-                });
-              },
-            },
-            {
-              label: 'Hide lineage',
-              key: '3',
-              handler: () => {
-                unselectAll(graph);
-              },
-            },
-            {
-              label: 'Edit node',
-              key: '4',
-              handler: () => {
-                eventService.publishEditorEvent(
-                  EditorEventType.SELECT_ITEM,
-                  context,
-                );
-              },
-            },
-            {
-              label: 'Delete node',
-              key: '5',
-              handler: () => {
-                editor.removeNode(selectedNodeId);
-                const incomingConnections = graph
-                  .connections()
-                  .filter((connection) => connection.target === selectedNodeId);
-                const outgoingConnections = graph
-                  .connections()
-                  .filter((connection) => connection.source === selectedNodeId);
-                incomingConnections.forEach((connection) =>
-                  editor.removeConnection(connection.id),
-                );
-                outgoingConnections.forEach((connection) =>
-                  editor.removeConnection(connection.id),
-                );
-              },
-            },
+            }
+            if (context instanceof ItemNode) {
+                const selectedNodeId = context.id;
+                return {
+                    searchBar: false,
+                    list: [
+                        {
+                            key: '1',
+                            label: 'Show backward lineage',
+                            //fixme maybe we can use parent-child relationship to show lineage
+                            handler: () => {
+                                const incomingConnections = graph
+                                    .connections()
+                                    .filter((connection) => connection.target === selectedNodeId);
+                                graph
+                                    .predecessors(selectedNodeId)
+                                    .connections()
+                                    .concat(incomingConnections)
+                                    .forEach((connection) => {
+                                        connection.updateData({
+                                            selected: true,
+                                        });
+                                    });
+                                graph.predecessors(selectedNodeId).nodes().forEach(((node) => {
+                                    node.updateData({
+                                        selected: true
+                                    });
+                                }));
+                                context.updateData({
+                                    selected: true
+                                });
+                            },
+                        },
+                        {
+                            key: '2',
+                            label: 'Show forward lineage',
+                            //fixme maybe we can use parent-child relationship to show lineage
+                            handler: () => {
+                                const outgoingConnections = graph
+                                    .connections()
+                                    .filter((connection) => connection.source === selectedNodeId);
+                                graph
+                                    .successors(selectedNodeId)
+                                    .connections()
+                                    .concat(outgoingConnections)
+                                    .forEach((connection) => {
+                                        connection.updateData({
+                                            selected: true,
+                                        });
+                                    });
+                                graph.successors(selectedNodeId).nodes().forEach(((node) => {
+                                    node.updateData({
+                                        selected: true
+                                    });
+                                }));
+                                context.updateData({
+                                    selected: true
+                                });
+                            },
+                        },
+                        {
+                            label: 'Hide lineage',
+                            key: '3',
+                            handler: () => {
+                                unselectAll(graph);
+                            },
+                        },
+                        {
+                            label: 'Edit node',
+                            key: '4',
+                            handler: () => {
+                                eventService.publishEditorEvent(
+                                    EditorEventType.SELECT_ITEM,
+                                    context,
+                                );
+                            },
+                        },
+                        {
+                            label: 'Delete node',
+                            key: '5',
+                            handler: () => {
+                                editor.removeNode(selectedNodeId);
+                                const incomingConnections = graph
+                                    .connections()
+                                    .filter((connection) => connection.target === selectedNodeId);
+                                const outgoingConnections = graph
+                                    .connections()
+                                    .filter((connection) => connection.source === selectedNodeId);
+                                incomingConnections.forEach((connection) =>
+                                    editor.removeConnection(connection.id),
+                                );
+                                outgoingConnections.forEach((connection) =>
+                                    editor.removeConnection(connection.id),
+                                );
+                            },
+                        },
 
-          ],
-        };
-      }
-      return {
-        searchBar: false,
-        list: [
-          {
-            label: 'Root context menu item',
-            key: '2',
-            handler: () => {
-            },
-          },
-        ],
-      };
-    },
-
-  });
-
-  const angularRender = new AngularPlugin<Schemes, AreaExtra>({injector});
-
-  AreaExtensions.selectableNodes(area, AreaExtensions.selector(), {
-    accumulating: AreaExtensions.accumulateOnCtrl(),
-  });
-
-  angularRender.addPreset(
-    AngularPresets.classic.setup({
-      customize: {
-        node(context) {
-          return ItemComponent;
+                    ],
+                };
+            }
+            return {
+                searchBar: false,
+                list: [
+                    {
+                        label: 'Root context menu item',
+                        key: '2',
+                        handler: () => {
+                        },
+                    },
+                ],
+            };
         },
-        connection() {
-          return CustomConnectionComponent;
-        },
-        socket() {
-          return CustomSocketComponent;
-        },
-      },
-    }),
-  );
-  angularRender.addPreset(AngularPresets.minimap.setup());
-  angularRender.addPreset(AngularPresets.contextMenu.setup());
 
-  connection.addPreset(ConnectionPresets.classic.setup());
+    });
 
-  //addCustomBackground(area);
+    const angularRender = new AngularPlugin<Schemes, AreaExtra>({injector});
 
-  editor.use(area);
-  area.use(connection);
+    AreaExtensions.selectableNodes(area, AreaExtensions.selector(), {
+        accumulating: AreaExtensions.accumulateOnCtrl(),
+    });
 
-  area.use(angularRender);
-  area.use(minimap);
-  area.use(contextMenu);
+    angularRender.addPreset(
+        AngularPresets.classic.setup({
+            customize: {
+                node(context) {
+                    return ItemComponent;
+                },
+                connection() {
+                    return CustomConnectionComponent;
+                },
+                socket() {
+                    return CustomSocketComponent;
+                },
+            },
+        }),
+    );
+    angularRender.addPreset(AngularPresets.minimap.setup());
+    angularRender.addPreset(AngularPresets.contextMenu.setup());
 
-  setTimeout(() => {
-    AreaExtensions.zoomAt(area, editor.getNodes());
-  }, 300);
+    connection.addPreset(ConnectionPresets.classic.setup());
 
-  const arrange = new AutoArrangePlugin<Schemes>();
+    //addCustomBackground(area);
 
-  arrange.addPreset(ArrangePresets.classic.setup());
+    editor.use(area);
+    area.use(connection);
 
-  area.use(arrange);
+    area.use(angularRender);
+    area.use(minimap);
+    area.use(contextMenu);
 
-  return {
-    destroy: () => area.destroy(),
-    editor: editor,
-    area: area,
-    arrange: arrange,
-  };
+    setTimeout(() => {
+        AreaExtensions.zoomAt(area, editor.getNodes());
+    }, 300);
+
+    const arrange = new AutoArrangePlugin<Schemes>();
+
+    arrange.addPreset(ArrangePresets.classic.setup());
+
+    area.use(arrange);
+    const pathPlugin = new ConnectionPathPlugin<Schemes, Area2D<Schemes>>({
+        transformer: () => Transformers.classic({vertical: false}),
+        arrow: () => false //{ return  {marker: 'M-10,-25 L-10,25 L30,0 z', color: 'steelblue'}
+
+    })
+
+    // @ts-ignore
+    angularRender.use(pathPlugin);
+
+    return {
+        destroy: () => area.destroy(),
+        editor: editor,
+        area: area,
+        arrange: arrange,
+    };
 }

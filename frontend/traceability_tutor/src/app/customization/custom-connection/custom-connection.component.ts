@@ -34,13 +34,15 @@ export class CustomConnectionComponent implements OnInit, OnDestroy {
 
   constructor(private cdr: ChangeDetectorRef) {}
   ngOnInit() {
-    this.subscription = this.data.changes$.subscribe({
-      next: (data: any) => {
-        this.selected = data.selected ?? this.selected;
-        this.highlighted = data.highlighted ?? this.highlighted;
-        this.cdr.detectChanges();
-      },
-    });
+    if (!(this.data as any).isPseudo && this.data.changes$) {
+      this.subscription = this.data.changes$.subscribe({
+        next: (data: any) => {
+          this.selected = data.selected ?? this.selected;
+          this.highlighted = data.highlighted ?? this.highlighted;
+          this.cdr.detectChanges();
+        },
+      });
+    }
   }
 
   ngOnDestroy() {

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-  template: `
+    template: `
     <!DOCTYPE html>
     <html lang="en">
 
@@ -30,7 +30,7 @@ import {Component} from '@angular/core';
 
     </html>
   `,
-  styles: ``
+    styles: ``
 })
 export class PageNotFoundComponent {
 

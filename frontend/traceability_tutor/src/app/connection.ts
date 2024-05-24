@@ -18,14 +18,14 @@ export class Connection<
   selected?: boolean;
   relationshipData: RelationshipDTO;
   private changes = new Subject<any>();
-  changes$ = this.changes.asObservable();
+  public changes$ = this.changes.asObservable();
 
   constructor(source: Source, sourceOutput: keyof Source['outputs'], target: Target, targetInput: keyof Target['inputs'], relationshipData: RelationshipDTO) {
     super(source, sourceOutput, target, targetInput);
     this.relationshipData = relationshipData;
   }
 
-  updateData(data: any) {
+  public updateData(data: any) {
     this.relationshipData = data.relationshipData ?? this.relationshipData;
     this.selected = data.selected ?? this.selected;
     this.changes.next(data);

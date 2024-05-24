@@ -3,11 +3,11 @@
  * Do not edit manually.
  * traceability-tutor
  */
-import type { ApiFieldError } from './apiFieldError';
+import type {ApiFieldError} from './apiFieldError';
 
 export interface ApiErrorResponse {
-  code?: string;
-  fieldErrors?: ApiFieldError[];
-  message?: string;
-  status?: number;
+    code?: string;
+    fieldErrors?: ApiFieldError[];
+    message?: string;
+    status?: number;
 }

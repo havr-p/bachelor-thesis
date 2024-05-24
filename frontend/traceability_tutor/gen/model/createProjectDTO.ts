@@ -3,20 +3,20 @@
  * Do not edit manually.
  * traceability-tutor
  */
-import type { LevelDTO } from './levelDTO';
+import type {LevelDTO} from './levelDTO';
 
 export interface CreateProjectDTO {
-  /** Access token for project from code hosting platform (currently only GitHub) */
-  accessToken: string;
-  levels: LevelDTO[];
-  /**
-   * @minLength 0
-   * @maxLength 255
-   */
-  name: string;
-  /**
-   * @minLength 0
-   * @maxLength 255
-   */
-  repoUrl: string;
+    /** Access token for project from code hosting platform (currently only GitHub) */
+    accessToken: string;
+    levels: LevelDTO[];
+    /**
+     * @minLength 0
+     * @maxLength 255
+     */
+    name: string;
+    /**
+     * @minLength 0
+     * @maxLength 255
+     */
+    repoUrl: string;
 }

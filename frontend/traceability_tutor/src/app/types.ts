@@ -8,7 +8,7 @@ export type ItemProps =
 // | Message
 // | OnMessage
 // | MatchMessage
-  ItemNode;
+    ItemNode;
 export type ConnProps = Connection<ItemNode, ItemNode>;
 // | Connection<MatchMessage, SendMessage>
 // | Connection<OnMessage, MatchMessage>;
@@ -16,72 +16,72 @@ export type ConnProps = Connection<ItemNode, ItemNode>;
 export type Schemes = GetSchemes<ItemProps, ConnProps>;
 
 export enum EditorEventType {
-  ADD = 'add',
-  REMOVE = 'remove',
-  EDIT = 'edit',
-  SELECT_ITEM = 'select item',
-  SELECT_RELATIONSHIP = 'select relationship',
-  LOAD = 'load',
-  DEMO = 'demo',
-  EXPORT = 'export',
-  IMPORT = 'import',
-  CLEAR = 'clear',
-  TO_PROJECTS_MENU = 'to projects menu',
-  SAVE_ITERATION ='save iteration',
+    ADD = 'add',
+    REMOVE = 'remove',
+    EDIT = 'edit',
+    SELECT_ITEM = 'select item',
+    SELECT_RELATIONSHIP = 'select relationship',
+    LOAD = 'load',
+    DEMO = 'demo',
+    EXPORT = 'export',
+    IMPORT = 'import',
+    CLEAR = 'clear',
+    TO_PROJECTS_MENU = 'to projects menu',
+    SAVE_ITERATION = 'save iteration',
 }
 
 export enum ProjectEventType {
-  CREATE = 'create',
-  REMOVE = 'remove',
-  EDIT = 'edit',
-  SELECT = 'select',
-  SETUP_DEMO = "setup demo",
+    CREATE = 'create',
+    REMOVE = 'remove',
+    EDIT = 'edit',
+    SELECT = 'select',
+    SETUP_DEMO = "setup demo",
 }
 
 export enum ItemViewEventType {
-  EDIT = 'edit',
+    EDIT = 'edit',
 }
 
 export enum EventSource {
-  EDITOR = 'editor',
-  ITEM_VIEW = 'item view',
-  PROJECT_MENU = 'project menu'
+    EDITOR = 'editor',
+    ITEM_VIEW = 'item view',
+    PROJECT_MENU = 'project menu'
 }
 
 export abstract class BaseEvent<S extends EventSource, U> {
-  protected constructor(
-    public source: S,
-    public type: U,
-    public payload: any,
-  ) {
-  }
+    protected constructor(
+        public source: S,
+        public type: U,
+        public payload: any,
+    ) {
+    }
 }
 
 export class EditorEvent extends BaseEvent<
-  EventSource.EDITOR,
-  EditorEventType
+    EventSource.EDITOR,
+    EditorEventType
 > {
-  constructor(type: EditorEventType, data: any) {
-    super(EventSource.EDITOR, type, data);
-  }
+    constructor(type: EditorEventType, payload: any) {
+        super(EventSource.EDITOR, type, payload);
+    }
 }
 
 export class ItemViewEvent extends BaseEvent<
-  EventSource.ITEM_VIEW,
-  ItemViewEventType
+    EventSource.ITEM_VIEW,
+    ItemViewEventType
 > {
-  constructor(type: ItemViewEventType, data: any) {
-    super(EventSource.ITEM_VIEW, type, data);
-  }
+    constructor(type: ItemViewEventType, payload: any) {
+        super(EventSource.ITEM_VIEW, type, payload);
+    }
 }
 
 export class ProjectEvent extends BaseEvent<
-  EventSource.PROJECT_MENU,
-  ProjectEventType
+    EventSource.PROJECT_MENU,
+    ProjectEventType
 > {
-  constructor(type: ProjectEventType, data: any) {
-    super(EventSource.PROJECT_MENU, type, data);
-  }
+    constructor(type: ProjectEventType, payload: any) {
+        super(EventSource.PROJECT_MENU, type, payload);
+    }
 }
 
 

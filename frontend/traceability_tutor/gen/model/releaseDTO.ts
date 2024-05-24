@@ -5,16 +5,16 @@
  */
 
 export interface ReleaseDTO {
-  id?: number;
-  project: number;
-  /**
-   * @minLength 0
-   * @maxLength 255
-   */
-  releaseCommitId: string;
-  /**
-   * @minLength 0
-   * @maxLength 255
-   */
-  semanticId: string;
+    id?: number;
+    project: number;
+    /**
+     * @minLength 0
+     * @maxLength 255
+     */
+    releaseCommitId: string;
+    /**
+     * @minLength 0
+     * @maxLength 255
+     */
+    semanticId: string;
 }

@@ -3,65 +3,53 @@
  * Do not edit manually.
  * traceability-tutor
  */
-import {
-  HttpClient
-} from '@angular/common/http'
-import type {
-  HttpContext,
-  HttpHeaders,
-  HttpParams
-} from '@angular/common/http'
-import {
-  Injectable
-} from '@angular/core'
-import {
-  Observable
-} from 'rxjs'
-import type {
-  AuthResponse,
-  LoginRequest,
-  SignUpRequest
-} from '../model'
-
+import type {HttpContext, HttpHeaders, HttpParams} from '@angular/common/http'
+import {HttpClient} from '@angular/common/http'
+import {Injectable} from '@angular/core'
+import {Observable} from 'rxjs'
+import type {AuthResponse, LoginRequest, SignUpRequest} from '../model'
 
 
 type HttpClientOptions = {
-  headers?: HttpHeaders | {
-      [header: string]: string | string[];
-  };
-  context?: HttpContext;
-  observe?: any;
-  params?: HttpParams | {
-    [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
-  };
-  reportProgress?: boolean;
-  responseType?: any;
-  withCredentials?: boolean;
+    headers?: HttpHeaders | {
+        [header: string]: string | string[];
+    };
+    context?: HttpContext;
+    observe?: any;
+    params?: HttpParams | {
+        [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+    };
+    reportProgress?: boolean;
+    responseType?: any;
+    withCredentials?: boolean;
 };
 
 
-
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AuthControllerService {
-  constructor(
-    private http: HttpClient,
-  ) {} signUp<TData = AuthResponse>(
-    signUpRequest: SignUpRequest, options?: HttpClientOptions
-  ): Observable<TData>  {
-    return this.http.post<TData>(
-      `/auth/signup`,
-      signUpRequest,options
-    );
-  }
- login<TData = AuthResponse>(
-    loginRequest: LoginRequest, options?: HttpClientOptions
-  ): Observable<TData>  {
-    return this.http.post<TData>(
-      `/auth/authenticate`,
-      loginRequest,options
-    );
-  }
-};
+    constructor(
+        private http: HttpClient,
+    ) {
+    }
+
+    signUp<TData = AuthResponse>(
+        signUpRequest: SignUpRequest, options?: HttpClientOptions
+    ): Observable<TData> {
+        return this.http.post<TData>(
+            `/auth/signup`,
+            signUpRequest, options
+        );
+    }
+
+    login<TData = AuthResponse>(
+        loginRequest: LoginRequest, options?: HttpClientOptions
+    ): Observable<TData> {
+        return this.http.post<TData>(
+            `/auth/authenticate`,
+            loginRequest, options
+        );
+    }
+}
 
 export type SignUpClientResult = NonNullable<AuthResponse>
 export type LoginClientResult = NonNullable<AuthResponse>

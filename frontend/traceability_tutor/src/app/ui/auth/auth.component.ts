@@ -12,60 +12,62 @@ import {LoginRequest, SignUpRequest} from "../../../../gen/model";
 
 
 @Component({
-  selector: 'app-auth',
-  templateUrl: './auth.component.html',
-  standalone: true,
-  imports: [
-    ButtonModule,
-    AsyncPipe,
-    NgIf,
-    SignupComponent,
-    LoginComponent,
-    TabViewModule
-  ],
-  styleUrls: ['./auth.component.scss']
+    selector: 'app-auth',
+    templateUrl: './auth.component.html',
+    standalone: true,
+    imports: [
+        ButtonModule,
+        AsyncPipe,
+        NgIf,
+        SignupComponent,
+        LoginComponent,
+        TabViewModule
+    ],
+    styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  authenticated: boolean = false;
-  currentUser: User | null = null;
-  isError: boolean = false;
-  activeIndex = 0;
+    authenticated: boolean = false;
+    currentUser: User | null = null;
+    isError: boolean = false;
+    activeIndex = 0;
 
-  constructor(
-    protected router: Router,
-    private route: ActivatedRoute,
-    protected authService: AuthService,
-  ) {}
+    constructor(
+        protected router: Router,
+        private route: ActivatedRoute,
+        protected authService: AuthService,
+    ) {
+    }
 
-  ngOnInit(): void {
-    this.authService.currentUser.subscribe(user => {
-      this.currentUser = user;
-    });
-  }
+    ngOnInit(): void {
+        this.authenticated = this.authService.isAuthenticated();
+        this.authService.currentUser.subscribe(user => {
+            this.currentUser = user;
+        });
+    }
 
 
-  logout(): void {
-    this.authService.logout();
-  }
+    logout(): void {
+        this.authService.logout();
+    }
 
-  handleGithubLogin() {
-    console.log('handleGithubLogin')
-    window.location.href = environment.apiUrl + getSocialLoginUrl('github');
-  }
+    handleGithubLogin() {
+        console.log('handleGithubLogin')
+        window.location.href = environment.apiUrl + getSocialLoginUrl('github');
+    }
 
-  handleLocalLogin($event: LoginRequest) {
-    console.log('handle local Login')
-    this.authService.localLogin($event);
-  }
+    handleLocalLogin($event: LoginRequest) {
+        console.log('handle local Login')
+        this.authService.localLogin($event);
+    }
 
-  handleSignUp($event: SignUpRequest) {
-    console.log($event);
-    this.authService.signup($event);
-  }
+    handleSignUp($event: SignUpRequest) {
+        console.log($event);
+        this.authService.signup($event);
+    }
 
-  onProjectsClick() {
-    this.router.navigateByUrl('/projects');
-  }
+    onProjectsClick() {
+        this.router.navigateByUrl('/projects');
+    }
 
 
 }

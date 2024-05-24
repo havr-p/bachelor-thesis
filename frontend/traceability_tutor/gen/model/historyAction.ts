@@ -5,9 +5,9 @@
  */
 
 export enum HistoryAction {
-  CREATE= 'CREATE',
-  UPDATE= 'UPDATE',
-  DELETE= 'DELETE',
-  NO_CHANGES= 'NO_CHANGES',
+    CREATE = 'CREATE',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
+    NO_CHANGES = 'NO_CHANGES',
 
 }

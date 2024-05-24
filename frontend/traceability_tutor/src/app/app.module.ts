@@ -35,60 +35,60 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {APIInterceptor} from "./interceptors/api-interceptor";
 
 @NgModule({
-  bootstrap: [AppComponent],
-  declarations: [
-    AppComponent,
-    CustomSocketComponent,
-    CustomConnectionComponent,
-    EditorComponent,
-    ItemComponent,
-    EditorWrapperComponent,
-    PageNotFoundComponent,
-  ],
-  exports: [
-    DockComponent
-  ],
-  imports: [
-    BrowserModule,
-    MenubarModule,
-    DialogModule,
-    FileUploadModule,
-    FormsModule,
-    KeyValuePipe,
-    NgForOf,
-    SharedModule,
-    NgOptimizedImage,
-    PanelModule,
-    ItemInfoViewComponent,
-    BrowserAnimationsModule,
-    SidebarModule,
-    SpeedDialModule,
-    ReteModule,
-    ProgressSpinnerModule,
-    BrowserAnimationsModule,
-    ToastrModule.forRoot(),
-    AuthComponent,
-    TabViewModule,
-    InputTextModule,
-    CreateProjectFormComponent,
-    AppRoutingModule,
-    DockComponent,
-],
-  providers: [
-     {
-       provide: HTTP_INTERCEPTORS,
-       useClass: AuthInterceptor,
-       multi: true
-     },
+    bootstrap: [AppComponent],
+    declarations: [
+        AppComponent,
+        CustomSocketComponent,
+        CustomConnectionComponent,
+        EditorComponent,
+        ItemComponent,
+        EditorWrapperComponent,
+        PageNotFoundComponent,
+    ],
+    exports: [
+        DockComponent
+    ],
+    imports: [
+        BrowserModule,
+        MenubarModule,
+        DialogModule,
+        FileUploadModule,
+        FormsModule,
+        KeyValuePipe,
+        NgForOf,
+        SharedModule,
+        NgOptimizedImage,
+        PanelModule,
+        ItemInfoViewComponent,
+        BrowserAnimationsModule,
+        SidebarModule,
+        SpeedDialModule,
+        ReteModule,
+        ProgressSpinnerModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot(),
+        AuthComponent,
+        TabViewModule,
+        InputTextModule,
+        CreateProjectFormComponent,
+        AppRoutingModule,
+        DockComponent,
+    ],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        },
 
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: APIInterceptor,
-      multi: true,
-    },
-    //{ provide: ErrorHandler, useClass: AppErrorHandler },
-    //EventService
-  ]
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: APIInterceptor,
+            multi: true,
+        },
+        //{ provide: ErrorHandler, useClass: AppErrorHandler },
+        //EventService
+    ]
 })
 export class AppModule {
 }

@@ -4,29 +4,29 @@ import {Item} from "../../items/Item";
 import {RelationshipType} from "../../../../gen/model";
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class ValidationService {
-  constructor() {
-  }
+    constructor() {
+    }
 
-  validateRequirement(requirement?: Requirement) {
-    return true;
-  }
+    validateRequirement(requirement?: Requirement) {
+        return true;
+    }
 
-  isValidConnection(fromItem: Item, toItem: Item, relationshipType: RelationshipType): boolean {
-    return true;
-  }
+    isValidConnection(fromItem: Item, toItem: Item, relationshipType: RelationshipType): boolean {
+        return true;
+    }
 
-  doesCreateCycle(fromItem: Item, toItem: Item): boolean {
-    return false;
-  }
+    doesCreateCycle(fromItem: Item, toItem: Item): boolean {
+        return false;
+    }
 
-  validateRequirementEdits(requirement: Requirement, updates: any): string[] {
-    return [];
-  }
+    validateRequirementEdits(requirement: Requirement, updates: any): string[] {
+        return [];
+    }
 
-  validateItemEdits(item: Item, updates: any): string[] {
-    return [];
-  }
+    validateItemEdits(item: Item, updates: any): string[] {
+        return [];
+    }
 }

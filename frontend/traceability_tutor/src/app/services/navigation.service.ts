@@ -3,24 +3,25 @@ import {Router} from "@angular/router";
 import {DockMode} from "../ui/dock/dock-manager";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class NavigationService {
 
-  constructor(private router: Router) {}
+    constructor(private router: Router) {
+    }
 
-  navigateToEditor(projectId: number, releaseId?: number) {
-    const editorDockMode: DockMode = releaseId ? 'editor-release' : 'editor';
-    const url = releaseId ? `/editor/${projectId}/${releaseId}` : `/editor/${projectId}`;
-    const extras = {
-      state: { editorDockMode }
-    };
+    navigateToEditor(projectId: number, releaseId?: number) {
+        const editorDockMode: DockMode = releaseId ? 'editor-release' : 'editor';
+        const url = releaseId ? `/editor/${projectId}/${releaseId}` : `/editor/${projectId}`;
+        const extras = {
+            state: {editorDockMode}
+        };
 
-    this.router.navigateByUrl(url, extras);
-  }
+        this.router.navigateByUrl(url, extras);
+    }
 
-  navigateToProjectMenu() {
-    const url ="/projects";
-    this.router.navigateByUrl(url);
-  }
+    navigateToProjectMenu() {
+        const url = "/projects";
+        this.router.navigateByUrl(url);
+    }
 }
