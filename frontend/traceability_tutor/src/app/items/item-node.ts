@@ -5,11 +5,11 @@ import {ClassicPreset} from 'rete';
 import {HistoryAction, ItemType} from "../../../gen/model";
 import {StateManager} from "../models/state";
 
-export class RequirementItem extends ClassicPreset.Node {
+export class ItemNode extends ClassicPreset.Node {
   width = 400;
   height = 200;
   type = ItemType.REQUIREMENT;
-  backgroundColor: string;
+  backgroundColor: string | undefined;
   borderStyle: string = '2px solid black';
   data: RequirementData;
   itemType: ItemType;
@@ -31,7 +31,6 @@ export class RequirementItem extends ClassicPreset.Node {
     this.releaseId = requirement.releaseId;
     this.status = requirement.status;
     this.historyAction = requirement.historyAction;
-    this.backgroundColor = getColorByLevel(requirement.data.level);
     this.selected = false;
   }
 }

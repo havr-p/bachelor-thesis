@@ -3,7 +3,7 @@ import {ClassicPreset, NodeEditor} from "rete";
 import {Schemes} from "../../types";
 import {ItemDTO} from "../../../../gen/model";
 import {mapGenericModel} from "../../models/itemMapper";
-import {RequirementItem} from "../../items/requirement-item";
+import {ItemNode} from "../../items/item-node";
 const socket = new ClassicPreset.Socket('socket');
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class EditorService {
     for (const item of items) {
       try {
         const data = mapGenericModel(item);
-        await this.addNode(new RequirementItem(data!));
+        await this.addNode(new ItemNode(data!));
       } catch (error) {
 
       }

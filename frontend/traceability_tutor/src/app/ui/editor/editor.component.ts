@@ -4,9 +4,8 @@ import {AutoArrangePlugin, Presets as ArrangePresets,} from 'rete-auto-arrange-p
 
 import {ClassicPreset, NodeEditor} from 'rete';
 import {AreaExtensions} from 'rete-area-plugin';
-import {BaseEvent, ConnProps, EditorEventType, EventSource, ItemProps, Schemes,} from '../../types';
-import {MenuItem} from 'primeng/api';
-import {RequirementItem} from '../../items/requirement-item';
+import {BaseEvent, EditorEventType, EventSource, Schemes,} from '../../types';
+import {ItemNode} from '../../items/item-node';
 import {EventService} from 'src/app/services/event/event.service';
 import {LocalStorageService} from '../../services/local-storage/local-storage.service';
 import {Item} from '../../items/Item';
@@ -126,9 +125,9 @@ export class EditorComponent
               await this.processDemoEvent(event.data);
               break;
             case EditorEventType.ADD:
-              await this.addNode(new RequirementItem(event.data));
+              await this.addNode(new ItemNode(event.data));
               break;
-            case EditorEventType.SELECT:
+            case EditorEventType.SELECT_ITEM:
               console.log('selected', event.data);
               this.openedItem = event.data;
               this.sidebarVisible = true;
@@ -174,6 +173,7 @@ export class EditorComponent
         console.log('Project with editable items:', project, items);
         try {
           await this.addItems(items);
+          //await AreaExtensions.zoomAt(this.area, this.editor.getNodes());
           console.log('Items added successfully');
         } catch (error) {
           console.error('Failed to add items:', error);
@@ -181,6 +181,10 @@ export class EditorComponent
         }
       })
     );
+  }
+
+  private getLevelColor(item: ItemDTO) {
+    return this.state.currentProject?.levels.find(lvl => lvl.name.toLowerCase() === item.data['level'].toLowerCase())?.color;
   }
   simulateClicks() {
     const mousedownEvent = new MouseEvent('mousedown', {
@@ -222,6 +226,7 @@ export class EditorComponent
         }
        await this.arrangeNodes();
         //this.simulateClicks();
+        //await AreaExtensions.zoomAt(this.area, this.editor.getNodes());
       },
       error: (error) => {
         console.error('Failed to load relationships:', error);
@@ -281,7 +286,10 @@ export class EditorComponent
     for (const item of items) {
       try {
         const data = mapGenericModel(item);
-        await this.addNode(new RequirementItem(data!));
+        const lvlColor = this.getLevelColor(item);
+        let node = new ItemNode(data!);
+        node.backgroundColor = lvlColor!;
+        await this.addNode(node);
       } catch (error) {
 
       }
@@ -293,7 +301,7 @@ export class EditorComponent
     let connectionData = [];
 
     for (const node of this.editor.getNodes()) {
-      if (node instanceof RequirementItem) {
+      if (node instanceof ItemNode) {
         nodesData.push(node.data);
       }
     }

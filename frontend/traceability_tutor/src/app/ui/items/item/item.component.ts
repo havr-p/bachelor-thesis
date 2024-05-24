@@ -8,18 +8,18 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import {RequirementItem} from '../../../items/requirement-item';
+import {ItemNode} from '../../../items/item-node';
 import {EventService} from '../../../services/event/event.service';
 
 @Component({
-  templateUrl: './requirement-item.component.html',
-  styleUrls: ['./requirement-item.component.sass'],
+  templateUrl: './item.component.html',
+  styleUrls: ['./item.component.sass'],
   host: {
     'data-testid': 'node',
   },
 })
-export class RequirementItemComponent implements OnChanges, OnInit {
-  @Input() data!: RequirementItem;
+export class ItemComponent implements OnChanges, OnInit {
+  @Input() data!: ItemNode;
   @Input() emit!: (data: any) => void;
   @Input() rendered!: () => void;
   shortLabel: string = '';
