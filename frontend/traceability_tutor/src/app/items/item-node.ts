@@ -1,9 +1,6 @@
 import {Requirement, RequirementData} from '../models/requirement';
-import {getColorByLevel} from '../utils';
-import {Item} from './Item';
 import {ClassicPreset} from 'rete';
 import {HistoryAction, ItemType} from "../../../gen/model";
-import {StateManager} from "../models/state";
 
 export class ItemNode extends ClassicPreset.Node {
   width = 400;
