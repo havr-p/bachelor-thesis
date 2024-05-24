@@ -22,6 +22,7 @@ export class RequirementItemComponent implements OnChanges, OnInit {
   @Input() data!: RequirementItem;
   @Input() emit!: (data: any) => void;
   @Input() rendered!: () => void;
+  shortLabel: string = '';
 
   seed = 0;
 
@@ -30,7 +31,6 @@ export class RequirementItemComponent implements OnChanges, OnInit {
   }
 
   @HostListener('click', ['$event']) onClick(btn: any) {
-    console.log('clicked', btn);
     this.data.selected = !this.data.selected;
   }
 
@@ -45,11 +45,14 @@ export class RequirementItemComponent implements OnChanges, OnInit {
   }
 
   ngOnInit(): void {
+    this.updateShortLabel();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
       this.backgroundColor = this.data.backgroundColor || '#fff';
+      this.updateShortLabel();
+
     }
     this.cdr.detectChanges();
     requestAnimationFrame(() => this.rendered());
@@ -61,6 +64,15 @@ export class RequirementItemComponent implements OnChanges, OnInit {
     const bi = b.value.index || 0;
 
     return ai - bi;
+  }
+
+  updateShortLabel() {
+    const label = this.data.label || '';
+    if (label.length > 90) {
+      this.shortLabel = label.substring(0, 90) + '...';
+    } else {
+      this.shortLabel = label;
+    }
   }
 
 }

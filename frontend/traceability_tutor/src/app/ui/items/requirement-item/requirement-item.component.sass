@@ -1,10 +1,9 @@
 @use "sass:math"
 @import "../../../customization/vars"
 
-
 :host
   display: block
-  background: black
+  background: white
   border: 4px solid grey
   border-radius: 10px
   cursor: pointer
@@ -14,39 +13,62 @@
   padding-bottom: 6px
   position: relative
   user-select: none
+  text-align: center !important
+
   &:hover
     background: #333
+
   &.selected
     border: 4px solid red
+
   .title
     color: black
     font-family: sans-serif
-    font-size: 18px
+    font-size: 30px
+    width: 90%
     padding: 8px
+    margin: 0 auto
+    text-align: center
+    padding-top: 20px
+    display: -webkit-box
+    -webkit-line-clamp: 3
+    -webkit-box-orient: vertical
+    overflow: hidden
+    text-overflow: ellipsis
+
+  .output, .input
+    position: absolute
+    bottom: 20%
+    width: 5%
+
   .output
+    right: 0
     text-align: right
+
   .input
+    left: 0
     text-align: left
-  .output-socket
-    text-align: right
-    margin-right: -1px
+
+  .output-socket, .input-socket
     display: inline-block
-  .input-socket
-    text-align: left
-    margin-left: -1px
-    display: inline-block
-  .input-title,.output-title
+    margin: 0 1px
+    border-radius: 5px
+
+  .input-title, .output-title
     vertical-align: middle
     color: white
-    display: inline-block
+    display: none
     font-family: sans-serif
     font-size: 14px
     margin: $socket-margin
     line-height: $socket-size
+
   .input-control
     z-index: 1
-    width: calc(100% - #{$socket-size + 2*$socket-margin})
+    width: calc(100% - 1.5 * #{$socket-size + 2*$socket-margin})
     vertical-align: middle
-    display: inline-block
+    display: none
+
   .control
     padding: $socket-margin math.div($socket-size, 2) + $socket-margin
+    display: none
