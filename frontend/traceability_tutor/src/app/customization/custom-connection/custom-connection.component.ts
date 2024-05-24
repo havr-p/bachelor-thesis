@@ -9,25 +9,25 @@ import {
 } from '@angular/core';
 import { Connection } from '../../connection';
 import { Subscription } from 'rxjs';
-import { RequirementItem } from '../../items/requirement-item';
+import { ItemNode } from '../../items/item-node';
 
 @Component({
   selector: 'connection',
   template: `
     <svg data-testid="connection">
-      <path [attr.d]="path" [ngClass]="{'selected': isSelected, 'highlight': isHighlighted}"/>
+      <path [attr.d]="path" [ngClass]="{'selected': selected, 'highlight': highlighted}"/>
     </svg>
   `,
   styleUrls: ['./custom-connection.component.sass'],
 })
 export class CustomConnectionComponent implements OnInit, OnDestroy {
-  @Input() data!: Connection<RequirementItem, RequirementItem>;
+  @Input() data!: Connection<ItemNode, ItemNode>;
   @Input() start: any;
   @Input() end: any;
   @Input() path!: string;
 
-  @Input() isSelected = false;
-  @Input() isHighlighted = false;
+  @Input() selected = false;
+  @Input() highlighted = false;
   private subscription: Subscription = new Subscription();
 
   @ViewChild('pathElement') pathElement!: ElementRef;
@@ -36,8 +36,8 @@ export class CustomConnectionComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.data.changes$.subscribe({
       next: (data: any) => {
-        this.isSelected = data.isSelected
-        this.isHighlighted = data.isHighlighted
+        this.selected = data.selected ?? this.selected;
+        this.highlighted = data.highlighted ?? this.highlighted;
         this.cdr.detectChanges();
       },
     });
