@@ -66,6 +66,25 @@ export async function createEditor(
               },
             },
             {
+              key: '2',
+              label: 'Show forward lineage',
+              //fixme maybe we can use parent-child relationship to show lineage
+              handler: () => {
+                const outgoingConnections = graph
+                    .connections()
+                    .filter((connection) => connection.source === selectedNodeId);
+                graph
+                    .successors(selectedNodeId)
+                    .connections()
+                    .concat(outgoingConnections)
+                    .forEach((connection) => {
+                      connection.updateData({
+                        isSelected: true,
+                      });
+                    });
+              },
+            },
+            {
               label: 'Hide lineage',
               key: '2',
               handler: () => {
