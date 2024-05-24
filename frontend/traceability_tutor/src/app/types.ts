@@ -52,7 +52,7 @@ export abstract class BaseEvent<S extends EventSource, U> {
   protected constructor(
     public source: S,
     public type: U,
-    public data: any,
+    public payload: any,
   ) {
   }
 }

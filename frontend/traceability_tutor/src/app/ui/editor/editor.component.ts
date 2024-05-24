@@ -1,4 +1,13 @@
-import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild,} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 
 import {ClassicPreset, NodeEditor} from 'rete';
 import {AreaExtensions} from 'rete-area-plugin';
@@ -39,9 +48,9 @@ export class EditorComponent
   area: any;
   arrange: any;
   sidebarVisible = false;
-  openedItem!: Item;
-  //todo disable vertical scroll
+  openedItem!: ItemDTO;
   loading = false;
+  sideViewInitialized = false;
 
   onItemInfoViewToggleVisible(visible: boolean) {
     this.sidebarVisible = visible;
@@ -57,6 +66,7 @@ export class EditorComponent
     private router: Router,
     private itemService: ItemResourceService,
     private relationshipService: RelationshipResourceService,
+    private cdr: ChangeDetectorRef,
   ) {
   }
 
@@ -76,6 +86,12 @@ export class EditorComponent
       );
       this.loading = false;
     }
+  }
+
+  onItemViewInitialized() {
+    this.sideViewInitialized = true;
+    this.loading = false;
+    this.cdr.detectChanges();
   }
 
   private loadProjectFromPath() {
@@ -123,14 +139,15 @@ export class EditorComponent
         if (event.source === EventSource.EDITOR) {
           switch (event.type) {
             case EditorEventType.DEMO:
-              await this.processDemoEvent(event.data);
+              await this.processDemoEvent(event.payload);
               break;
             case EditorEventType.ADD:
-              await this.addNode(new ItemNode(event.data));
+              await this.addNode(new ItemNode(event.payload));
               break;
             case EditorEventType.SELECT_ITEM:
-              console.log('selected', event.data);
-              this.openedItem = event.data;
+              console.log('selected', event.payload);
+              console.log(event)
+              this.openedItem = event.payload.data;
               this.sidebarVisible = true;
               break;
             case EditorEventType.CLEAR:

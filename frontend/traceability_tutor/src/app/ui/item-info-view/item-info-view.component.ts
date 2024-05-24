@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
 import {PanelModule} from 'primeng/panel';
 import {EditorModule} from 'primeng/editor';
 import {DropdownModule} from 'primeng/dropdown';
@@ -6,12 +6,11 @@ import {TableModule} from 'primeng/table';
 import {NgForOf, NgSwitch, NgSwitchCase, NgSwitchDefault,} from '@angular/common';
 import {InplaceModule} from 'primeng/inplace';
 import {FormsModule} from '@angular/forms';
-import {Item} from '../../items/Item';
 import {InputTextModule} from 'primeng/inputtext';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {EventService} from 'src/app/services/event/event.service';
 import {ValidationService} from '../../services/validation/validation.service';
-import {ItemType, RelationshipDTO} from "../../../../gen/model";
+import {ItemDTO, ItemType, RelationshipDTO} from "../../../../gen/model";
 
 @Component({
   selector: 'app-item-info-view',
@@ -33,10 +32,11 @@ import {ItemType, RelationshipDTO} from "../../../../gen/model";
     InputTextareaModule,
   ],
 })
-export class ItemInfoViewComponent {
-  @Input() item!: Item;
+export class ItemInfoViewComponent implements AfterViewInit{
+  @Input() item!: ItemDTO;
   @Input() relationships!: RelationshipDTO[]
   @Output() toggleVisible = new EventEmitter<boolean>();
+  @Output() viewInitialized = new EventEmitter<void>();
 
   constructor(
     private eventService: EventService,
@@ -87,4 +87,8 @@ export class ItemInfoViewComponent {
 
   protected readonly ItemType = ItemType;
   protected readonly JSON = JSON;
+
+  ngAfterViewInit(): void {
+    this.viewInitialized.emit();
+  }
 }
