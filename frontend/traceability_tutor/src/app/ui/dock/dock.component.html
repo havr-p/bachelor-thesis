@@ -1,7 +1,11 @@
 <div class="card w-full">
   <p-menubar [model]="items" styleClass="dock">
     <ng-template pTemplate="start">
-      <strong class="pr-4">Traceability Tutor</strong>
+      <strong class="pr-4">{{locationTitle}}</strong>
+    </ng-template>
+
+    <ng-template pTemplate="end">
+
     </ng-template>
   </p-menubar>
 

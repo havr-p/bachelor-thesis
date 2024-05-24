@@ -345,7 +345,7 @@ export class EditorComponent
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'editor-data.json';
+    a.download = 'tt-snapshot-' + new Date().toISOString()+' .json';
     a.click();
 
     URL.revokeObjectURL(url);

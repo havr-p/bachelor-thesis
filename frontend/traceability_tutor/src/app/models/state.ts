@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Project} from "./project";
-import {ProjectDTO, RelationshipType} from "../../../gen/model";
+import {ProjectDTO, RelationshipType, ReleaseDTO} from "../../../gen/model";
 import {Item} from "../items/Item";
 import {Release} from "./release";
 import {
@@ -21,9 +21,9 @@ export interface EditorState {
   providedIn: 'root'
 })
 export class StateManager {
-  private projects: Map<number, Project> = new Map();
-  public currentProject: Project | undefined;
-  private currentRelease: Release | undefined;
+  private projects: Map<number, ProjectDTO> = new Map();
+  public currentProject: ProjectDTO | undefined;
+  public currentRelease: ReleaseDTO | undefined;
   private editorState: EditorState | undefined;
 
   constructor(
@@ -52,7 +52,7 @@ export class StateManager {
       throw new Error('Project not found');
     }
     const release = new Release({ project: project.id!, releaseCommitId: commitHash, semanticId: semanticId ?? `0.0.${commitHash}` });
-    project.addRelease(release);
+    //project.addRelease(release);
     return release;
   }
 

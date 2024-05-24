@@ -7,6 +7,12 @@ import {MenuItem} from "primeng/api";
 import {DockManager, DockMode} from "./dock-manager";
 import {AuthService} from "../../services/auth/auth.service";
 
+export interface ReleaseIdentifier {
+  projectName: string;
+  releaseId: number;
+  savedAt?: Date;
+}
+
 @Component({
   selector: 'app-dock',
   templateUrl: './dock.component.html',
@@ -21,9 +27,25 @@ import {AuthService} from "../../services/auth/auth.service";
 export class DockComponent implements OnInit {
   @Input() items: MenuItem[] = [];
   @Input() mode: DockMode = 'editor';
-  id = 1;
 
   constructor(private dockManager: DockManager, private stateManager: StateManager, private authService: AuthService) {
+  }
+
+
+  get locationTitle(): string | ReleaseIdentifier {
+    switch (this.mode) {
+      case "editor":
+        return this.stateManager.currentProject? this.stateManager.currentProject.name : "Editor";
+      case "projects":
+        return "Projects menu"
+      case "editor-release":
+        return {
+          projectName: this.stateManager.currentProject?.name!,
+          releaseId: this.stateManager.currentRelease?.id!,
+        }
+      default:
+        return "Editor"
+    }
   }
 
 
@@ -48,6 +70,7 @@ export class DockComponent implements OnInit {
           }],
         }
       ];
+
       this.items.push(...userMenuItems);
     });
   }
