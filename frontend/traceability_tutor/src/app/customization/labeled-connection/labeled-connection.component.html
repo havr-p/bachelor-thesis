@@ -1,1 +1,15 @@
-<p>labeled-connection works!</p>
+<svg data-testid="connection" #svg>
+    <path
+            [ngClass]="{ 'source-connected': !!data.source, 'target-connected': !!data.target }"
+            [attr.d]="path"
+            [attr.stroke]="data.selected ? 'rgb(255,44,44)' : 'steelblue'"
+            fill="none"
+            stroke-width="7px"
+            pointer-events="auto"
+    />
+</svg>
+<div class="connection-menu" #menu>
+    <div *ngIf="data.relationshipData.type" class="label">
+        {{ data.relationshipData.type }}
+    </div>
+</div>

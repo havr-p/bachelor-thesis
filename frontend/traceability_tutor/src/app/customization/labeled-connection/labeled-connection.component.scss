@@ -1,0 +1,38 @@
+@use "sass:math";
+@import "../vars";
+
+svg {
+  overflow: visible !important;
+  position: absolute;
+  pointer-events: none;
+  width: 9999px;
+  height: 9999px;
+
+  path {
+    fill: none;
+    stroke-width: 5px;
+    stroke: steelblue;
+    pointer-events: auto;
+
+    &.source-connected:not(.target-connected) {
+      stroke: var(--purple-border-color);
+      stroke-dasharray: 2 2;
+    }
+  }
+}
+
+.connection-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .label {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: #5082b6;
+    color: white;
+    border-radius: 2em;
+    padding: 0.2em 0.6em;
+    white-space: pre;
+  }
+}
