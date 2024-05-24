@@ -6,16 +6,15 @@ import {ConnectionPlugin, Presets as ConnectionPresets} from "rete-connection-pl
 import {MinimapExtra, MinimapPlugin} from "rete-minimap-plugin";
 import {ContextMenuExtra, ContextMenuPlugin} from "rete-context-menu-plugin";
 import {structures} from "rete-structures";
-import {RequirementItem} from "../../items/requirement-item";
+import {ItemNode} from "../../items/item-node";
 import {EditorEventType, ItemProps} from "../../types";
 import {AngularArea2D, AngularPlugin, Presets as AngularPresets} from "rete-angular-plugin/17";
-import {RequirementItemComponent} from "../items/requirement-item/requirement-item.component";
+import {ItemComponent} from "../items/item/item.component";
 import {CustomConnectionComponent} from "../../customization/custom-connection/custom-connection.component";
 import {CustomSocketComponent} from "../../customization/custom-socket/custom-socket.component";
 import {addCustomBackground} from "../../customization/custom-background";
 import {Connection} from "../../connection";
 import { AutoArrangePlugin, Presets as ArrangePresets } from "rete-auto-arrange-plugin";
-import {ItemType} from "../../../../gen/model";
 
 type Schemes = GetSchemes<
   ItemProps,
@@ -114,7 +113,7 @@ export async function createEditor(
               key: '4',
               handler: () => {
                 eventService.publishEditorEvent(
-                  EditorEventType.SELECT,
+                  EditorEventType.SELECT_ITEM,
                   context,
                 );
               },
@@ -138,12 +137,7 @@ export async function createEditor(
                 );
               },
             },
-            // {
-            //   label: 'Collection', key: '1', handler: () => null,
-            //   subitems: [
-            //     { label: 'Subitem', key: '1', handler: () => console.log('Subitem') }
-            //   ]
-            // }
+
           ],
         };
       }
@@ -159,21 +153,7 @@ export async function createEditor(
         ],
       };
     },
-    // items: ContextMenuPresets.classic.setup([
-    //   ['Source', () => new SourceNode()],
-    //   [
-    //     'Requirement',
-    //     () =>
-    //       new RequirementNode({
-    //         id: '1',
-    //         name: 'Test',
-    //         statement: 'Test',
-    //         references: [],
-    //         status: 'Test',
-    //         level: 'Test',
-    //       }),
-    //   ],
-    // ]),
+
   });
 
   const angularRender = new AngularPlugin<Schemes, AreaExtra>({injector});
@@ -186,11 +166,7 @@ export async function createEditor(
     AngularPresets.classic.setup({
       customize: {
         node(context) {
-          if (context.payload.type === ItemType.REQUIREMENT)
-          return RequirementItemComponent;
-          if (context.payload.type === ItemType.DESIGN)
-            return RequirementItemComponent; //todo add another types
-          return RequirementItemComponent;
+          return ItemComponent;
         },
         connection() {
           return CustomConnectionComponent;

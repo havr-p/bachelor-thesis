@@ -41,7 +41,7 @@ import {APIInterceptor} from "./interceptors/api-interceptor";
     CustomSocketComponent,
     CustomConnectionComponent,
     EditorComponent,
-    RequirementItemComponent,
+    ItemComponent,
     EditorWrapperComponent,
     PageNotFoundComponent,
   ],

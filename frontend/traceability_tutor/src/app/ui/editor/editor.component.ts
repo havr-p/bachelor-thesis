@@ -1,16 +1,12 @@
 import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 
-import {AutoArrangePlugin, Presets as ArrangePresets,} from 'rete-auto-arrange-plugin';
-
 import {ClassicPreset, NodeEditor} from 'rete';
 import {AreaExtensions} from 'rete-area-plugin';
 import {BaseEvent, EditorEventType, EventSource, Schemes,} from '../../types';
 import {ItemNode} from '../../items/item-node';
 import {EventService} from 'src/app/services/event/event.service';
-import {LocalStorageService} from '../../services/local-storage/local-storage.service';
 import {Item} from '../../items/Item';
 import {StateManager} from "../../models/state";
-import {AuthService} from "../../services/auth/auth.service";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";
 import {ActivatedRoute, Router} from "@angular/router";
 import {createEditor} from "./create-editor";
@@ -24,7 +20,6 @@ import {mapGenericModel} from "../../models/itemMapper";
 import {Connection} from "../../connection";
 import {RelationshipResourceService} from "../../../../gen/services/relationship-resource";
 import {structures} from "rete-structures";
-import {Structures} from "rete-structures/_types/types";
 import {findSelf} from "./cycleValidation";
 
 const socket = new ClassicPreset.Socket('socket');
@@ -247,7 +242,7 @@ export class EditorComponent
     const startItem = this.editor.getNode(relationship.startItem.toString());
     const endItem = this.editor.getNode(relationship.endItem.toString());
     await this.editor.addConnection(
-      new Connection(startItem, startItem.id, endItem, endItem.id, relationship.description)
+      new Connection(startItem, startItem.id, endItem, endItem.id, relationship)
     );
   }
 
@@ -270,7 +265,7 @@ export class EditorComponent
     await this.arrange.layout({
       options: {
         'elk.spacing.nodeNode': 100,
-        'elk.layered.spacing.nodeNodeBetweenLayers': 500,
+        'elk.layered.spacing.nodeNodeBetweenLayers': 300,
         'elk.alignment': 'RIGHT',
         'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS', //LINEAR_SEGMENTS, BRANDES_KOEPF
         'elk.direction': 'RIGHT', //we want DOWN but need to configure sockets,
@@ -310,7 +305,7 @@ export class EditorComponent
       connectionData.push({
         startItem: Number(connection.source),
         endItem: Number(connection.target),
-        description: connection.description,
+        description: connection.relationshipData.description,
       });
     }
 

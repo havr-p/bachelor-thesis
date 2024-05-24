@@ -13,6 +13,7 @@ import { ClassicPreset } from "rete";
   host: {
     "data-testid": "node"
   },
+  standalone: true,
 })
 export class CustomNodeComponent implements OnChanges {
   @Input() data!: ClassicPreset.Node;

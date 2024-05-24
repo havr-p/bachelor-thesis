@@ -1,6 +1,6 @@
 import {GetSchemes} from 'rete';
 import {Connection} from './connection';
-import {RequirementItem} from './items/requirement-item';
+import {ItemNode} from './items/item-node';
 import {Requirement} from './models/requirement';
 
 export type ItemProps =
@@ -8,8 +8,8 @@ export type ItemProps =
 // | Message
 // | OnMessage
 // | MatchMessage
-  RequirementItem;
-export type ConnProps = Connection<RequirementItem, RequirementItem>;
+  ItemNode;
+export type ConnProps = Connection<ItemNode, ItemNode>;
 // | Connection<MatchMessage, SendMessage>
 // | Connection<OnMessage, MatchMessage>;
 
@@ -19,7 +19,8 @@ export enum EditorEventType {
   ADD = 'add',
   REMOVE = 'remove',
   EDIT = 'edit',
-  SELECT = 'select',
+  SELECT_ITEM = 'select item',
+  SELECT_RELATIONSHIP = 'select relationship',
   LOAD = 'load',
   DEMO = 'demo',
   EXPORT = 'export',
