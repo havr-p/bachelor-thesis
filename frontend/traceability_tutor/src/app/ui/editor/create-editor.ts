@@ -42,7 +42,22 @@ export async function createEditor(
     items: (context, plugin) => {
       console.log(context);
       const graph = structures(editor);
-      if (context instanceof RequirementItem) {
+      if (context instanceof ClassicPreset.Connection) {
+          return {
+            searchBar: false,
+            list: [{
+
+                label: 'Edit connection',
+                key: '4',
+                handler: () => {
+                  eventService.publishEditorEvent(
+                      EditorEventType.SELECT_RELATIONSHIP,
+                      context)
+                }
+              },
+            ]}
+      }
+      if (context instanceof ItemNode) {
         const selectedNodeId = context.id;
         return {
           searchBar: false,
@@ -61,7 +76,7 @@ export async function createEditor(
                   .concat(incomingConnections)
                   .forEach((connection) => {
                     connection.updateData({
-                      isSelected: true,
+                      selected: true,
                     });
                   });
               },
@@ -80,7 +95,7 @@ export async function createEditor(
                     .concat(outgoingConnections)
                     .forEach((connection) => {
                       connection.updateData({
-                        isSelected: true,
+                        selected: true,
                       });
                     });
               },
@@ -90,7 +105,7 @@ export async function createEditor(
               key: '3',
               handler: () => {
                 graph.connections().forEach((connection) => {
-                  connection.updateData({isSelected: false});
+                  connection.updateData({selected: false});
                 });
               },
             },
