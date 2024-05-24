@@ -11,14 +11,21 @@ import {Subject} from 'rxjs';
 // }
 
 export class Connection<
-  A extends ItemProps,
-  B extends ItemProps,
-> extends ClassicPreset.Connection<A, B> {
+  Source extends ItemProps,
+  Target extends ItemProps,
+> extends ClassicPreset.Connection<Source, Target> {
   isSelected?: boolean;
+  description?: string
   private changes = new Subject<any>();
   changes$ = this.changes.asObservable();
 
+  constructor(source: Source, sourceOutput: keyof Source['outputs'], target: Target, targetInput: keyof Target['inputs'], description?: string) {
+    super(source, sourceOutput, target, targetInput);
+    this.description = description;
+  }
+
   updateData(data: any) {
+    this.description = data.description;
     this.isSelected = data.isSelected;
     this.changes.next(data);
   }
