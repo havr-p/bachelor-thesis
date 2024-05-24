@@ -19,7 +19,7 @@ import {StateManager} from "../../models/state";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";
 import {ActivatedRoute, Router} from "@angular/router";
 import {createEditor, unselectAll} from "./create-editor";
-import {concatMap, map, switchMap} from "rxjs";
+import {concatMap, map, switchMap, timeout} from "rxjs";
 import {ItemDTO, ProjectDTO, RelationshipDTO, ReleaseDTO} from "../../../../gen/model";
 import {Project} from "../../models/project";
 import {Release} from "../../models/release";
@@ -148,7 +148,9 @@ export class EditorComponent
               console.log('selected', event.payload);
               console.log(event)
               this.openedItem = event.payload.data;
-              this.sidebarVisible = true;
+              setTimeout(() => {
+                this.sidebarVisible = true;
+              }, 300);
               break;
             case EditorEventType.CLEAR:
               await this.editor.clear();

@@ -1,8 +1,12 @@
 <ng-container [ngSwitch]="item.itemType">
   <div *ngSwitchCase="ItemType.REQUIREMENT" class="p-fluid">
     <div class="grid p-4 gap-3">
-      <div class="col-12 md:col-6 lg:col-4"><strong>ID:</strong> {{ item.internalProjectUUID }}</div>
-      <div class="col-12 md:col-6 lg:col-4"><strong>Level:</strong> {{ item.data['level'] }}</div>
+      <div class="col-12 md:col-6 lg:col-4">
+        <strong>ID:</strong> {{ item.internalProjectUUID }}
+      </div>
+      <div class="col-12 md:col-6 lg:col-4">
+        <strong>Level:</strong> {{ item.data['level'] }}
+      </div>
       <div class="col-12 p-field">
         <div class="flex flex-column gap-2">
           <label for="name">Name</label>
@@ -26,9 +30,11 @@
     </div>
     <div class="col-12 mt-2">
       <label for="relationships">Relationships</label>
-            <ng-container id="relationships" *ngFor="let rel of relationships">
-              <div class="p-2">{{JSON.stringify(rel)}}</div>
-            </ng-container>
+      <div id="relationships" class="flex flex-column gap-2">
+        <ng-container *ngFor="let rel of relationships">
+          <div class="p-2 bg-gray-100 border-round">{{JSON.stringify(rel)}}</div>
+        </ng-container>
+      </div>
     </div>
   </div>
   <ng-container *ngSwitchDefault>
@@ -36,7 +42,7 @@
   </ng-container>
 </ng-container>
 <div class="flex flex-wrap gap-3 justify-content-center mt-5">
-  <p-button label="Save Changes" [outlined]="true" (onClick)="saveChanges()" [disabled]="!dataChanged"
+  <p-button label="Save Changes" [outlined]="true" (onClick)="saveChanges()"
             class="mr-3"></p-button>
   <p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="cancelChanges()"></p-button>
 </div>
