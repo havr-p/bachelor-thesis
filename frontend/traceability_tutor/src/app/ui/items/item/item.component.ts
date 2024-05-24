@@ -30,8 +30,12 @@ export class ItemComponent implements OnChanges, OnInit {
     return this.data.selected;
   }
 
+  @HostBinding('class.highlighted') get highlighted() {
+    return this.data.highlighted;
+  }
+
   @HostListener('click', ['$event']) onClick(btn: any) {
-    this.data.selected = !this.data.selected;
+    this.data.selected = true;
   }
 
   @HostBinding('style.background-color') backgroundColor: string = '#fff';

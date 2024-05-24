@@ -9,7 +9,7 @@ import {Item} from '../../items/Item';
 import {StateManager} from "../../models/state";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";
 import {ActivatedRoute, Router} from "@angular/router";
-import {createEditor} from "./create-editor";
+import {createEditor, unselectAll} from "./create-editor";
 import {concatMap, map, switchMap} from "rxjs";
 import {ItemDTO, ProjectDTO, RelationshipDTO, ReleaseDTO} from "../../../../gen/model";
 import {Project} from "../../models/project";
@@ -96,8 +96,8 @@ export class EditorComponent
   }
 
   private applyPipes(editor: NodeEditor<Schemes>) {
+    const graph = structures(editor);
     editor.addPipe((c) => {
-      const graph = structures(editor);
       if (c.type === 'connectioncreate') {
         for (const node of graph.nodes()) {
           const found = findSelf(graph, node, graph.predecessors(node.id).nodes());
@@ -106,6 +106,12 @@ export class EditorComponent
             return;
           }
         }
+      }
+      return c;
+    });
+    this.area.addPipe((c: { type: string; }) => {
+      if (c.type === 'pointerdown') {
+        unselectAll(graph);
       }
       return c;
     });

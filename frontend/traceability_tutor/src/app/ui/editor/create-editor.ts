@@ -7,7 +7,7 @@ import {MinimapExtra, MinimapPlugin} from "rete-minimap-plugin";
 import {ContextMenuExtra, ContextMenuPlugin} from "rete-context-menu-plugin";
 import {structures} from "rete-structures";
 import {ItemNode} from "../../items/item-node";
-import {EditorEventType, ItemProps} from "../../types";
+import {ConnProps, EditorEventType, ItemProps} from "../../types";
 import {AngularArea2D, AngularPlugin, Presets as AngularPresets} from "rete-angular-plugin/17";
 import {ItemComponent} from "../items/item/item.component";
 import {CustomConnectionComponent} from "../../customization/custom-connection/custom-connection.component";
@@ -15,6 +15,11 @@ import {CustomSocketComponent} from "../../customization/custom-socket/custom-so
 import {addCustomBackground} from "../../customization/custom-background";
 import {Connection} from "../../connection";
 import { AutoArrangePlugin, Presets as ArrangePresets } from "rete-auto-arrange-plugin";
+import {Subgraph} from "rete-structures/_types/subgraph/types";
+import {Sets} from "rete-structures/_types/sets/types";
+import {Mapping} from "three";
+import {Traverse} from "rete-structures/_types/traverse/types";
+import {Structures} from "rete-structures/_types/types";
 
 type Schemes = GetSchemes<
   ItemProps,
@@ -27,6 +32,15 @@ type AreaExtra =
   | MinimapExtra;
 
 const socket = new ClassicPreset.Socket('socket');
+
+export function unselectAll(graph:  Structures<ItemNode, ConnProps>) {
+  graph.connections().forEach((connection) => {
+    connection.updateData({selected: false});
+  });
+  graph.nodes().forEach((node) => {
+    node.updateData({selected: false});
+  });
+}
 
 export async function createEditor(
   container: HTMLElement,
@@ -78,6 +92,14 @@ export async function createEditor(
                       selected: true,
                     });
                   });
+                graph.predecessors(selectedNodeId).nodes().forEach(((node) => {
+                  node.updateData({
+                    selected: true
+                  });
+                }));
+                context.updateData({
+                  selected: true
+                });
               },
             },
             {
@@ -97,15 +119,21 @@ export async function createEditor(
                         selected: true,
                       });
                     });
+                graph.successors(selectedNodeId).nodes().forEach(((node) => {
+                  node.updateData({
+                    selected: true
+                  });
+                }));
+                context.updateData({
+                  selected: true
+                });
               },
             },
             {
               label: 'Hide lineage',
               key: '3',
               handler: () => {
-                graph.connections().forEach((connection) => {
-                  connection.updateData({selected: false});
-                });
+                unselectAll(graph);
               },
             },
             {
