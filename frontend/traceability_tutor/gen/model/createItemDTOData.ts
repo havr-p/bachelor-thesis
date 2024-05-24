@@ -4,4 +4,4 @@
  * traceability-tutor
  */
 
-export type CreateItemDTOData = { [key: string]: string };
+export type CreateItemDTOData = {[key: string]: string};

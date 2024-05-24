@@ -3,78 +3,85 @@
  * Do not edit manually.
  * traceability-tutor
  */
-import type {HttpContext, HttpHeaders, HttpParams} from '@angular/common/http'
-import {HttpClient} from '@angular/common/http'
-import {Injectable} from '@angular/core'
-import {Observable} from 'rxjs'
-import type {ReleaseDTO} from '../model'
+import {
+  HttpClient
+} from '@angular/common/http'
+import type {
+  HttpContext,
+  HttpHeaders,
+  HttpParams
+} from '@angular/common/http'
+import {
+  Injectable
+} from '@angular/core'
+import {
+  Observable
+} from 'rxjs'
+import type {
+  ReleaseDTO
+} from '../model'
+
 
 
 type HttpClientOptions = {
-    headers?: HttpHeaders | {
-        [header: string]: string | string[];
-    };
-    context?: HttpContext;
-    observe?: any;
-    params?: HttpParams | {
-        [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
-    };
-    reportProgress?: boolean;
-    responseType?: any;
-    withCredentials?: boolean;
+  headers?: HttpHeaders | {
+      [header: string]: string | string[];
+  };
+  context?: HttpContext;
+  observe?: any;
+  params?: HttpParams | {
+    [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+  };
+  reportProgress?: boolean;
+  responseType?: any;
+  withCredentials?: boolean;
 };
 
 
-@Injectable({providedIn: 'root'})
+
+@Injectable({ providedIn: 'root' })
 export class ReleaseResourceService {
-    constructor(
-        private http: HttpClient,
-    ) {
-    }
-
-    getRelease<TData = ReleaseDTO>(
-        id: number, options?: HttpClientOptions
-    ): Observable<TData> {
-        return this.http.get<TData>(
-            `/api/releases/${id}`, options
-        );
-    }
-
-    updateRelease<TData = number>(
-        id: number,
-        releaseDTO: ReleaseDTO, options?: HttpClientOptions
-    ): Observable<TData> {
-        return this.http.put<TData>(
-            `/api/releases/${id}`,
-            releaseDTO, options
-        );
-    }
-
-    deleteRelease<TData = void>(
-        id: number, options?: HttpClientOptions
-    ): Observable<TData> {
-        return this.http.delete<TData>(
-            `/api/releases/${id}`, options
-        );
-    }
-
-    getAllReleases<TData = ReleaseDTO[]>(
-        options?: HttpClientOptions
-    ): Observable<TData> {
-        return this.http.get<TData>(
-            `/api/releases`, options
-        );
-    }
-
-    createRelease<TData = number>(
-        releaseDTO: ReleaseDTO, options?: HttpClientOptions
-    ): Observable<TData> {
-        return this.http.post<TData>(
-            `/api/releases`,
-            releaseDTO, options
-        );
-    }
-}
+  constructor(
+    private http: HttpClient,
+  ) {} getRelease<TData = ReleaseDTO>(
+    id: number, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/releases/${id}`,options
+    );
+  }
+ updateRelease<TData = number>(
+    id: number,
+    releaseDTO: ReleaseDTO, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.put<TData>(
+      `/api/releases/${id}`,
+      releaseDTO,options
+    );
+  }
+ deleteRelease<TData = void>(
+    id: number, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.delete<TData>(
+      `/api/releases/${id}`,options
+    );
+  }
+ getAllReleases<TData = ReleaseDTO[]>(
+     options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/releases`,options
+    );
+  }
+ createRelease<TData = number>(
+    releaseDTO: ReleaseDTO, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.post<TData>(
+      `/api/releases`,
+      releaseDTO,options
+    );
+  }
+};
 
 export type GetReleaseClientResult = NonNullable<ReleaseDTO>
 export type UpdateReleaseClientResult = NonNullable<number>

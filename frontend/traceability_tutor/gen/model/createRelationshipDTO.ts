@@ -3,15 +3,15 @@
  * Do not edit manually.
  * traceability-tutor
  */
-import type {RelationshipType} from './relationshipType';
+import type { RelationshipType } from './relationshipType';
 
 export interface CreateRelationshipDTO {
-    /**
-     * @minLength 0
-     * @maxLength 255
-     */
-    description?: string;
-    endItem: number;
-    startItem: number;
-    type: RelationshipType;
+  /**
+   * @minLength 0
+   * @maxLength 255
+   */
+  description?: string;
+  endItem: number;
+  startItem: number;
+  type: RelationshipType;
 }

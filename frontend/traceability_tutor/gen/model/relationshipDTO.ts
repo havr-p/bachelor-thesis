@@ -3,19 +3,19 @@
  * Do not edit manually.
  * traceability-tutor
  */
-import type {HistoryAction} from './historyAction';
-import type {RelationshipType} from './relationshipType';
+import type { HistoryAction } from './historyAction';
+import type { RelationshipType } from './relationshipType';
 
 export interface RelationshipDTO {
-    /**
-     * @minLength 0
-     * @maxLength 255
-     */
-    description?: string;
-    endItem: number;
-    historyAction?: HistoryAction;
-    id?: number;
-    release?: number;
-    startItem: number;
-    type: RelationshipType;
+  /**
+   * @minLength 0
+   * @maxLength 255
+   */
+  description?: string;
+  endItem: number;
+  historyAction?: HistoryAction;
+  id?: number;
+  release?: number;
+  startItem: number;
+  type: RelationshipType;
 }

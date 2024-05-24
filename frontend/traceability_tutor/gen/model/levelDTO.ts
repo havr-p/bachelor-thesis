@@ -5,6 +5,6 @@
  */
 
 export interface LevelDTO {
-    color: string;
-    name: string;
+  color: string;
+  name: string;
 }

@@ -5,6 +5,6 @@
  */
 
 export interface Repository {
-    name?: string;
-    url?: string;
+  name?: string;
+  url?: string;
 }

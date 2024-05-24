@@ -3,42 +3,53 @@
  * Do not edit manually.
  * traceability-tutor
  */
-import type {HttpContext, HttpHeaders, HttpParams} from '@angular/common/http'
-import {HttpClient} from '@angular/common/http'
-import {Injectable} from '@angular/core'
-import {Observable} from 'rxjs'
-import type {Repository} from '../model'
+import {
+  HttpClient
+} from '@angular/common/http'
+import type {
+  HttpContext,
+  HttpHeaders,
+  HttpParams
+} from '@angular/common/http'
+import {
+  Injectable
+} from '@angular/core'
+import {
+  Observable
+} from 'rxjs'
+import type {
+  Repository
+} from '../model'
+
 
 
 type HttpClientOptions = {
-    headers?: HttpHeaders | {
-        [header: string]: string | string[];
-    };
-    context?: HttpContext;
-    observe?: any;
-    params?: HttpParams | {
-        [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
-    };
-    reportProgress?: boolean;
-    responseType?: any;
-    withCredentials?: boolean;
+  headers?: HttpHeaders | {
+      [header: string]: string | string[];
+  };
+  context?: HttpContext;
+  observe?: any;
+  params?: HttpParams | {
+    [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+  };
+  reportProgress?: boolean;
+  responseType?: any;
+  withCredentials?: boolean;
 };
 
 
-@Injectable({providedIn: 'root'})
-export class GitHubResourceService {
-    constructor(
-        private http: HttpClient,
-    ) {
-    }
 
-    getPublicRepos<TData = Repository[]>(
-        options?: HttpClientOptions
-    ): Observable<TData> {
-        return this.http.get<TData>(
-            `/api/git/repositories`, options
-        );
-    }
-}
+@Injectable({ providedIn: 'root' })
+export class GitHubResourceService {
+  constructor(
+    private http: HttpClient,
+  ) {} getPublicRepos<TData = Repository[]>(
+     options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/git/repositories`,options
+    );
+  }
+};
 
 export type GetPublicReposClientResult = NonNullable<Repository[]>

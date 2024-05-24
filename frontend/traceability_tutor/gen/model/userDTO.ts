@@ -5,13 +5,13 @@
  */
 
 export interface UserDTO {
-    /**
-     * @minLength 0
-     * @maxLength 255
-     */
-    email: string;
-    id: number;
-    name: string;
-    role?: string;
-    username: string;
+  /**
+   * @minLength 0
+   * @maxLength 255
+   */
+  email: string;
+  id: number;
+  name: string;
+  role?: string;
+  username: string;
 }
