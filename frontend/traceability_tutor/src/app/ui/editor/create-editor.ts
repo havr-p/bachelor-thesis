@@ -182,7 +182,7 @@ export async function createEditor(
 
   connection.addPreset(ConnectionPresets.classic.setup());
 
-  addCustomBackground(area);
+  //addCustomBackground(area);
 
   editor.use(area);
   area.use(connection);
