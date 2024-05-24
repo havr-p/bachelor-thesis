@@ -15,6 +15,7 @@ import {CustomSocketComponent} from "../../customization/custom-socket/custom-so
 import {addCustomBackground} from "../../customization/custom-background";
 import {Connection} from "../../connection";
 import { AutoArrangePlugin, Presets as ArrangePresets } from "rete-auto-arrange-plugin";
+import {ItemType} from "../../../../gen/model";
 
 type Schemes = GetSchemes<
   ItemProps,
@@ -48,7 +49,7 @@ export async function createEditor(
           list: [
             {
               key: '1',
-              label: 'Show lineage',
+              label: 'Show backward lineage',
               //fixme maybe we can use parent-child relationship to show lineage
               handler: () => {
                 const incomingConnections = graph
@@ -86,7 +87,7 @@ export async function createEditor(
             },
             {
               label: 'Hide lineage',
-              key: '2',
+              key: '3',
               handler: () => {
                 graph.connections().forEach((connection) => {
                   connection.updateData({isSelected: false});
@@ -95,7 +96,7 @@ export async function createEditor(
             },
             {
               label: 'Edit node',
-              key: '3',
+              key: '4',
               handler: () => {
                 eventService.publishEditorEvent(
                   EditorEventType.SELECT,
@@ -169,7 +170,11 @@ export async function createEditor(
   angularRender.addPreset(
     AngularPresets.classic.setup({
       customize: {
-        node() {
+        node(context) {
+          if (context.payload.type === ItemType.REQUIREMENT)
+          return RequirementItemComponent;
+          if (context.payload.type === ItemType.DESIGN)
+            return RequirementItemComponent; //todo add another types
           return RequirementItemComponent;
         },
         connection() {

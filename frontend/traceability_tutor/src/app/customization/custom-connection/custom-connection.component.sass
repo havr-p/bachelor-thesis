@@ -7,6 +7,14 @@ svg
   pointer-events: none
   path
     fill: none
-    stroke-width: 5px
+    stroke-width: 7px
     stroke: black
     pointer-events: auto
+
+    &.selected
+        stroke: red
+        stroke-width: 12px
+
+
+    &.highlight
+      stroke: yellow // Пример использования другого класса для выделения
