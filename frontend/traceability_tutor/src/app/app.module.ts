@@ -12,7 +12,7 @@ import {DialogModule} from 'primeng/dialog';
 import {FileUploadModule} from 'primeng/fileupload';
 import {FormsModule} from '@angular/forms';
 import {KeyValuePipe, NgForOf, NgOptimizedImage} from '@angular/common';
-import {RequirementItemComponent} from './ui/items/requirement-item/requirement-item.component';
+import {ItemComponent} from './ui/items/item/item.component';
 import {PanelModule} from 'primeng/panel';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {SidebarModule} from 'primeng/sidebar';
