@@ -170,6 +170,20 @@ export async function createEditor(
                                 eventService.publishEditorEvent(EditorEventType.ADD_CONNECTION, context)
                             }
                         },
+                      {
+                        key: '7',
+                        label: 'Copy',
+                        handler: () => null,
+                        subitems: [
+                          {
+                            key: '8',
+                            label: 'ID',
+                            handler: () => {
+                              copy(context.id)
+                            }
+                          }
+                        ]
+                      },
 
                     ],
                 };

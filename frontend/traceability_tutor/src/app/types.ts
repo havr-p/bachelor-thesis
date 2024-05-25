@@ -16,7 +16,7 @@ export type ConnProps = Connection<ItemNode, ItemNode>;
 export type Schemes = GetSchemes<ItemProps, ConnProps>;
 
 export enum EditorEventType {
-    ADD = 'add',
+    ADD_ITEM = 'add',
     ADD_CONNECTION = 'add connection',
     REMOVE = 'remove',
     EDIT = 'edit',
