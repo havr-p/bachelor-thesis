@@ -1,13 +1,51 @@
 import {Structures} from "rete-structures/_types/types";
-import {ConnProps, ItemProps} from "../../types";
+import {ConnProps, ItemProps, Schemes} from "../../types";
 
-export function findSelf(graph: Structures<ItemProps, ConnProps>, node: ItemProps, inputNodes: ItemProps[]) {
-    if (inputNodes.some(n => n === node))
-        return true;
+export class GraphCycleDetector {
+    private readonly graph:  Structures<ItemProps, ConnProps>
 
-    for (const element of inputNodes) {
-        if (findSelf(graph, node, graph.predecessors(element.id).nodes()))
-            return true;
+    constructor(graph:  Structures<ItemProps, ConnProps>) {
+        this.graph = graph;
     }
-    return false;
+
+    public isCyclic(): boolean {
+        const nodes = this.graph.nodes();
+        const vis: { [key: string]: boolean } = {};
+        const dfsVis: { [key: string]: boolean } = {};
+
+        for (const node of nodes) {
+            vis[node.id] = false;
+            dfsVis[node.id] = false;
+        }
+
+        for (const node of nodes) {
+            if (!vis[node.id]) {
+                if (this.checkCycle(node.id, this.graph, vis, dfsVis)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private checkCycle(nodeId: string, graph: any, vis: { [key: string]: boolean }, dfsVis: { [key: string]: boolean }): boolean {
+        vis[nodeId] = true;
+        dfsVis[nodeId] = true;
+
+        const outgoingNodes = graph.successors(nodeId).nodes();
+
+        for (const neighbor of outgoingNodes) {
+            if (!vis[neighbor.id]) {
+                if (this.checkCycle(neighbor.id, graph, vis, dfsVis)) {
+                    return true;
+                }
+            } else if (dfsVis[neighbor.id]) {
+                return true;
+            }
+        }
+
+        dfsVis[nodeId] = false;
+        return false;
+    }
 }

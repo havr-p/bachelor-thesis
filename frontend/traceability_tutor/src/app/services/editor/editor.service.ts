@@ -31,4 +31,19 @@ export class EditorService {
             }
         }
     }
+    public async notCreateCycle(startItem: number, endItem: number): Promise<boolean> {
+        const tempConnection = await this.addConnectionForCheck(startItem, endItem);
+      console.log("temp", tempConnection);
+        const graph = structures(this.editor);
+        const graphCycleDetector = new GraphCycleDetector(graph);
+
+        const cycleDetected = graphCycleDetector.isCyclic();
+        console.log("cycle detected?", cycleDetected)
+
+        await this.editor.removeConnection(tempConnection);
+
+        return !cycleDetected;
+    }
+
+
 }
