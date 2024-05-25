@@ -42,10 +42,10 @@ public class RelationshipResource {
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createRelationship(
+    public ResponseEntity<RelationshipDTO> createRelationship(
             @RequestBody @Valid final CreateRelationshipDTO relationshipDTO) {
-        final Long createdId = relationshipService.create(relationshipDTO);
-        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+         var relationship = relationshipService.create(relationshipDTO);
+        return new ResponseEntity<>(relationship, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

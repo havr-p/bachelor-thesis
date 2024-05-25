@@ -1,25 +1,32 @@
-import {EventService} from "../../services/event/event.service";
-import {LocalStorageService} from "../../services/local-storage/local-storage.service";
-import {StateManager} from "../../models/state";
-import {MenuItem} from "primeng/api";
-import {EditorEventType, ProjectEventType} from "../../types";
-import {Requirement} from "../../models/requirement";
-import {Injectable} from "@angular/core";
-import {ProjectResourceService} from "../../../../gen/services/project-resource";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { EventService } from '../../services/event/event.service';
+import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import { StateManager } from '../../models/state';
+import { MenuItem } from 'primeng/api';
+import { EditorEventType, ProjectEventType } from '../../types';
+import { ProjectResourceService } from '../../../../gen/services/project-resource';
+import { ItemType } from '../../../../gen/model';
 
-export type DockMode = 'projects' | 'releases' | 'editor' | 'editor-release'
+export type DockMode = 'projects' | 'releases' | 'editor' | 'editor-release';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class DockManager {
-    constructor(
-        private eventService: EventService,
-        private localStorageService: LocalStorageService,
-        private stateManager: StateManager,
-        private projectService: ProjectResourceService
-    ) {
-    }
+  private menuItemsSubject = new BehaviorSubject<MenuItem[]>([]);
+  menuItems$ = this.menuItemsSubject.asObservable();
+
+  constructor(
+    private eventService: EventService,
+    private localStorageService: LocalStorageService,
+    private stateManager: StateManager,
+    private projectService: ProjectResourceService
+  ) {
+    // Initialize with default menu items
+    const initialItems = this.buildMenuItems('editor'); // Default mode
+    this.menuItemsSubject.next(initialItems);
+  }
 
     /**
      * Build a standard menu based on the current mode.
@@ -107,4 +114,31 @@ export class DockManager {
         return items;
     }
 
+  /**
+   * Update the menu items based on the mode.
+   * @param mode Mode of the application
+   */
+  updateMenuItems(mode: DockMode) {
+    const items = this.buildMenuItems(mode);
+    this.menuItemsSubject.next(items);
+  }
+
+  /**
+   * Add a new menu item.
+   * @param item The `MenuItem` to add
+   */
+  addMenuItem(item: MenuItem) {
+    const currentItems = this.menuItemsSubject.getValue();
+    this.menuItemsSubject.next([...currentItems, item]);
+  }
+
+  /**
+   * Remove a menu item.
+   * @param label The label of the `MenuItem` to remove
+   */
+  removeMenuItem(label: string) {
+    const currentItems = this.menuItemsSubject.getValue();
+    const updatedItems = currentItems.filter(item => item.label !== label);
+    this.menuItemsSubject.next(updatedItems);
+  }
 }

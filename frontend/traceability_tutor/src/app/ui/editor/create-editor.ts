@@ -163,6 +163,13 @@ export async function createEditor(
                                 );
                             },
                         },
+                        {
+                            label: 'Add connection',
+                            key: '6',
+                            handler: () => {
+                                eventService.publishEditorEvent(EditorEventType.ADD_CONNECTION, context)
+                            }
+                        },
 
                     ],
                 };

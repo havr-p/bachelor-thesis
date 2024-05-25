@@ -42,9 +42,10 @@ export class ItemComponent implements OnChanges, OnInit {
         return this.data.highlighted;
     }
 
-    @HostListener('click', ['$event']) onClick(btn: any) {
-        this.data.selected = true;
-    }
+  @HostListener('click', ['$event']) onClick(event: MouseEvent) {
+    this.eventService.publishEditorEvent(EditorEventType.CHOOSE_SECOND_ITEM, { item: this.data, event });
+    this.data.selected = true;
+  }
 
     ngOnInit(): void {
         this.updateShortLabel();

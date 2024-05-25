@@ -43,9 +43,10 @@ public class RelationshipService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final CreateRelationshipDTO relationshipDTO) {
+    public RelationshipDTO create(final CreateRelationshipDTO relationshipDTO) {
         final Relationship relationship = new Relationship();
-        return relationshipRepository.save(mapToEntity(relationshipDTO, relationship)).getId();
+        RelationshipDTO dto = new RelationshipDTO();
+        return mapToDTO(relationshipRepository.save(mapToEntity(relationshipDTO, relationship)), dto);
     }
 
     public void update(final Long id, final RelationshipDTO relationshipDTO) {

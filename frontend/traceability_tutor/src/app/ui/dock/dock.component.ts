@@ -39,10 +39,11 @@ export class DockComponent implements OnInit {
             case "projects":
                 return "Projects menu"
             case "editor-release":
-                return {
-                    projectName: this.stateManager.currentProject?.name!,
-                    releaseId: this.stateManager.currentRelease?.id!,
-                }
+                // return {
+                //     projectName: this.stateManager.currentProject?.name!,
+                //     releaseId: this.stateManager.currentRelease?.id!,
+                // }
+                return this.stateManager.currentProject?.name! + ' ver. ' + this.stateManager.currentRelease?.id!
             default:
                 return "Editor"
         }
@@ -50,8 +51,10 @@ export class DockComponent implements OnInit {
 
 
     ngOnInit() {
-        const menuItems = this.dockManager.buildMenuItems(this.mode);
-        this.items.push(...menuItems);
+      this.dockManager.menuItems$.subscribe(items => {
+        this.items = items;
+      });
+      this.dockManager.updateMenuItems(this.mode);
         this.authService.currentUser.subscribe(user => {
             console.log("user in dock", user)
             const userMenuItems: MenuItem[] = [

@@ -17,6 +17,7 @@ export type Schemes = GetSchemes<ItemProps, ConnProps>;
 
 export enum EditorEventType {
     ADD = 'add',
+    ADD_CONNECTION = 'add connection',
     REMOVE = 'remove',
     EDIT = 'edit',
     SELECT_ITEM = 'select item',
@@ -28,6 +29,7 @@ export enum EditorEventType {
     CLEAR = 'clear',
     TO_PROJECTS_MENU = 'to projects menu',
     SAVE_ITERATION = 'save iteration',
+    CHOOSE_SECOND_ITEM = 'choose second item',
 }
 
 export enum ProjectEventType {

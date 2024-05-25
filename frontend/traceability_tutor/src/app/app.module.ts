@@ -33,6 +33,7 @@ import {PageNotFoundComponent} from './ui/page-not-found/page-not-found.componen
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {APIInterceptor} from "./interceptors/api-interceptor";
+import {CreateRelationshipFormComponent} from "./ui/forms/create-relationship-form/create-relationship-form.component";
 
 @NgModule({
     bootstrap: [AppComponent],
