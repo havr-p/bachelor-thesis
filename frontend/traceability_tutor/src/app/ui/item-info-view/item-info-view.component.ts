@@ -81,7 +81,8 @@ export class ItemInfoViewComponent implements AfterViewInit, OnChanges {
   saveChanges() {
     if (this.itemForm.valid) {
       this.dataChanged = true;
-      // Add logic to save changes based on item type
+      console.log(this.itemForm.value);
+      console.log(this.relationships)
     }
   }
 

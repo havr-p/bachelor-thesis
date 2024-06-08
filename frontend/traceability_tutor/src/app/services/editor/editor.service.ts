@@ -66,7 +66,7 @@ export class EditorService {
         node.backgroundColor = lvlColor!;
         node.addOutput(node.id, new ClassicPreset.Output(socket, undefined, true));
         node.addInput(node.id, new ClassicPreset.Input(socket, undefined, true));
-        if (!this.editor.addNode(node)) throw new Error("Error while adding node");
+        if (!await this.editor.addNode(node)) throw new Error("Error while adding node");
     }
 
     async createItem(dto: CreateItemDTO) {
@@ -202,7 +202,7 @@ export class EditorService {
         editor.addPipe(async (c) => {
             if (c.type === 'connectioncreate') {
                 const connection = c.data;
-                // Uncomment to check for cycle
+                // Uncomment to check for cycle - now check runs only from form constructor
                 // if (await this.notCreateCycle(Number(connection.source), Number(connection.target))) {
                 //     alert("Connection caused cycle, now removed.");
                 //     return;
@@ -243,9 +243,6 @@ export class EditorService {
       return this.state.currentProject?.levels.find(lvl => lvl.name.toLowerCase() === item.data['level'].toLowerCase())?.name;
     }
 
-    getLevelColorByName(level: string | "Design" | "Code" | "Test" | undefined): string | undefined {
-        return this.state.currentProject?.levels.find(lvl => lvl.name.toLowerCase() === level!.toLowerCase())?.color;
-    }
 
     public exportEditorContents(): void {
         let nodesData = [];
@@ -276,7 +273,7 @@ export class EditorService {
 
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'tt-snapshot-' + new Date().toISOString() + '.json';
+        a.download = this.state.currentProject?.name + '-' + new Date().toISOString() + '.json';
         a.click();
 
         URL.revokeObjectURL(url);

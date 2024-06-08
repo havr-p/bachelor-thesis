@@ -76,7 +76,7 @@ export class ItemComponent implements OnChanges, OnInit {
 
     updateShortLabel() {
         const label = this.data.label || '';
-        if (label.length > 40) {
+        if (label.length > 50) {
             this.shortLabel = label.substring(0, 50) + '...';
         } else {
             this.shortLabel = label;
