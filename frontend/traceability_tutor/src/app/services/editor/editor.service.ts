@@ -240,7 +240,7 @@ export class EditorService {
     }
 
     getLevelName(item: Item): string | undefined {
-      return this.state.currentProject?.levels.find(lvl => lvl.name.toLowerCase() === item.data['level'].toUpperCase())?.name;
+      return this.state.currentProject?.levels.find(lvl => lvl.name.toLowerCase() === item.data['level'].toLowerCase())?.name;
     }
 
     getLevelColorByName(level: string | "Design" | "Code" | "Test" | undefined): string | undefined {
