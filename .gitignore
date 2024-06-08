@@ -34,3 +34,5 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 /target/
+/traceability_tutor/frontend/traceability_tutor/node_modules/**
+/traceability_tutor/frontend/traceability_tutor/.angular/
