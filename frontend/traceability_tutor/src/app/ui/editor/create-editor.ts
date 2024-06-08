@@ -78,7 +78,63 @@ export async function createEditor(
                 }
             }
             if (context instanceof ItemNode) {
-                const selectedNodeId = context.id;
+              const selectedNodeId = context.id;
+              const showBackwardLineage = () => {
+                const incomingConnections = graph
+                  .connections()
+                  .filter((connection) => connection.target === selectedNodeId);
+                graph
+                  .predecessors(selectedNodeId)
+                  .connections()
+                  .concat(incomingConnections)
+                  .map(c => c as Connection<ItemProps, ItemProps>)
+                  .forEach((connection) => {
+                    if (connection.updateData !== undefined) {
+                      connection.updateData({
+                        selected: true,
+                      });
+                    } else {
+                      console.log("i am in else")
+                      console.log(connection)
+                      connection.selected = true;
+                    }
+                  })
+                graph.predecessors(selectedNodeId).nodes().forEach(((node) => {
+                  node.updateData({
+                    selected: true
+                  });
+                }));
+                context.updateData({
+                  selected: true
+                });
+              };
+
+              const showForwardLineage = () => {
+                const outgoingConnections = graph
+                  .connections()
+                  .filter((connection) => connection.source === selectedNodeId);
+                graph
+                  .successors(selectedNodeId)
+                  .connections()
+                  .concat(outgoingConnections)
+                  .forEach((connection) => {
+                    if (connection.updateData !== undefined) {
+                      connection.updateData({
+                        selected: true,
+                      });
+                    } else {
+                      connection.selected = true;
+                    }
+                  });
+                graph.successors(selectedNodeId).nodes().forEach(((node) => {
+                  node.updateData({
+                    selected: true
+                  });
+                }));
+                context.updateData({
+                  selected: true
+                });
+              };
                 return {
                     searchBar: false,
                     list: [
@@ -86,77 +142,26 @@ export async function createEditor(
                             key: '1',
                             label: 'Show backward lineage',
                             //fixme maybe we can use parent-child relationship to show lineage
-                            handler: () => {
-                                const incomingConnections = graph
-                                    .connections()
-                                    .filter((connection) => connection.target === selectedNodeId);
-                                graph
-                                    .predecessors(selectedNodeId)
-                                    .connections()
-                                    .concat(incomingConnections)
-                                    .map(c => c as Connection<ItemProps, ItemProps>)
-                                    .forEach((connection) => {
-                                        if (connection.updateData !== undefined) {
-                                            connection.updateData({
-                                                selected: true,
-                                            });
-                                        } else {
-                                            console.log("i am in else")
-                                            console.log(connection)
-                                            connection.selected = true;
-                                        }
-                                    })
-                                graph.predecessors(selectedNodeId).nodes().forEach(((node) => {
-                                    node.updateData({
-                                        selected: true
-                                    });
-                                }));
-                                context.updateData({
-                                    selected: true
-                                });
-                            },
+                            handler: showBackwardLineage
                         },
+                      {
+                        key: '2',
+                        label: 'Show forward lineage',
+                        //fixme maybe we can use parent-child relationship to show lineage
+                        handler: showForwardLineage
+                      },
+
                         {
-                            key: '2',
-                            label: 'Show forward lineage',
-                            //fixme maybe we can use parent-child relationship to show lineage
-                            handler: () => {
-                                const outgoingConnections = graph
-                                    .connections()
-                                    .filter((connection) => connection.source === selectedNodeId);
-                                graph
-                                    .successors(selectedNodeId)
-                                    .connections()
-                                    .concat(outgoingConnections)
-                                    .forEach((connection) => {
-                                        if (connection.updateData !== undefined) {
-                                            connection.updateData({
-                                                selected: true,
-                                            });
-                                        } else {
-                                            connection.selected = true;
-                                        }
-                                    });
-                                graph.successors(selectedNodeId).nodes().forEach(((node) => {
-                                    node.updateData({
-                                        selected: true
-                                    });
-                                }));
-                                context.updateData({
-                                    selected: true
-                                });
-                            },
+                          label: 'Show forward and backward lineage',
+                          key: '4',
+                          handler: () => {
+                              showForwardLineage();
+                              showBackwardLineage();
+                          }
                         },
-                        // {
-                        //     label: 'Hide lineage',
-                        //     key: '3',
-                        //     handler: () => {
-                        //         unselectAll(graph);
-                        //     },
-                        // },
                         {
                             label: 'Edit item',
-                            key: '4',
+                            key: '5',
                             handler: () => {
                                 eventService.publishEditorEvent(
                                     EditorEventType.SELECT_ITEM,
@@ -166,7 +171,7 @@ export async function createEditor(
                         },
                         {
                             label: 'Delete item',
-                            key: '5',
+                            key: '6',
                             handler: () => {
                               let payload = { item: selectedNodeId, relationships: [] as number[] };
                               let connections: number[] = [];
@@ -206,12 +211,12 @@ export async function createEditor(
                         //     }
                         // },
                       {
-                        key: '7',
+                        key: '8',
                         label: 'Copy',
                         handler: () => null,
                         subitems: [
                           {
-                            key: '8',
+                            key: '9',
                             label: 'ID',
                             handler: () => {
                               copy(context.id)
