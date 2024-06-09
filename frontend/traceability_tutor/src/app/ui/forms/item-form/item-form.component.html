@@ -51,9 +51,8 @@
                     <p-divider *ngIf="i < links.controls.length - 1"></p-divider>
                 </div>
             </p-scrollPanel>
-            <div class="flex text-center pt-3 mt-2 align-items-center">
-                <label for="newLink" style="margin-right: 10px;">Add link: </label>
-                <input id="newLink" type="text" pInputText formControlName="newLink" style="max-width: 80%; align-self: center" />
+            <div class="flex text-center pt-3 mt-2">
+                <input id="newLink" type="text" pInputText formControlName="newLink" style="width: 90%; align-self: flex-start" [placeholder]="newLinkPlaceholder"/>
                 <p-button severity="primary" styleClass="ml-2 p-button-rounded p-button-sm" icon="pi pi-plus" type="button" (click)="addLink()" ></p-button>
             </div>
         </div>
