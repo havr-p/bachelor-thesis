@@ -15,8 +15,8 @@ import {StateManager} from "../../../models/state";
 
 @Component({
   selector: 'app-create-item-form',
-  templateUrl: './create-item-form.component.html',
-  styleUrls: ['./create-item-form.component.scss'],
+  templateUrl: './item-form.component.html',
+  styleUrls: ['./item-form.component.scss'],
   standalone: true,
   imports: [
     InputTextareaModule,
@@ -31,7 +31,7 @@ import {StateManager} from "../../../models/state";
     ScrollPanelModule
   ]
 })
-export class CreateItemFormComponent implements OnInit, OnChanges {
+export class ItemFormComponent implements OnInit, OnChanges {
   @Output() onItemCreate = new EventEmitter<any>();
   @Input() visible: boolean = false;
 
