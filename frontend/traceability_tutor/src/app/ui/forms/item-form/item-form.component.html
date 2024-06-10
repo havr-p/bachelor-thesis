@@ -13,17 +13,17 @@
         </small>
     </div>
     <div class="form-field">
-        <label for="statement">Statement</label>
+        <label for="description">Description</label>
         <textarea
-                id="statement"
+                id="description"
                 pInputTextarea
-                formControlName="statement"
+                formControlName="description"
                 required
                 rows="3"
                 cols="20">
         </textarea>
-        <small class="p-error" *ngIf="submitted && itemForm.controls['statement'].invalid">
-            Statement is required.
+        <small class="p-error" *ngIf="submitted && itemForm.controls['description'].invalid">
+            description is required.
         </small>
     </div>
     <div class="flex gap-5 align-items-center align-content-center">
@@ -45,7 +45,7 @@
     <ng-container *ngIf="itemForm.controls['links']">
         <div class="form-field">
             <p>{{linksLabel}}</p>
-            <p-scrollPanel class="border-1 border-round" [style]="{ width: '100%', height: '150px', padding: '20px' }">
+            <p-scrollPanel class="border-1 border-round" [style]="{ width: '100%', height: '300px', padding: '20px' }">
                 <div id="links" *ngFor="let linkCtrl of links.controls; let i = index">
                     <p>{{ linkCtrl.value.url }} - {{ linkCtrl.value.addedAt | date:'short' }}</p>
                     <p-divider *ngIf="i < links.controls.length - 1"></p-divider>
@@ -57,7 +57,7 @@
             </div>
         </div>
     </ng-container>
-    <div class="flex justify-content-center align-content-center align-items-center">
+    <div class="flex justify-content-center align-content-center align-items-center" *ngIf="mode === 'create'">
         <p-button label="Create item" type="submit" [disabled]="itemForm.invalid"></p-button>
             <p-button label="Cancel" type="button" severity="secondary" (click)="hideDialog()"></p-button>
     </div>

@@ -3,27 +3,27 @@ import {CreateItemDTO, HistoryAction, ItemDTO, ItemType} from "../../../gen/mode
 export type RequirementData = {
     level: string;
     name: string;
-    statement: string;
+    description: string;
 }
 
 export type DesignData = {
     level: 'Design';
     name: string;
-    statement: string;
+    description: string;
     links: string[];
 }
 
 export type CodeData = {
     level: 'Code';
     name: string;
-    statement: string;
+    description: string;
     commits: string[];
 }
 
 export type TestData = {
     level: 'Test';
     name: string;
-    statement: string;
+    description: string;
     test_reports: string[];
 }
 
@@ -80,7 +80,7 @@ function toRequirement(itemDTO: ItemDTO): Item {
             data: {
                 level: itemDTO.data['level'] || '',
                 name: itemDTO.data['name'] || '',
-                statement: itemDTO.data['statement'] || ''
+                description: itemDTO.data['description'] || ''
             }
         } as Item;
     }
@@ -94,7 +94,7 @@ function toDesign(itemDTO: ItemDTO): Item {
             data: {
                 level: 'Design',
                 name: itemDTO.data['name'] || '',
-                statement: itemDTO.data['statement'] || '',
+                description: itemDTO.data['description'] || '',
                 links: itemDTO.data['links'] ? JSON.parse(itemDTO.data['links']) : []
             }
         } as Item;
@@ -109,7 +109,7 @@ function toCode(itemDTO: ItemDTO): Item {
             data: {
                 level: 'Code',
                 name: itemDTO.data['name'] || '',
-                statement: itemDTO.data['statement'] || '',
+                description: itemDTO.data['description'] || '',
                 commits: itemDTO.data['commits'] ? JSON.parse(itemDTO.data['commits']) : []
             }
         } as Item;

@@ -59,7 +59,7 @@ export class EditorService {
         return this.createItemType;
     }
 
-    async addLoadedItem(item: ItemDTO) {
+    async addItem(item: ItemDTO) {
         const data = mapGenericModel(item);
         const lvlColor = this.getLevelColor(item);
         let node = new ItemNode(data);
@@ -72,7 +72,7 @@ export class EditorService {
     async createItem(dto: CreateItemDTO) {
         console.log("in service")
         const newItem = this.itemService.createItem(dto).subscribe({
-            next: item => this.addLoadedItem(item)
+            next: item => this.addItem(item)
         })
     }
 
@@ -85,13 +85,9 @@ export class EditorService {
     }
 
     async createConnection(relationship: CreateRelationshipDTO) {
-        const startItem = this.editor.getNode(relationship.startItem.toString());
-        const endItem = this.editor.getNode(relationship.endItem.toString());
         this.relationshipService.createRelationship(relationship).subscribe({
             next: async result => {
-                await this.editor.addConnection(
-                    new Connection(startItem, startItem.id, endItem, endItem.id, result)
-                );
+                await this.addConnectionToEditor(result);
             }
         });
     }
@@ -191,7 +187,7 @@ export class EditorService {
     public async addItems(items: ItemDTO[]): Promise<void> {
         for (const item of items) {
             try {
-                await this.addLoadedItem(item);
+                await this.addItem(item);
             } catch (error) {
                 console.error('Error adding item:', error);
             }

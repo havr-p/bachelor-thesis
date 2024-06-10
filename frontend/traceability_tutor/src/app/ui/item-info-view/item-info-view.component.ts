@@ -73,7 +73,7 @@ export class ItemInfoViewComponent implements AfterViewInit, OnChanges {
     this.itemForm = this.fb.group({
       level: ['', Validators.required],
       name: ['', Validators.required],
-      statement: [''],
+      description: [''],
       status: ['', Validators.required],
     });
   }

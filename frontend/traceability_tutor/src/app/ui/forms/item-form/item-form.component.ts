@@ -14,7 +14,7 @@ import {ScrollPanelModule} from "primeng/scrollpanel";
 import {StateManager} from "../../../models/state";
 
 @Component({
-  selector: 'app-create-item-form',
+  selector: 'app-item-form',
   templateUrl: './item-form.component.html',
   styleUrls: ['./item-form.component.scss'],
   standalone: true,
@@ -33,7 +33,6 @@ import {StateManager} from "../../../models/state";
 })
 export class ItemFormComponent implements OnInit, OnChanges {
   @Output() onItemCreate = new EventEmitter<any>();
-  @Input() visible: boolean = false;
 
   itemForm!: FormGroup;
   submitted = false;
@@ -41,6 +40,7 @@ export class ItemFormComponent implements OnInit, OnChanges {
   linksLabel: string = '';
 
   itemType!: ItemType;
+  mode: "create" | "update" = 'create';
 
   constructor(private fb: FormBuilder,
               private eventService: EventService,
@@ -56,7 +56,6 @@ export class ItemFormComponent implements OnInit, OnChanges {
               case EditorEventType.ADD_ITEM:
                 this.itemType = event.payload;
                 this.editorService.setCreateItemType(event.payload);
-                this.visible = true;
                 this.statuses = this.editorService.getStatuses(this.itemType);
                 this.initializeForm();
                 break;
@@ -78,10 +77,9 @@ export class ItemFormComponent implements OnInit, OnChanges {
   initializeForm(): void {
     this.itemForm = this.fb.group({
       name: ['', Validators.required],
-      statement: ['', Validators.required],
       level: ['', Validators.required],
       status: ['', Validators.required],
-      description: ['', Validators.maxLength(255)],
+      description: [''],
       links: this.fb.array([]),
       newLink: ['']
     });
@@ -116,10 +114,8 @@ export class ItemFormComponent implements OnInit, OnChanges {
         return 'Add a new VCS link';
       case ItemType.TEST:
         return 'Add a new test report link';
-      case ItemType.REQUIREMENT:
-        return 'Add a new comment';
       default:
-        return '';
+        return 'Add a new link';
     }
   }
 
@@ -162,4 +158,5 @@ export class ItemFormComponent implements OnInit, OnChanges {
   }
 
   protected readonly ItemType = ItemType;
+
 }
