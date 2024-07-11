@@ -1,17 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, OnChanges, Output, SimpleChanges } from '@angular/core';
-import {FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule} from '@angular/forms';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {DropdownModule} from 'primeng/dropdown';
+import {InputTextModule} from 'primeng/inputtext';
+import {ButtonModule} from 'primeng/button';
+import {DividerModule} from 'primeng/divider';
+import {DatePipe, NgForOf, NgIf} from '@angular/common';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {EventService} from "../../../services/event/event.service";
 import {EditorService} from "../../../services/editor/editor.service";
-import {BaseEvent, EditorEventType, EventSource, ProjectEventType} from "../../../types";
-import {CreateItemDTO, ItemType} from "../../../../../gen/model";
-import {InputTextareaModule} from "primeng/inputtextarea";
-import {DropdownModule} from "primeng/dropdown";
-import {InputTextModule} from "primeng/inputtext";
-import {ButtonModule} from "primeng/button";
-import {DividerModule} from "primeng/divider";
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
-import {ScrollPanelModule} from "primeng/scrollpanel";
 import {StateManager} from "../../../models/state";
+import {BaseEvent, EditorEventType, EventSource} from "../../../types";
+import {ItemType} from "../../../../../gen/model";
+import {Item} from "../../../models/itemMapper";
 
 @Component({
   selector: 'app-item-form',
@@ -33,14 +34,16 @@ import {StateManager} from "../../../models/state";
 })
 export class ItemFormComponent implements OnInit, OnChanges {
   @Output() onItemCreate = new EventEmitter<any>();
-
+  @Output() onItemEdit = new EventEmitter<any>();
   itemForm!: FormGroup;
   submitted = false;
   statuses: string[] = [];
   linksLabel: string = '';
 
   itemType!: ItemType;
-  mode: "create" | "update" = 'create';
+  @Input() visible: boolean = false;
+  @Input() formData: Item | undefined;
+  @Input() mode: "create" | "update" = "create";
 
   constructor(private fb: FormBuilder,
               private eventService: EventService,
@@ -59,6 +62,10 @@ export class ItemFormComponent implements OnInit, OnChanges {
                 this.statuses = this.editorService.getStatuses(this.itemType);
                 this.initializeForm();
                 break;
+              case EditorEventType.SELECT_ITEM:
+                console.log("item for edit", event.payload);
+                this.initializeForm();
+                break;
             }
           }
         }
@@ -66,24 +73,40 @@ export class ItemFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const type = this.editorService.getCreateItemType();
-    if (type) {
+    if (changes['formData'] && this.formData) {
+      this.itemType = this.formData.itemType;
       this.initializeForm();
-      this.itemType = type;
-      this.statuses = this.editorService.getStatuses(type);
     }
   }
 
   initializeForm(): void {
-    this.itemForm = this.fb.group({
-      name: ['', Validators.required],
-      level: ['', Validators.required],
-      status: ['', Validators.required],
-      description: [''],
-      links: this.fb.array([]),
-      newLink: ['']
-    });
+    if (this.formData) {
+      const linksArray = this.formData.data.links.map(link => this.fb.group({
+        url: [link, Validators.required],
+        addedAt: [new Date(), Validators.required]
+      }));
+      this.itemForm = this.fb.group({
+        name: [this.formData.data.name, Validators.required],
+        level: [this.formData.data.level, Validators.required],
+        status: [this.formData.status, Validators.required],
+        description: [this.formData.data.description || ''],
+        links: this.fb.array(linksArray),
+        newLink: ['']
+      });
+    } else {
+      this.itemForm = this.fb.group({
+        name: ['', Validators.required],
+        level: ['', Validators.required],
+        status: ['', Validators.required],
+        description: [''],
+        links: this.fb.array([]),
+        newLink: ['']
+      });
+    }
+    this.setLinksLabel();
+  }
 
+  private setLinksLabel(): void {
     switch (this.itemType) {
       case ItemType.DESIGN:
         this.linksLabel = 'Resources';
@@ -114,6 +137,8 @@ export class ItemFormComponent implements OnInit, OnChanges {
         return 'Add a new VCS link';
       case ItemType.TEST:
         return 'Add a new test report link';
+      case ItemType.REQUIREMENT:
+        return 'Add a new comment';
       default:
         return 'Add a new link';
     }
@@ -134,12 +159,11 @@ export class ItemFormComponent implements OnInit, OnChanges {
     this.links.clear();
   }
 
-  hideDialog(): void {
+  resetItemForm(): void {
     this.submitted = false;
     this.itemForm.reset();
     this.clearLinks();
   }
-
 
   createItem(): void {
     this.submitted = true;
@@ -149,14 +173,24 @@ export class ItemFormComponent implements OnInit, OnChanges {
         ...formValueWithoutNewLink,
         itemType: this.itemType,
         projectId: this.state.currentProject?.id,
-
       };
-      console.log(newItem)
       this.onItemCreate.emit(newItem);
-      this.hideDialog();
+      this.resetItemForm();
     }
   }
 
-  protected readonly ItemType = ItemType;
-
+  editItem(): void {
+    this.submitted = true;
+    if (this.itemForm.valid) {
+      const { newLink, ...formValueWithoutNewLink } = this.itemForm.value;
+      const updatedItem = {
+        ...this.formData,
+        data: {
+          ...formValueWithoutNewLink
+        }
+      };
+      this.onItemEdit.emit(updatedItem);
+      this.resetItemForm();
+    }
+  }
 }

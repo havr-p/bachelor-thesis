@@ -1,6 +1,6 @@
 <div #rete class="rete">
 </div>
-<p-sidebar *ngIf="openedItem" [(visible)]="sidebarVisible"
+<p-sidebar [(visible)]="sidebarVisible"
            [closeOnEscape]="true"
            [modal]="false"
 
@@ -8,12 +8,11 @@
            position="right"
            [style]="{'min-width': '60rem'}">
     <ng-template pTemplate="header">
-        <!--    <p class="text-2xl"> {{ this.openedItem.data.id + "           " }}         <span-->
-        <!--      class="font-medium">{{ openedItemTitle }}</span></p>-->
     </ng-template>
-    <app-item-info-view (toggleVisible)="onItemInfoViewToggleVisible($event)"
+    <app-item-info-view *ngIf="openedItem" (toggleVisible)="onItemInfoViewToggleVisible($event)"
                         (viewInitialized)="onItemViewInitialized()"
                         [editorService]="editorService"
+                        (onItemEdit)="onItemEdit($event)"
                         [item]="openedItem"></app-item-info-view
     >
 

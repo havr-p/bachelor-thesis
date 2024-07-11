@@ -8,7 +8,6 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
 import { EditorModule } from 'primeng/editor';
 import { DropdownModule } from 'primeng/dropdown';
@@ -25,8 +24,9 @@ import { TabViewModule } from "primeng/tabview";
 import { EditorService } from "../../services/editor/editor.service";
 import { ConnProps } from "../../types";
 import { StateManager } from "../../models/state";
-import { Item, RequirementData, DesignData, CodeData, TestData } from "../../models/itemMapper";
+import { Item } from "../../models/itemMapper";
 import {RelationshipTableComponent} from "../relationship-table/relationship-table.component";
+import {ItemFormComponent} from "../forms/item-form/item-form.component";
 
 @Component({
   selector: 'app-item-info-view',
@@ -52,38 +52,28 @@ import {RelationshipTableComponent} from "../relationship-table/relationship-tab
     ReactiveFormsModule,
     TabViewModule,
     RelationshipTableComponent,
+    ItemFormComponent,
   ],
 })
-export class ItemInfoViewComponent implements AfterViewInit, OnChanges {
+export class ItemInfoViewComponent implements AfterViewInit {
   @Input() item!: Item;
   @Output() toggleVisible = new EventEmitter<boolean>();
   @Output() viewInitialized = new EventEmitter<void>();
+  @Output() onItemEdit = new EventEmitter<any>();
   @Input() editorService!: EditorService;
   relationships: ConnProps[] = [];
-  dataChanged = false;
-  itemForm: FormGroup;
   protected readonly ItemType = ItemType;
-  protected readonly JSON = JSON;
 
   constructor(
-      private fb: FormBuilder,
       private cdr: ChangeDetectorRef,
       private state: StateManager,
   ) {
-    this.itemForm = this.fb.group({
-      level: ['', Validators.required],
-      name: ['', Validators.required],
-      description: [''],
-      status: ['', Validators.required],
-    });
   }
 
+
+  //todo use onItemEdit
   saveChanges() {
-    if (this.itemForm.valid) {
-      this.dataChanged = true;
-      console.log(this.itemForm.value);
-      console.log(this.relationships)
-    }
+
   }
 
   cancelChanges() {
@@ -99,20 +89,5 @@ export class ItemInfoViewComponent implements AfterViewInit, OnChanges {
     this.cdr.detectChanges();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['item'] && this.item) {
-      this.initializeForm(this.item);
-      this.relationships = this.editorService.getRelationships(this.item);
-      this.editorService.focusOnNode(this.item.id.toString());
-    }
-  }
-
-  initializeForm(item: Item) {
-    this.itemForm.patchValue({
-      level: item.data.level,
-      name: item.data.name,
-      status: item.status,
-    });
-  }
 
 }

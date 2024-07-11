@@ -4,6 +4,7 @@ export type RequirementData = {
     level: string;
     name: string;
     description: string;
+    links: string[];
 }
 
 export type DesignData = {
@@ -17,14 +18,14 @@ export type CodeData = {
     level: 'Code';
     name: string;
     description: string;
-    commits: string[];
+    links: string[];
 }
 
 export type TestData = {
     level: 'Test';
     name: string;
     description: string;
-    test_reports: string[];
+    links: string[];
 }
 
 export type RequirementItem = {
@@ -110,7 +111,7 @@ function toCode(itemDTO: ItemDTO): Item {
                 level: 'Code',
                 name: itemDTO.data['name'] || '',
                 description: itemDTO.data['description'] || '',
-                commits: itemDTO.data['commits'] ? JSON.parse(itemDTO.data['commits']) : []
+                links: itemDTO.data['links'] ? JSON.parse(itemDTO.data['links']) : []
             }
         } as Item;
     }
@@ -124,7 +125,7 @@ function toTest(itemDTO: ItemDTO): Item {
             data: {
                 level: 'Test',
                 name: itemDTO.data['name'] || '',
-                test_reports: itemDTO.data['test_reports'] ? JSON.parse(itemDTO.data['test_reports']) : []
+                links: itemDTO.data['links'] ? JSON.parse(itemDTO.data['links']) : []
             }
         } as Item;
     }

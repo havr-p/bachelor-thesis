@@ -113,9 +113,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   async onItemCreate($event: any) {
-    console.log($event, 'this is  event');
     const newItem = constructCreateItemDTO($event);
-    console.log('dto', newItem);
     await this.editorService.createItem(newItem);
   }
 
@@ -223,5 +221,9 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
     } else {
       this.createRelationshipVisible = true;
     }
+  }
+
+  onItemEdit($event: any) {
+    console.log("onItemEdit", $event);
   }
 }

@@ -71,7 +71,7 @@ export class EditorService {
 
     async createItem(dto: CreateItemDTO) {
         console.log("in service")
-        const newItem = this.itemService.createItem(dto).subscribe({
+        this.itemService.createItem(dto).subscribe({
             next: item => this.addItem(item)
         })
     }
@@ -288,7 +288,7 @@ export class EditorService {
 
     public async focusOnNode(nodeId: string): Promise<void> {
         const graph = structures(this.editor);
-        AreaExtensions.zoomAt(this.area, graph.nodes().filter(n => n.id === nodeId), { scale: 0.1 });
+        await AreaExtensions.zoomAt(this.area, graph.nodes().filter(n => n.id === nodeId), {scale: 0.1});
         await this.translateFromSidebar();
     }
 
