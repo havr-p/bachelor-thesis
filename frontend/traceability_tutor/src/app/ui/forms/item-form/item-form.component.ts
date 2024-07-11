@@ -73,7 +73,7 @@ export class ItemFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['formData'] && this.formData) {
+    if (this.formData) {
       this.itemType = this.formData.itemType;
       this.initializeForm();
     }

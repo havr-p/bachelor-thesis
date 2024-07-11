@@ -81,7 +81,8 @@ function toRequirement(itemDTO: ItemDTO): Item {
             data: {
                 level: itemDTO.data['level'] || '',
                 name: itemDTO.data['name'] || '',
-                description: itemDTO.data['description'] || ''
+                description: itemDTO.data['description'] || '',
+              links: itemDTO.data['links'] ? JSON.parse(itemDTO.data['links']) : []
             }
         } as Item;
     }

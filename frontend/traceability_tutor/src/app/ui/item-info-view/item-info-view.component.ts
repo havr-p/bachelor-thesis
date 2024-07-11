@@ -12,7 +12,7 @@ import { PanelModule } from 'primeng/panel';
 import { EditorModule } from 'primeng/editor';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
-import { NgForOf, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import {JsonPipe, NgForOf, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import { InplaceModule } from 'primeng/inplace';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -53,6 +53,7 @@ import {ItemFormComponent} from "../forms/item-form/item-form.component";
     TabViewModule,
     RelationshipTableComponent,
     ItemFormComponent,
+    JsonPipe,
   ],
 })
 export class ItemInfoViewComponent implements AfterViewInit {
@@ -73,7 +74,7 @@ export class ItemInfoViewComponent implements AfterViewInit {
 
   //todo use onItemEdit
   saveChanges() {
-
+    console.log("save canges")
   }
 
   cancelChanges() {

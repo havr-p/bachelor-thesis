@@ -1,39 +1,33 @@
 <ng-container [ngSwitch]="item.itemType">
 
-      <app-item-form *ngSwitchCase="ItemType.REQUIREMENT"
-                     [formData]="item"
-                     [mode]="'update'">
-      </app-item-form>
+  <app-item-form *ngSwitchCase="ItemType.REQUIREMENT"
+                 [formData]="item"
+                 [mode]="'update'">
+  </app-item-form>
+  <app-item-form *ngSwitchCase="ItemType.DESIGN"
+                 [formData]="item"
+                 [mode]="'update'">
+  </app-item-form>
+
+  <app-item-form *ngSwitchCase="ItemType.CODE"
+                 [formData]="item"
+                 [mode]="'update'">
+  </app-item-form>
+
+  <app-item-form *ngSwitchCase="ItemType.TEST"
+                 [formData]="item"
+                 [mode]="'update'">
+  </app-item-form>
   <app-relationship-table [relationships]="relationships"
                           [item]="item"></app-relationship-table>
-      <app-item-form *ngSwitchCase="ItemType.DESIGN"
-                     [formData]="item"
-                     [mode]="'update'">
-      </app-item-form>
-  <app-relationship-table [relationships]="relationships"
-                          [item]="item"></app-relationship-table>
-
-      <app-item-form *ngSwitchCase="ItemType.CODE"
-                     [formData]="item"
-                     [mode]="'update'">
-      </app-item-form>
-  <app-relationship-table [relationships]="relationships"
-                          [item]="item"></app-relationship-table>
-
-      <app-item-form *ngSwitchCase="ItemType.TEST"
-                     [formData]="item"
-                     [mode]="'update'">
-      </app-item-form>
-                <app-relationship-table [relationships]="relationships"
-                                        [item]="item"></app-relationship-table>
 
 
-    <ng-container *ngSwitchDefault>
-        <p>undefined</p>
-    </ng-container>
+  <ng-container *ngSwitchDefault>
+    <p>{{item | json}}</p>
+  </ng-container>
 </ng-container>
 <div class="flex flex-wrap gap-3 justify-content-center mt-5">
-    <p-button (onClick)="saveChanges()" [outlined]="true" class="mr-3"
-              label="Save Changes"></p-button>
-    <p-button (onClick)="cancelChanges()" [outlined]="true" label="Cancel" severity="secondary"></p-button>
+  <p-button (onClick)="saveChanges()" [outlined]="true" class="mr-3"
+            label="Save Changes"></p-button>
+  <p-button (onClick)="cancelChanges()" [outlined]="true" label="Cancel" severity="secondary"></p-button>
 </div>

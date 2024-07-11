@@ -1,4 +1,4 @@
-<form [formGroup]="itemForm" (ngSubmit)="mode === 'create' ? createItem() : editItem()" class="app-form" >
+<form *ngIf="itemForm" [formGroup]="itemForm" (ngSubmit)="mode === 'create' ? createItem() : editItem()" class="app-form" >
     <div class="form-field">
         <label for="name">Name</label>
         <input
