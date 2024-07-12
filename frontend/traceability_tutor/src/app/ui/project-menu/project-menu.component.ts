@@ -45,7 +45,6 @@ export class ProjectMenuComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(this.authService.currentUserValue);
         this.fetchUserProjects();
         this.eventService.event$.subscribe(
             async (event: BaseEvent<EventSource, ProjectEventType>) => {
@@ -66,17 +65,11 @@ export class ProjectMenuComponent implements OnInit {
     openProject(project: ProjectDTO) {
         this.projectService.updateLastOpened(project.id!).subscribe({
             next: value => {
-                console.log('update last opened', value)
             },
             error: err => {
                 console.log(err)
             }
         });
-        //   .subscribe((projectId => {
-        //   let project = this.projects.find(p => p.id === projectId);
-        //   project?.lastOpened
-        // }))
-        this.navigationService.navigateToEditor(project.id!);
     }
 
     private fetchUserProjects() {

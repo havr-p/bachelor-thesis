@@ -4,7 +4,7 @@
     <ng-template let-projects pTemplate="list">
         <div class="grid grid-nogutter">
             <div *ngFor="let project of projects" class="col-12">
-                <a [routerLink]="['/editor', project.id]" class="text-reset">
+                <a [routerLink]="['/editor', project.id]" (click)="openProject(project)" class="text-reset">
                     <div class="card mb-3">
                         <div class="row align-items-center p-2">
                             <div class="col-9">
