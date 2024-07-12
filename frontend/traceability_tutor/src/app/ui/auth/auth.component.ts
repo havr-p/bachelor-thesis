@@ -42,6 +42,9 @@ export class AuthComponent implements OnInit {
         this.authenticated = this.authService.isAuthenticated();
         this.authService.currentUser.subscribe(user => {
             this.currentUser = user;
+            if (this.currentUser) {
+              this.router.navigateByUrl('/projects');
+            }
         });
     }
 
