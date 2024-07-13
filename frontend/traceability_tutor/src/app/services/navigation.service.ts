@@ -10,14 +10,14 @@ export class NavigationService {
     constructor(private router: Router) {
     }
 
-    navigateToEditor(projectId: number, releaseId?: number) {
+    async navigateToEditor(projectId: number, releaseId?: number) {
         const editorDockMode: DockMode = releaseId ? 'editor-release' : 'editor';
         const url = releaseId ? `/editor/${projectId}/${releaseId}` : `/editor/${projectId}`;
         const extras = {
             state: {editorDockMode}
         };
 
-        this.router.navigateByUrl(url, extras);
+        await this.router.navigateByUrl(url, extras);
     }
 
     navigateToProjectMenu() {
