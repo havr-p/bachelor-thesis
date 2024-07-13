@@ -62,7 +62,7 @@ public class ItemService {
     public void update(final Long id, final ItemDTO itemDTO) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        item = mapToEntity(itemDTO);
+        updateItem(item, itemDTO);
         itemRepository.save(item);
     }
 
@@ -84,17 +84,7 @@ public class ItemService {
 
     private Item mapToEntity(final ItemDTO itemDTO) {
         Item item = new Item();
-        item.setItemType(itemDTO.getItemType());
-        item.setData(itemDTO.getData());
-        item.setStatus(itemDTO.getStatus());
-        item.setInternalProjectUUID(itemDTO.getInternalProjectUUID());
-        item.setHistoryAction(itemDTO.getHistoryAction());
-        final Project project = itemDTO.getProjectId() == null ? null : projectRepository.findById(itemDTO.getProjectId())
-                .orElseThrow(() -> new NotFoundException("project not found"));
-        item.setProject(project);
-        final Release release = itemDTO.getReleaseId() == null ? null : releaseRepository.findById(itemDTO.getReleaseId())
-                .orElseThrow(() -> new NotFoundException("release not found"));
-        item.setRelease(release);
+        updateItem(item, itemDTO);
         return item;
     }
 
@@ -110,6 +100,20 @@ public class ItemService {
                 .orElseThrow(() -> new NotFoundException("Project with id " + createItemDTO.getProjectId() + "was not found when creating the new item."));
         item.setProject(project);
         return item;
+    }
+
+    private void updateItem(Item item, final ItemDTO itemDTO) {
+            item.setItemType(itemDTO.getItemType());
+            item.setData(itemDTO.getData());
+            item.setStatus(itemDTO.getStatus());
+            item.setInternalProjectUUID(itemDTO.getInternalProjectUUID());
+            item.setHistoryAction(itemDTO.getHistoryAction());
+            final Project project = itemDTO.getProjectId() == null ? null : projectRepository.findById(itemDTO.getProjectId())
+                    .orElseThrow(() -> new NotFoundException("project not found"));
+            item.setProject(project);
+            final Release release = itemDTO.getReleaseId() == null ? null : releaseRepository.findById(itemDTO.getReleaseId())
+                    .orElseThrow(() -> new NotFoundException("release not found"));
+            item.setRelease(release);
     }
 
     public ReferencedWarning getReferencedWarning(final Long id) {

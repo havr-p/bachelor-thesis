@@ -54,12 +54,10 @@ export class AuthComponent implements OnInit {
     }
 
     handleGithubLogin() {
-        console.log('handleGithubLogin')
         window.location.href = environment.apiUrl + getSocialLoginUrl('github');
     }
 
     handleLocalLogin($event: LoginRequest) {
-        console.log('handle local Login')
         this.authService.localLogin($event);
     }
 
