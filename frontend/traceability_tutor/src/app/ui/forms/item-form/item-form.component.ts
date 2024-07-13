@@ -182,14 +182,16 @@ export class ItemFormComponent implements OnInit, OnChanges {
   editItem(): void {
     this.submitted = true;
     if (this.itemForm.valid) {
-      const { newLink, ...formValueWithoutNewLink } = this.itemForm.value;
-      const updatedItem = {
-        ...this.formData,
+      const { newLink, status, ...formValueWithoutNewLink } = this.itemForm.value;
+      const updatedItem: Item = {
+        ...this.formData!,
         data: {
           ...formValueWithoutNewLink
-        }
+        },
+        status: this.itemForm.get('status')!.value,
       };
-      this.onItemEdit.emit(updatedItem);
+      this.formData = updatedItem;
+      this.formDataChange.emit(updatedItem);
       this.resetItemForm();
     }
   }

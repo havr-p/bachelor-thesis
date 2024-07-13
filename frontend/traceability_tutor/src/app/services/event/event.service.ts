@@ -4,7 +4,7 @@ import {
     BaseEvent,
     EditorEvent,
     EditorEventType,
-    EventSource,
+    EventSource, ItemEvent, ItemEventType,
     ItemViewEvent,
     ItemViewEventType,
     ProjectEvent,
@@ -34,6 +34,10 @@ export class EventService {
     publishProjectMenuEvent(type: ProjectEventType, payload?: any) {
         console.log('publishProjectMenuEvent', type, payload);
         this.eventSource.next(new ProjectEvent(type, payload));
+    }
+    publishItemEvent(type: ItemEventType, payload?: any) {
+        console.log('publishItemEvent', type, payload);
+        this.eventSource.next(new ItemEvent(type, payload));
     }
 
     notify(message: string, type: 'success' | 'error' | 'info' | 'warning', title?: string,

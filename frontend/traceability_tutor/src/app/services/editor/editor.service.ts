@@ -1,33 +1,32 @@
-import {ChangeDetectorRef, Injectable, Injector} from '@angular/core';
+import {ChangeDetectorRef, Injectable} from '@angular/core';
 import {ClassicPreset, NodeEditor} from "rete";
 import {
-    CreateItemDTO,
-    CreateRelationshipDTO,
-    ItemDTO, ItemType,
-    ProjectDTO,
-    RelationshipDTO,
-    RelationshipType,
-    ReleaseDTO
+  CreateItemDTO,
+  CreateRelationshipDTO,
+  ItemDTO,
+  ItemType,
+  ProjectDTO,
+  RelationshipDTO,
+  RelationshipType,
+  ReleaseDTO
 } from "../../../../gen/model";
-import {Item, mapGenericModel} from "../../models/itemMapper";
+import {Item, mapGenericModel, toItemDTO} from "../../models/itemMapper";
 import {ItemNode} from "../../items/item-node";
-import {ConnProps, ItemProps, Schemes} from "../../types";
+import {ConnProps, EditorEventType, ItemEventType, Schemes} from "../../types";
 import {concatMap, from, map, Observable, switchMap} from "rxjs";
 import {Project} from "../../models/project";
 import {Release} from "../../models/release";
-import {ActivatedRoute, Router} from "@angular/router";
 import {EventService} from "../event/event.service";
 import {StateManager} from "../../models/state";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";
 import {ReleaseResourceService} from "../../../../gen/services/release-resource";
 import {ItemResourceService} from "../../../../gen/services/item-resource";
 import {Connection} from "../../connection";
-import {AreaExtensions} from "rete-area-plugin";
+import {AreaExtensions, AreaPlugin} from "rete-area-plugin";
 import {structures} from "rete-structures";
 import {GraphCycleDetector} from "../../ui/editor/cycleValidation";
-import {unselectAll} from "../../ui/editor/create-editor";
+import {AreaExtra, unselectAll} from "../../ui/editor/create-editor";
 import {RelationshipResourceService} from "../../../../gen/services/relationship-resource";
-import {ReadonlyPlugin} from "rete-readonly-plugin";
 
 const socket = new ClassicPreset.Socket('socket');
 
@@ -38,7 +37,7 @@ export type RequestConnectionDataCallback = () => Promise<any>;
 })
 export class EditorService {
     editor!: NodeEditor<Schemes>;
-    area: any;
+    area!: AreaPlugin<Schemes, AreaExtra>;
     arrange: any;
     private createItemType: ItemType | undefined;
 
@@ -70,11 +69,31 @@ export class EditorService {
     }
 
     async createItem(dto: CreateItemDTO) {
-        console.log("in service")
         this.itemService.createItem(dto).subscribe({
             next: item => this.addItem(item)
         })
     }
+
+    editItem(item: Item) {
+        const dto = toItemDTO(item);
+        this.itemService.updateItem(item.id, dto).subscribe({
+            next: async nodeId => {
+              let node = this.editor.getNode(nodeId.toString());
+              node.updateData({nodeData: item});
+                this.eventService.publishItemEvent(ItemEventType.UPDATE_LABEL, {id: node.id, label: item.data.name});
+              await this.area.update('node', node.id);
+              this.cdr.detectChanges();
+              this.eventService.notify("Item was successfully updated.", 'success');
+              //this.eventService.publishEditorEvent(EditorEventType.REARRANGE);
+            }
+        });
+    }
+
+  private cdr!: ChangeDetectorRef;
+
+  setChangeDetectorRef(cdr: ChangeDetectorRef) {
+    this.cdr = cdr;
+  }
 
     async addConnectionToEditor(relationship: RelationshipDTO) {
         const startItem = this.editor.getNode(relationship.startItem.toString());
@@ -140,10 +159,8 @@ export class EditorService {
                 );
             }),
             concatMap(async ({ project, items }) => {
-                console.log('Project with editable items:', project, items);
                 try {
                     await this.addItems(items);
-                    console.log('Items added successfully');
                 } catch (error) {
                     console.error('Failed to add items:', error);
                     throw error;
@@ -206,10 +223,10 @@ export class EditorService {
             }
             return c;
         });
-        this.area.addPipe((c: { type: string; }) => {
+        this.area.addPipe(async (c) => {
             if (c.type === 'pointerdown') {
                 const graph = structures(editor);
-                unselectAll(graph);
+                await unselectAll(graph);
             }
             return c;
         });

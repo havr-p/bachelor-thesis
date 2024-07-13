@@ -5,8 +5,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output,
-  SimpleChanges
+  Output, SimpleChanges, ViewChild
 } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { EditorModule } from 'primeng/editor';
@@ -65,6 +64,7 @@ export class ItemInfoViewComponent implements AfterViewInit {
   relationships: ConnProps[] = [];
   protected readonly ItemType = ItemType;
 
+  @ViewChild('itemForm') itemForm!: ItemFormComponent
   constructor(
       private cdr: ChangeDetectorRef,
       private state: StateManager,
@@ -75,6 +75,9 @@ export class ItemInfoViewComponent implements AfterViewInit {
   //todo use onItemEdit
   saveChanges() {
     console.log("save canges")
+    this.itemForm.editItem();
+    this.editorService.editItem(this.item);
+    this.toggleVisible.emit(false);
   }
 
   cancelChanges() {
@@ -83,7 +86,7 @@ export class ItemInfoViewComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.viewInitialized.emit();
-    if (this.editorService && this.item) {
+    if (this.item) {
       this.relationships = this.editorService.getRelationships(this.item);
       console.log("relationships", this.relationships);
     }

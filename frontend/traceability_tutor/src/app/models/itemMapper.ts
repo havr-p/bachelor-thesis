@@ -156,3 +156,24 @@ export function constructCreateItemDTO(source: any): CreateItemDTO {
     return dto;
 }
 
+export function toItemDTO(item: Item): ItemDTO {
+    const dto: ItemDTO = {
+        ...item,
+        data: {},
+    };
+
+    const itemData = item.data as Record<string, any>;
+
+    for (const key of Object.keys(itemData)) {
+        const value = itemData[key];
+
+        if (Array.isArray(value)) {
+            dto.data[key] = JSON.stringify(value);
+        } else {
+            dto.data[key] = String(value);
+        }
+    }
+
+    return dto;
+}
+

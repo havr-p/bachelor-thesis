@@ -1,5 +1,4 @@
 import {ClassicPreset} from 'rete';
-import {ItemDTO} from "../../../gen/model";
 import {Item} from "../models/itemMapper";
 
 export class ItemNode extends ClassicPreset.Node {
@@ -16,8 +15,13 @@ export class ItemNode extends ClassicPreset.Node {
         this.selected = false;
     }
 
-    updateData(param: { selected?: boolean, highlighted?: boolean }) {
+    updateData(param: { selected?: boolean, highlighted?: boolean, nodeData?: Item }) {
         this.selected = param.selected ?? this.selected;
         this.highlighted = param.highlighted ?? this.highlighted;
+        if (param.nodeData) {
+            this.data = param.nodeData;
+            this.label = this.data.data.name
+        }
+      console.log("data changed");
     }
 }
