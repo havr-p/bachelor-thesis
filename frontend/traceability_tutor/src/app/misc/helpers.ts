@@ -1,7 +1,6 @@
 import {environment} from "../../environments/environment";
 
 export function getSocialLoginUrl(name: string) {
-    console.log("test getSocialLoginUrl")
     return `/oauth2/authorization/${name}?redirect_uri=${environment.oauthRedirectUri}`
 }
 
@@ -16,7 +15,6 @@ export const handleLogError = (error: any) => {
 }
 
 export function parseUserFromJwt(token: string) {
-    console.log("token BBBBBB");
     if (!token) {
         return
     }

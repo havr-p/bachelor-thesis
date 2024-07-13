@@ -94,8 +94,6 @@ export async function createEditor(
                         selected: true,
                       });
                     } else {
-                      console.log("i am in else")
-                      console.log(connection)
                       connection.selected = true;
                     }
                   })

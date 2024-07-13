@@ -56,7 +56,6 @@ export class DockComponent implements OnInit {
       });
       this.dockManager.updateMenuItems(this.mode);
         this.authService.currentUser.subscribe(user => {
-            console.log("user in dock", user)
             const userMenuItems: MenuItem[] = [
                 {
                     label: user?.name,
