@@ -318,13 +318,13 @@ export class EditorService {
     public getStatuses(itemType: ItemType): string[] {
         switch (itemType) {
             case ItemType.REQUIREMENT:
-                return ['Open', 'Closed', 'TBD'];
+                return ['Open', 'Closed', 'TBD'].map(s => s.toUpperCase());
             case ItemType.CODE:
-                return ['Open', 'Tested', 'Closed'];
+                return ['Open', 'Tested', 'Closed'].map(s => s.toUpperCase());
             case ItemType.TEST:
-                return ['Planned', 'Completed', 'Failed'];
+                return ['Planned', 'Completed', 'Failed'].map(s => s.toUpperCase());
             case ItemType.DESIGN:
-                return ['Open', 'Implemented', 'Closed'];
+                return ['Open', 'Implemented', 'Closed'].map(s => s.toUpperCase());
             default:
                 return [];
         }
