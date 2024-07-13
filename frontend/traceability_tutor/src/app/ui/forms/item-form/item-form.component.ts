@@ -34,7 +34,6 @@ import {Item} from "../../../models/itemMapper";
 })
 export class ItemFormComponent implements OnInit, OnChanges {
   @Output() onItemCreate = new EventEmitter<any>();
-  @Output() onItemEdit = new EventEmitter<any>();
   itemForm!: FormGroup;
   submitted = false;
   statuses: string[] = [];
@@ -43,6 +42,7 @@ export class ItemFormComponent implements OnInit, OnChanges {
   itemType!: ItemType;
   @Input() visible: boolean = false;
   @Input() formData: Item | undefined;
+  @Output() formDataChange = new EventEmitter<Item>;
   @Input() mode: "create" | "update" = "create";
 
   constructor(private fb: FormBuilder,
@@ -59,12 +59,10 @@ export class ItemFormComponent implements OnInit, OnChanges {
               case EditorEventType.ADD_ITEM:
                 this.itemType = event.payload;
                 this.editorService.setCreateItemType(event.payload);
-                this.statuses = this.editorService.getStatuses(this.itemType);
                 this.initializeForm();
                 break;
               case EditorEventType.SELECT_ITEM:
-                console.log("item for edit", event.payload);
-                this.initializeForm();
+                console.log("select item");
                 break;
             }
           }
@@ -104,6 +102,7 @@ export class ItemFormComponent implements OnInit, OnChanges {
       });
     }
     this.setLinksLabel();
+    this.statuses = this.editorService.getStatuses(this.itemType);
   }
 
   private setLinksLabel(): void {

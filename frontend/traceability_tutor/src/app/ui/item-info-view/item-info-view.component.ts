@@ -74,7 +74,6 @@ export class ItemInfoViewComponent implements AfterViewInit {
 
   //todo use onItemEdit
   saveChanges() {
-    console.log("save canges")
     this.itemForm.editItem();
     this.editorService.editItem(this.item);
     this.toggleVisible.emit(false);

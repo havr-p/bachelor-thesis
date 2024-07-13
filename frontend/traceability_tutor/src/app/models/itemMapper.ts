@@ -126,6 +126,7 @@ function toTest(itemDTO: ItemDTO): Item {
             data: {
                 level: 'Test',
                 name: itemDTO.data['name'] || '',
+                description: itemDTO.data['description'] || '',
                 links: itemDTO.data['links'] ? JSON.parse(itemDTO.data['links']) : []
             }
         } as Item;

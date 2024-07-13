@@ -55,7 +55,9 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     public editorService: EditorService,
     private dockManager: DockManager
-  ) {}
+  ) {
+    this.editorService.setChangeDetectorRef(this.cdr);
+  }
 
   get statuses(): string[] {
     return this.editorService.getStatuses(this.editorService.getCreateItemType()!);
