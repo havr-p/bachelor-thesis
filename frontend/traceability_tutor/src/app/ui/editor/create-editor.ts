@@ -23,7 +23,7 @@ type Schemes = GetSchemes<
     ItemProps,
     Connection<ItemProps, ItemProps>
 >;
-type AreaExtra =
+export type AreaExtra =
     | Area2D<Schemes>
     | AngularArea2D<Schemes>
     | ContextMenuExtra
