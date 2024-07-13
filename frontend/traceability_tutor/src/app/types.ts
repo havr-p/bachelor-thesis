@@ -48,7 +48,12 @@ export enum ItemViewEventType {
 export enum EventSource {
     EDITOR = 'editor',
     ITEM_VIEW = 'item view',
-    PROJECT_MENU = 'project menu'
+    PROJECT_MENU = 'project menu',
+    ITEM = 'item',
+}
+
+export enum ItemEventType {
+    UPDATE_LABEL
 }
 
 export abstract class BaseEvent<S extends EventSource, U> {
@@ -84,6 +89,15 @@ export class ProjectEvent extends BaseEvent<
 > {
     constructor(type: ProjectEventType, payload: any) {
         super(EventSource.PROJECT_MENU, type, payload);
+    }
+}
+
+export class ItemEvent extends BaseEvent<
+    EventSource.ITEM,
+    ItemEventType
+> {
+    constructor(type: ItemEventType, payload: any) {
+        super(EventSource.ITEM, type, payload);
     }
 }
 

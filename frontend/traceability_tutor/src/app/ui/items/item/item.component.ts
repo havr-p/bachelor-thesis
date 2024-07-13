@@ -1,16 +1,17 @@
 import {
-    ChangeDetectorRef,
-    Component,
-    HostBinding,
-    HostListener,
-    Input,
-    OnChanges,
-    OnInit,
-    SimpleChanges,
+  ChangeDetectorRef,
+  Component, EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit, Output,
+  SimpleChanges,
 } from '@angular/core';
 import {ItemNode} from '../../../items/item-node';
 import {EventService} from '../../../services/event/event.service';
-import {EditorEventType} from "../../../types";
+import {BaseEvent, EditorEventType, EventSource, ItemEventType} from "../../../types";
+import {Subscription} from "rxjs";
 
 @Component({
     templateUrl: './item.component.html',
@@ -27,6 +28,8 @@ export class ItemComponent implements OnChanges, OnInit {
 
     seed = 0;
     @HostBinding('style.background-color') backgroundColor: string = '#fff';
+
+    private subscriptions: Subscription = new Subscription();
 
     constructor(
         private cdr: ChangeDetectorRef,
@@ -54,6 +57,16 @@ export class ItemComponent implements OnChanges, OnInit {
 
     ngOnInit(): void {
         this.updateShortLabel();
+        this.subscriptions.add(
+            this.eventService.event$.subscribe(async (event: BaseEvent<EventSource, ItemEventType>) => {
+                console.log('Event received:', event);
+                if (event.source === EventSource.ITEM) {
+                    if (event.type === ItemEventType.UPDATE_LABEL) {
+                      if (this.data.id === event.payload.id)
+                      this.shortLabel = event.payload.label;
+                    }
+                }
+            }));
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -81,6 +94,7 @@ export class ItemComponent implements OnChanges, OnInit {
         } else {
             this.shortLabel = label;
         }
+        this.cdr.detectChanges();
     }
 
 }
