@@ -42,6 +42,9 @@ public class Project {
     private String repoUrl;
 
     @Column(nullable = false)
+    private String repoName;
+
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -25,6 +25,10 @@ public class ProjectDTO {
 
     @NotNull
     @Size(max = 255)
+    private String repoName;
+
+    @NotNull
+    @Size(max = 255)
     private String name;
 
     @NotNull
