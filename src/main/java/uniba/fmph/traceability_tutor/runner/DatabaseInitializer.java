@@ -43,6 +43,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             new User("user@test.com", "user", "user", SecurityConfig.USER, OAuth2Provider.LOCAL)
     );
     private static final String TRACEABILITY_TUTOR_PROJECT_NAME = "Traceability Tutor";
+    private static final String TRACEABILITY_TUTOR_PROJECT_REPO_NAME = "traceability-tutor";
     private static final Project TRACEABILITY_TUTOR_PROJECT = Project.builder().lastOpened(OffsetDateTime.now())
             .name(TRACEABILITY_TUTOR_PROJECT_NAME)
             .repoUrl("https://github.com/havr-p/traceability-tutor.git")
@@ -150,6 +151,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 + " # " + (projectRepository.countByOwner(user) + 1);
         TRACEABILITY_TUTOR_PROJECT.setName(projectName);
         TRACEABILITY_TUTOR_PROJECT.setOwner(user);
+        TRACEABILITY_TUTOR_PROJECT.setRepoName(TRACEABILITY_TUTOR_PROJECT_REPO_NAME);
         return projectRepository.save(TRACEABILITY_TUTOR_PROJECT);
     }
 
