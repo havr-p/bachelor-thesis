@@ -5,7 +5,7 @@
  */
 
 export interface ProjectSettings {
-  accessToken: string;
   name: string;
   repoName: string;
+  url: string;
 }

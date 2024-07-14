@@ -21,5 +21,10 @@ export interface ProjectDTO {
    * @minLength 0
    * @maxLength 255
    */
+  repoName: string;
+  /**
+   * @minLength 0
+   * @maxLength 255
+   */
   repoUrl: string;
 }
