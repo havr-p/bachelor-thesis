@@ -24,7 +24,7 @@
 <p-dialog
           [(visible)]="createItemVisible"
           [style]="{ width: '900px' }"
-          [header]="'Create a new ' + (editorService.getCreateItemType()?.toString()?.toLowerCase() || 'item')"
+          [header]="'Create a new ' + (editorService.getCreateItemType()?.toString()?.toLowerCase() + ' item' || 'item')"
           [closable]="true"
           [draggable]="true"
           [resizable]="true">

@@ -1,4 +1,4 @@
-<form *ngIf="itemForm" [formGroup]="itemForm" (ngSubmit)="mode === 'create' ? createItem() : editItem()" class="app-form" >
+<form *ngIf="itemForm" [formGroup]="itemForm" (ngSubmit)="mode === 'create' ? createItem() : prepareFormData()" class="app-form" >
     <div class="form-field">
         <label for="name">Name</label>
         <input
@@ -38,10 +38,10 @@
             <p-dropdown formControlName="status" [options]="statuses" id="status" placeholder="Select a status"></p-dropdown>
         </div>
     </div>
-    <div class="form-field">
-        <label for="description">Description</label>
-        <textarea id="description" formControlName="description" pInputTextarea></textarea>
-    </div>
+<!--    <div class="form-field">-->
+<!--        <label for="description">Description</label>-->
+<!--        <textarea id="description" formControlName="description" pInputTextarea></textarea>-->
+<!--    </div>-->
     <ng-container *ngIf="itemForm.controls['links']">
         <div class="form-field">
             <p>{{linksLabel}}</p>
