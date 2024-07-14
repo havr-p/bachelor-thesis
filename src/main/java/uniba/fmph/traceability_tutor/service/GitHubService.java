@@ -23,7 +23,6 @@ private final WebClient webClient;
     @Setter
     private GitHub gitHub;
 
-
     public GitHubService(@Qualifier("github") WebClient webClient, ObjectMapper objectMapper) throws IOException {
         this.webClient = webClient;
         this.objectMapper = objectMapper;
