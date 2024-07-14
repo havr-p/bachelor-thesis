@@ -13,7 +13,7 @@ export interface ItemDTO {
   id: number;
   internalProjectUUID: string;
   itemType: ItemType;
-  projectId: number;
+  projectId?: number;
   releaseId?: number;
   /**
    * @minLength 0
