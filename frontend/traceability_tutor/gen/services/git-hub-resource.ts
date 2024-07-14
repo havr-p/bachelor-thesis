@@ -18,7 +18,8 @@ import {
   Observable
 } from 'rxjs'
 import type {
-  Repository
+  GetLoginParams,
+  JsonNode
 } from '../model'
 
 
@@ -43,13 +44,23 @@ type HttpClientOptions = {
 export class GitHubResourceService {
   constructor(
     private http: HttpClient,
-  ) {} getPublicRepos<TData = Repository[]>(
-     options?: HttpClientOptions
+  ) {} getLogin<TData = string>(
+    params: GetLoginParams, options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.get<TData>(
-      `/api/git/repositories`,options
+      `/api/git/login`,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+ commits<TData = JsonNode[]>(
+    projectId: number, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/git/commits/${projectId}`,options
     );
   }
 };
 
-export type GetPublicReposClientResult = NonNullable<Repository[]>
+export type GetLoginClientResult = NonNullable<string>
+export type CommitsClientResult = NonNullable<JsonNode[]>
