@@ -53,8 +53,26 @@ export class DockManager {
                     this.eventService.publishEditorEvent(EditorEventType.ADD_ITEM, data);
                   },
                 },
+                {
+                  label: 'Code item',
+                  tooltip: 'Use this command to add code item',
+                  tooltipPosition: 'bottom',
+                  command: async () => {
+                    const data = ItemType.CODE
+                    this.eventService.publishEditorEvent(EditorEventType.ADD_ITEM, data);
+                  },
+                },
               ]
-            }
+            },
+            {
+              label: 'Fetch code items',
+              tooltip: 'Use this command to fetch code items',
+              tooltipPosition: 'bottom',
+              command: async () => {
+                const data = {projectId: this.stateManager.currentProject?.id}
+                this.eventService.publishEditorEvent(EditorEventType.FETCH_CODE, data);
+              },
+            },
           ],
         },
         {
