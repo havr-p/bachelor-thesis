@@ -1,8 +1,6 @@
 package uniba.fmph.traceability_tutor.service;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.config.security.SecretsManager;
 import uniba.fmph.traceability_tutor.domain.*;
@@ -33,11 +31,12 @@ public class ProjectService {
     private final LevelMapper levelMapper;
     private final SecretsManager secretsManager;
     private final DatabaseInitializer databaseInitializer;
+    private final UserService userService;
 
     public ProjectService(ProjectRepository projectRepository, UserRepository userRepository,
                           ItemRepository itemRepository, ReleaseRepository releaseRepository,
                           ProjectMapper projectMapper, LevelMapper levelMapper, SecretsManager secretsManager,
-                          DatabaseInitializer databaseInitializer) {
+                          DatabaseInitializer databaseInitializer, UserService userService) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
@@ -46,6 +45,7 @@ public class ProjectService {
         this.levelMapper = levelMapper;
         this.secretsManager = secretsManager;
         this.databaseInitializer = databaseInitializer;
+        this.userService = userService;
     }
 
     public List<ProjectDTO> findAll() {
@@ -55,15 +55,14 @@ public class ProjectService {
     }
 
     public ProjectDTO get(Long id) {
-        var project = projectRepository.findById(id)
+        return projectRepository.findById(id)
                 .map(projectMapper::toDto)
                 .orElseThrow(() -> new NotFoundException("Project not found with id: " + id));
-        return project;
     }
 
     public Long create(CreateProjectDTO projectDTO) {
         Project project = projectMapper.toEntity(projectDTO);
-        User owner = getCurrentUser();
+        User owner = userService.getCurrentUser();
         project.setOwner(owner);
         project.setLastOpened(OffsetDateTime.now());
 
@@ -142,19 +141,20 @@ public class ProjectService {
         else throw new NotFoundException("User not found with id: " + id);
     }
 
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
-    }
 
     public boolean existsByUserAndName(String projectName) {
-        return projectRepository.existsByOwnerAndName(getCurrentUser(), projectName);
+        return projectRepository.existsByOwnerAndName(userService.getCurrentUser(), projectName);
     }
 
     public Long createDemoProject() {
-        var user = this.getCurrentUser();
+        var user = userService.getCurrentUser();
         return databaseInitializer.createDemoProject(user);
+    }
+
+    public void setVCSSecret(Long projectId) {
+        var user = userService.getCurrentUser();
+        var project = projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Project with id " + projectId + " was not found."));
+        String secret = secretsManager.retrieveSecret(user, project, UserSecretType.GITHUB_ACCESS_TOKEN);
+
     }
 }
