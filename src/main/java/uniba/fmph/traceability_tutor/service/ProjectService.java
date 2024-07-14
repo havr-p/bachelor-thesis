@@ -8,6 +8,7 @@ import uniba.fmph.traceability_tutor.mapper.LevelMapper;
 import uniba.fmph.traceability_tutor.mapper.ProjectMapper;
 import uniba.fmph.traceability_tutor.model.CreateProjectDTO;
 import uniba.fmph.traceability_tutor.model.ProjectDTO;
+import uniba.fmph.traceability_tutor.model.ProjectSettings;
 import uniba.fmph.traceability_tutor.model.UserSecretType;
 import uniba.fmph.traceability_tutor.repos.*;
 import uniba.fmph.traceability_tutor.runner.DatabaseInitializer;
@@ -156,5 +157,24 @@ public class ProjectService {
         var project = projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Project with id " + projectId + " was not found."));
         String secret = secretsManager.retrieveSecret(user, project, UserSecretType.GITHUB_ACCESS_TOKEN);
 
+    }
+
+    public ProjectSettings getProjectSettings(Long id) {
+        var project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project with id " + id + " was not found."));
+        var user = userService.getCurrentUser();
+        String secret = secretsManager.retrieveSecret(user, project, UserSecretType.GITHUB_ACCESS_TOKEN);
+        return new ProjectSettings(project.getName(), project.getRepoName(), secret);
+    }
+
+    public void updateSettings(Long id, ProjectSettings settings) {
+        var project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project with id " + id + " was not found."));
+        project.setName(settings.name());
+        project.setRepoName(settings.repoName());
+        secretsManager.storeSecret(
+                userService.getCurrentUser(),
+                UserSecretType.GITHUB_ACCESS_TOKEN,
+                settings.accessToken(),
+                project
+        );
     }
 }

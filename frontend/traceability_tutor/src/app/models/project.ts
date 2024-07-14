@@ -6,6 +6,7 @@ export class Project implements ProjectDTO {
     name: string;
     owner: number;
     repoUrl: string;
+    repoName: string;
     releases: Release[] = [];
     levels: LevelDTO[] = [];
     lastOpened: Date;
@@ -15,6 +16,7 @@ export class Project implements ProjectDTO {
         this.name = projectDTO.name;
         this.owner = projectDTO.owner;
         this.repoUrl = projectDTO?.repoUrl || '';
+        this.repoName = projectDTO?.repoName || '';
         this.levels = projectDTO.levels;
         this.lastOpened = projectDTO.lastOpened;
     }

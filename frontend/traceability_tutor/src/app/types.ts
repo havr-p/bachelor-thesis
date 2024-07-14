@@ -31,6 +31,8 @@ export enum EditorEventType {
     SAVE_ITERATION = 'save iteration',
     CHOOSE_SECOND_ITEM = 'choose second item',
     REARRANGE = 'rearrange',
+    OPEN_SETTINGS = 'open settings',
+    FETCH_CODE = 'fetch code',
 }
 
 export enum ProjectEventType {

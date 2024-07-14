@@ -136,6 +136,11 @@ export class DockManager {
           label: 'Projects menu',
           routerLink: '/projects',
         },
+        {label: 'Settings',
+          command: () => {
+            this.eventService.publishEditorEvent(EditorEventType.OPEN_SETTINGS);
+          }},
+
       ];
     } else if (mode === 'projects') {
       items = [

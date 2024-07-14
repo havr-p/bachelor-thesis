@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import uniba.fmph.traceability_tutor.exception.ProjectWithNameExistsException;
 import uniba.fmph.traceability_tutor.model.CreateProjectDTO;
 import uniba.fmph.traceability_tutor.model.ProjectDTO;
+import uniba.fmph.traceability_tutor.model.ProjectSettings;
 import uniba.fmph.traceability_tutor.service.ProjectService;
 import uniba.fmph.traceability_tutor.util.ReferencedException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
@@ -79,6 +80,17 @@ public class ProjectResource {
     @GetMapping("/demo")
     public ResponseEntity<Long> setupDemoProject() {
        return new ResponseEntity<>(projectService.createDemoProject(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/settings/{id}")
+    public ResponseEntity<ProjectSettings> getProjectSettings(@PathVariable(name = "id") final Long id) {
+        return ResponseEntity.ok(projectService.getProjectSettings(id));
+    }
+
+    @PutMapping("/settings/{id}")
+    public ResponseEntity<Long> updateProjectSettings(@PathVariable(name = "id") final Long id, @RequestBody @Valid final ProjectSettings settings) {
+        projectService.updateSettings(id, settings);
+        return ResponseEntity.ok(id);
     }
 
 

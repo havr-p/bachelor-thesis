@@ -35,6 +35,7 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {APIInterceptor} from "./interceptors/api-interceptor";
 import {CreateRelationshipFormComponent} from "./ui/forms/create-relationship-form/create-relationship-form.component";
 import {ItemFormComponent} from "./ui/forms/item-form/item-form.component";
+import {SettingsComponent} from "./ui/forms/settings/settings.component";
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -77,6 +78,7 @@ import {ItemFormComponent} from "./ui/forms/item-form/item-form.component";
         DockComponent,
         CreateRelationshipFormComponent,
         ItemFormComponent,
+        SettingsComponent,
     ],
     providers: [
         {

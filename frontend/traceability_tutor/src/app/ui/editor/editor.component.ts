@@ -46,6 +46,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   protected readonly ItemType = ItemType;
   private destroyEditor: any;
   private subscriptions: Subscription = new Subscription();
+  settingsVisible = false;
 
   constructor(
     private injector: Injector,
@@ -152,6 +153,8 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
       case EditorEventType.REMOVE_ITEM:
         await this.editorService.deleteItemWithConnections(event.payload);
         break;
+      case EditorEventType.OPEN_SETTINGS:
+        this.openSettingsDialog()
     }
   }
 
@@ -227,5 +230,9 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
 
   onItemEdit($event: any) {
     console.log("onItemEdit", $event);
+  }
+
+  private openSettingsDialog() {
+      this.settingsVisible = true;
   }
 }

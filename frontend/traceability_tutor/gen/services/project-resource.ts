@@ -19,7 +19,8 @@ import {
 } from 'rxjs'
 import type {
   CreateProjectDTO,
-  ProjectDTO
+  ProjectDTO,
+  ProjectSettings
 } from '../model'
 
 
@@ -67,6 +68,22 @@ export class ProjectResourceService {
       `/api/projects/${id}`,options
     );
   }
+ getProjectSettings<TData = ProjectSettings>(
+    id: number, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/projects/settings/${id}`,options
+    );
+  }
+ updateProjectSettings<TData = number>(
+    id: number,
+    projectSettings: ProjectSettings, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.put<TData>(
+      `/api/projects/settings/${id}`,
+      projectSettings,options
+    );
+  }
  updateLastOpened<TData = number>(
     id: number, options?: HttpClientOptions
   ): Observable<TData>  {
@@ -108,6 +125,8 @@ export class ProjectResourceService {
 export type GetProjectClientResult = NonNullable<ProjectDTO>
 export type UpdateProjectClientResult = NonNullable<number>
 export type DeleteProjectClientResult = NonNullable<void>
+export type GetProjectSettingsClientResult = NonNullable<ProjectSettings>
+export type UpdateProjectSettingsClientResult = NonNullable<number>
 export type UpdateLastOpenedClientResult = NonNullable<number>
 export type GetAllProjectsClientResult = NonNullable<ProjectDTO[]>
 export type CreateProjectClientResult = NonNullable<number>

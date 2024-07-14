@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Project} from "./project";
-import {ProjectDTO, RelationshipType, ReleaseDTO} from "../../../gen/model";
+import {ProjectDTO, ProjectSettings, RelationshipType, ReleaseDTO} from "../../../gen/model";
 import {Release} from "./release";
 import {
   CURRENT_PROJECT_KEY,
@@ -22,6 +22,7 @@ export interface EditorState {
 })
 export class StateManager {
     public currentProject: ProjectDTO | undefined;
+    public currentProjectSettings: ProjectSettings | undefined;
     public currentRelease: ReleaseDTO | undefined;
     private projects: Map<number, ProjectDTO> = new Map();
     private editorState: EditorState | undefined;
