@@ -59,7 +59,7 @@ export class ItemComponent implements OnChanges, OnInit {
         this.updateShortLabel();
         this.subscriptions.add(
             this.eventService.event$.subscribe(async (event: BaseEvent<EventSource, ItemEventType>) => {
-                console.log('Event received:', event);
+                //console.log('Event received:', event);
                 if (event.source === EventSource.ITEM) {
                     if (event.type === ItemEventType.UPDATE_LABEL) {
                       if (this.data.id === event.payload.id)

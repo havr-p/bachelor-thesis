@@ -55,7 +55,7 @@ import {ItemFormComponent} from "../forms/item-form/item-form.component";
     JsonPipe,
   ],
 })
-export class ItemInfoViewComponent implements AfterViewInit {
+export class ItemInfoViewComponent implements AfterViewInit, OnChanges {
   @Input() item!: Item;
   @Output() toggleVisible = new EventEmitter<boolean>();
   @Output() viewInitialized = new EventEmitter<void>();
@@ -72,9 +72,8 @@ export class ItemInfoViewComponent implements AfterViewInit {
   }
 
 
-  //todo use onItemEdit
   saveChanges() {
-    this.itemForm.editItem();
+    this.itemForm.prepareFormData();
     this.editorService.editItem(this.item);
     this.toggleVisible.emit(false);
   }
@@ -85,11 +84,13 @@ export class ItemInfoViewComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.viewInitialized.emit();
+    this.cdr.detectChanges();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
     if (this.item) {
       this.relationships = this.editorService.getRelationships(this.item);
-      console.log("relationships", this.relationships);
     }
-    this.cdr.detectChanges();
   }
 
 

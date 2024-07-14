@@ -67,7 +67,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptions.add(
       this.eventService.event$.subscribe(async (event: BaseEvent<EventSource, EditorEventType>) => {
-        console.log('Event received:', event);
+        //console.log('Event received:', event);
         if (event.source === EventSource.EDITOR) {
           await this.handleEditorEvent(event);
         } else if (event.source === EventSource.ITEM_VIEW) {

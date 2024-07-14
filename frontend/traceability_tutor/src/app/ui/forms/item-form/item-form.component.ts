@@ -178,7 +178,7 @@ export class ItemFormComponent implements OnInit, OnChanges {
     }
   }
 
-  editItem(): void {
+  prepareFormData(): void {
     this.submitted = true;
     if (this.itemForm.valid) {
       const { newLink, status, ...formValueWithoutNewLink } = this.itemForm.value;

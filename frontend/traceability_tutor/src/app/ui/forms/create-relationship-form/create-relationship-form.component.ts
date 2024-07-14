@@ -91,7 +91,7 @@ export class CreateRelationshipFormComponent {
                       isValid => (isValid ? null : { notCreatingCycle: true })
                   ));
               }),
-              catchError(() => of(null)) // Обработка возможных ошибок
+              catchError(() => of(null)) // possible errors handling
           );
     };
   }
