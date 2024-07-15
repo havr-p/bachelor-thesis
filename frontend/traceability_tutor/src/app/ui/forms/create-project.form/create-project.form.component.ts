@@ -111,7 +111,7 @@ export class CreateProjectFormComponent {
         this.forceUpdateOrderList();
         console.log(this.levels.errors);
 
-        console.log('Form Submitted!', this.projectForm.value);
+        //console.log('Form Submitted!', this.projectForm.value);
         if (this.projectForm.valid) {
             const createProjectDTO = {
                 owner: this.authService.currentUserValue?.id!,
@@ -120,7 +120,7 @@ export class CreateProjectFormComponent {
                 accessToken: this.projectForm.value.accessToken!,
                 levels: this.levels.value,
             };
-            console.log(createProjectDTO);
+            //console.log(createProjectDTO);
             this.projectService.createProject(createProjectDTO).subscribe({
                 next: (projectId) => {
                     this.eventService.notify('Project was created successfully', 'success');

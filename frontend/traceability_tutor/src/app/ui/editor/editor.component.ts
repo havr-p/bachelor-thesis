@@ -20,6 +20,7 @@ import {EditorService} from "../../services/editor/editor.service";
 import {Subscription} from "rxjs";
 import {DockManager} from "../dock/dock-manager";
 import {constructCreateItemDTO, Item} from "../../models/itemMapper";
+import {StateManager} from "../../models/state";
 
 const socket = new ClassicPreset.Socket('socket');
 
@@ -49,13 +50,14 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   settingsVisible = false;
 
   constructor(
-    private injector: Injector,
-    private route: ActivatedRoute,
-    private eventService: EventService,
-    private router: Router,
-    private cdr: ChangeDetectorRef,
-    public editorService: EditorService,
-    private dockManager: DockManager
+      private injector: Injector,
+      private route: ActivatedRoute,
+      private eventService: EventService,
+      private router: Router,
+      private cdr: ChangeDetectorRef,
+      public editorService: EditorService,
+      private dockManager: DockManager,
+      public state: StateManager,
   ) {
     this.editorService.setChangeDetectorRef(this.cdr);
   }
@@ -174,7 +176,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private async handleSecondItemSelection(payload: any): Promise<void> {
-    console.log('Handling second item selection:', payload);
+    //console.log('Handling second item selection:', payload);
       const secondItem: ItemNode = payload.item;
       const firstItem = this.firstSelectedItem;
       if (firstItem && secondItem) {
@@ -229,7 +231,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   onItemEdit($event: any) {
-    console.log("onItemEdit", $event);
+    //console.log("onItemEdit", $event);
   }
 
   private openSettingsDialog() {

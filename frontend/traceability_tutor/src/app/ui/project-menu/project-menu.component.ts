@@ -83,7 +83,7 @@ export class ProjectMenuComponent implements OnInit {
     private setupDemo() {
         this.projectService.setupDemoProject().subscribe({
                 next: projectId => {
-                    console.log("Demo project created with id " + projectId);
+                    //console.log("Demo project created with id " + projectId);
                     this.fetchUserProjects();
                     this.navigationService.navigateToProjectMenu();
                     this.eventService.notify("Your demo project was created! You can now access it via project menu.", 'success');

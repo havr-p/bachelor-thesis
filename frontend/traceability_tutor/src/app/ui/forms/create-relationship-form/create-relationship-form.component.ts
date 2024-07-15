@@ -48,7 +48,7 @@ export class CreateRelationshipFormComponent {
   ngOnInit(): void {
     this.initializeForm();
     this.eventService.event$.subscribe(async (event: BaseEvent<EventSource, EditorEventType>) => {
-      console.log('Event received in form component:', event);
+      //console.log('Event received in form component:', event);
       if (event.source === EventSource.EDITOR) {
         switch (event.type) {
           case EditorEventType.ADD_RELATIONSHIP:

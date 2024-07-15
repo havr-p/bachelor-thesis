@@ -23,7 +23,7 @@ export class EventService {
     }
 
     publishEditorEvent(type: EditorEventType, payload?: any) {
-        console.log('publishEditorEvent', type, payload);
+        //console.log('publishEditorEvent', type, payload);
         this.eventSource.next(new EditorEvent(type, payload));
     }
 
@@ -32,11 +32,11 @@ export class EventService {
     }
 
     publishProjectMenuEvent(type: ProjectEventType, payload?: any) {
-        console.log('publishProjectMenuEvent', type, payload);
+        //console.log('publishProjectMenuEvent', type, payload);
         this.eventSource.next(new ProjectEvent(type, payload));
     }
     publishItemEvent(type: ItemEventType, payload?: any) {
-        console.log('publishItemEvent', type, payload);
+        //console.log('publishItemEvent', type, payload);
         this.eventSource.next(new ItemEvent(type, payload));
     }
 

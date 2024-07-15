@@ -41,7 +41,7 @@ export class AuthComponent implements OnInit {
     ngOnInit(): void {
         this.authenticated = this.authService.isAuthenticated();
         this.authService.currentUser.subscribe(user => {
-          console.log(this.currentUser?.accessToken);
+          //console.log(this.currentUser?.accessToken);
             this.currentUser = user;
             if (this.currentUser) {
               this.router.navigateByUrl('/projects');
@@ -63,7 +63,7 @@ export class AuthComponent implements OnInit {
     }
 
     handleSignUp($event: SignUpRequest) {
-        console.log($event);
+        //console.log($event);
         this.authService.signup($event);
     }
 
