@@ -35,22 +35,15 @@ public class GitHubResource {
 
 
     private final WebClient webClient;
-    private final GitHubService githubService;
-    private final ProjectService projectService;
-
     private final UserService userService;
-    private final UserRepository userRepository;
     private final SecretsManager secretsManager;
     private final ProjectRepository projectRepository;
 
-    public GitHubResource(@Qualifier("github") WebClient webClient, GitHubService githubService, ProjectService projectService, UserService userService,
-                          UserRepository userRepository, SecretsManager secretsManager,
+    public GitHubResource(@Qualifier("github") WebClient webClient, UserService userService,
+                          SecretsManager secretsManager,
                           ProjectRepository projectRepository) {
         this.webClient = webClient;
-        this.githubService = githubService;
-        this.projectService = projectService;
         this.userService = userService;
-        this.userRepository = userRepository;
         this.secretsManager = secretsManager;
         this.projectRepository = projectRepository;
     }
@@ -78,6 +71,7 @@ public class GitHubResource {
                 .block();
     }
 
+    @Operation(security = {@SecurityRequirement(name = BEARER_SECURITY_SCHEME)})
     @GetMapping("/login")
     public Mono<String> getLogin(Long projectId) throws IOException {
         String url = "/user";
