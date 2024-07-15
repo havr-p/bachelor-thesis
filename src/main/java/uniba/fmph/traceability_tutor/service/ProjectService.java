@@ -170,6 +170,7 @@ public class ProjectService {
         var project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project with id " + id + " was not found."));
         project.setName(settings.name());
         project.setRepoName(settings.repoName());
+        projectRepository.save(project);
         secretsManager.storeSecret(
                 userService.getCurrentUser(),
                 UserSecretType.GITHUB_ACCESS_TOKEN,

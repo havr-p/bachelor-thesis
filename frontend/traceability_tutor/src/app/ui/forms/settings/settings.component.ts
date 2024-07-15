@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ButtonModule} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
 import {InputTextModule} from "primeng/inputtext";
@@ -10,7 +10,7 @@ import {InputMaskModule} from "primeng/inputmask";
 import {ProjectSettings} from "../../../../../gen/model";
 import {StateManager} from "../../../models/state";
 import {ProjectResourceService} from "../../../../../gen/services/project-resource";
-import {lastValueFrom} from "rxjs";
+import {DialogModule} from "primeng/dialog";
 
 @Component({
   selector: 'app-settings',
@@ -23,38 +23,88 @@ import {lastValueFrom} from "rxjs";
     NgIf,
     PaginatorModule,
     ReactiveFormsModule,
-    InputMaskModule
+    InputMaskModule,
+    DialogModule
   ],
-  templateUrl: './settings.component.html',
-  styleUrl: './settings.component.scss'
+  template: `
+    <p-dialog [(visible)]="isVisible"
+              [style]="{ width: '900px' }"
+              [header]="'Project settings'"
+              [closable]="true"
+              [draggable]="true"
+              [resizable]="true">
+      <form [formGroup]="settingsForm" (ngSubmit)="submitForm()" class="app-form">
+        <div class="form-field">
+          <label for="name">Name</label>
+          <input id="name" formControlName="name" pInputText />
+        </div>
+        <div class="form-field">
+          <label for="repoName">Repository name</label>
+          <input id="repoName" formControlName="repoName" pInputText />
+        </div>
+        <div class="form-field">
+          <label for="accessToken">VCS token</label>
+          <input id="accessToken" formControlName="accessToken" pInputText />
+        </div>
+        <p-button label="Save" type="submit" [disabled]="settingsForm.invalid"></p-button>
+      </form>
+    </p-dialog>
+  `,
 })
-export class SettingsComponent implements OnChanges{
+export class SettingsComponent implements OnChanges {
+  @Input() visible = false;
+  @Output() visibleChange = new EventEmitter<boolean>();
 
-  constructor(private projectService: ProjectResourceService, private state: StateManager) {
-  }
-  @Input() projectId = 0;
+  isVisible = false;
+
   projectSettings!: ProjectSettings;
+  projectId = 0;
 
-  settingsForm = new FormBuilder().group({
+  settingsForm = this.formBuilder.group({
     name: ['', [Validators.required]],
     repoName: ['', [Validators.required]],
     accessToken: ['', [Validators.required]]
   });
 
+  constructor(
+      private formBuilder: FormBuilder,
+      private projectService: ProjectResourceService,
+      private state: StateManager
+  ) {}
 
-
-
-  submitForm() {
-    if (this.settingsForm.valid) {
-      const formValue: NonNullable<ProjectSettings> = this.settingsForm.getRawValue() as NonNullable<ProjectSettings>
-      this.projectService.updateProjectSettings(this.projectId, formValue);
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['visible'] && changes['visible'].currentValue !== this.isVisible) {
+      this.isVisible = this.visible;
+      if (this.isVisible) {
+        this.loadProjectSettings();
+      }
     }
   }
 
-  async ngOnChanges(changes: SimpleChanges) {
-    if (this.projectId) {
-      this.projectId = this.state.currentProject?.id!;
-      this.projectSettings = await lastValueFrom(this.projectService.getProjectSettings(this.projectId));
+  private loadProjectSettings() {
+    this.projectId = this.state.currentProject?.id!;
+    this.projectService.getProjectSettings(this.projectId).subscribe({
+      next: (value) => {
+        this.projectSettings = value;
+        this.settingsForm.patchValue(value);
+      }
+    });
+  }
+
+  submitForm() {
+    if (this.settingsForm.valid) {
+      const formValue = this.settingsForm.getRawValue() as NonNullable<ProjectSettings>;
+      this.projectService.updateProjectSettings(this.projectId, formValue).subscribe({
+        next: () => {
+          this.closeDialog();
+        }
+      });
     }
+  }
+
+  private closeDialog() {
+    this.isVisible = false;
+    this.visibleChange.emit(false);
+    this.settingsForm.reset();
   }
 }

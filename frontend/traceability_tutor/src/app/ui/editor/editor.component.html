@@ -35,14 +35,9 @@
 
 </p-dialog>
 
-<p-dialog [(visible)]="settingsVisible"
-          [style]="{ width: '900px' }"
-          [header]="'Project settings'"
-          [closable]="true"
-          [draggable]="true"
-          [resizable]="true">
-    <app-settings [projectId]="this.state.currentProject?.id!"></app-settings>
-</p-dialog>
+
+    <app-settings [(visible)]="settingsVisible"></app-settings>
+
 
 
 

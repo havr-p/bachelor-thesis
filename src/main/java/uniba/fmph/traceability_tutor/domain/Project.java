@@ -71,6 +71,9 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Level> levels;
 
+    @OneToOne(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true, fetch = FetchType.EAGER)
+    private UserSecret userSecret;
+
     public Project() {
 
     }

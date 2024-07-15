@@ -17,7 +17,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {createEditor} from "./create-editor";
 import {ItemType} from "../../../../gen/model";
 import {EditorService} from "../../services/editor/editor.service";
-import {Subscription} from "rxjs";
+import {lastValueFrom, Subscription} from "rxjs";
 import {DockManager} from "../dock/dock-manager";
 import {constructCreateItemDTO, Item} from "../../models/itemMapper";
 import {StateManager} from "../../models/state";
@@ -48,6 +48,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   private destroyEditor: any;
   private subscriptions: Subscription = new Subscription();
   settingsVisible = false;
+  projectId = 0;
 
   constructor(
       private injector: Injector,
@@ -235,6 +236,6 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private openSettingsDialog() {
-      this.settingsVisible = true;
+    this.settingsVisible = true;
   }
 }

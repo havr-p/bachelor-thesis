@@ -26,7 +26,10 @@ public class UserSecret {
     @Column(nullable = false)
     private String secretValue;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
+
+    @OneToOne
+    @JoinTable(name = "UserSecret_project",
+            joinColumns = @JoinColumn(name = "userSecret_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
     private Project project;
 }
