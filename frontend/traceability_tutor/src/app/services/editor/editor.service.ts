@@ -80,7 +80,7 @@ export class EditorService {
             next: async nodeId => {
               let node = this.editor.getNode(nodeId.toString());
               node.updateData({nodeData: item});
-                this.eventService.publishItemEvent(ItemEventType.UPDATE_LABEL, {id: node.id, label: item.data.name});
+                this.eventService.publishItemEvent(ItemEventType.UPDATE_DATA, {id: Number(node.id), itemDTO: dto});
               await this.area.update('node', node.id);
               this.cdr.detectChanges();
               this.eventService.notify("Item was successfully updated.", 'success');
@@ -170,7 +170,7 @@ export class EditorService {
     }
 
     public loadEditableRelationships(projectId: number): void {
-        console.log('nodes', this.editor.getNodes());
+        //console.log('nodes', this.editor.getNodes());
         this.relationshipService.getProjectEditableRelationships(projectId).pipe().subscribe({
             next: async (relationships: RelationshipDTO[]) => {
                 console.log('Editable relationships:', relationships);
@@ -315,7 +315,7 @@ export class EditorService {
     }
 
     public focusOnRelationship(relationship: ConnProps): void {
-        console.log(relationship);
+        //console.log(relationship);
         const graph = structures(this.editor);
         unselectAll(graph);
         relationship.updateData({ selected: true });
@@ -396,7 +396,7 @@ export class EditorService {
     }
 
     async deleteItemWithConnections(payload: {item: string, relationships: number[]}) {
-        console.log(payload)
+        //console.log(payload)
         from(this.editor.removeNode(payload.item)).pipe(
             concatMap(() => from(payload.relationships).pipe(
                 concatMap(conn => from(this.editor.removeConnection(conn.toString())).pipe(

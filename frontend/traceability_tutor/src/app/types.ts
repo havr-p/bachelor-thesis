@@ -55,7 +55,7 @@ export enum EventSource {
 }
 
 export enum ItemEventType {
-    UPDATE_LABEL
+    UPDATE_DATA
 }
 
 export abstract class BaseEvent<S extends EventSource, U> {

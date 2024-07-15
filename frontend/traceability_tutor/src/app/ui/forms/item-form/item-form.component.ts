@@ -62,7 +62,7 @@ export class ItemFormComponent implements OnInit, OnChanges {
                 this.initializeForm();
                 break;
               case EditorEventType.SELECT_ITEM:
-                console.log("select item");
+                //console.log("select item");
                 break;
             }
           }

@@ -21,6 +21,7 @@ export class ItemNode extends ClassicPreset.Node {
         if (param.nodeData) {
             this.data = param.nodeData;
             this.label = this.data.data.name
+
         }
       console.log("data changed");
     }

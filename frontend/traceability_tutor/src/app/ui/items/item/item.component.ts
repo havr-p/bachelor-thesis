@@ -12,6 +12,7 @@ import {ItemNode} from '../../../items/item-node';
 import {EventService} from '../../../services/event/event.service';
 import {BaseEvent, EditorEventType, EventSource, ItemEventType} from "../../../types";
 import {Subscription} from "rxjs";
+import {EditorService} from "../../../services/editor/editor.service";
 
 @Component({
     templateUrl: './item.component.html',
@@ -34,6 +35,7 @@ export class ItemComponent implements OnChanges, OnInit {
     constructor(
         private cdr: ChangeDetectorRef,
         private eventService: EventService,
+        private editorService: EditorService
     ) {
         this.cdr.detach();
     }
@@ -61,9 +63,14 @@ export class ItemComponent implements OnChanges, OnInit {
             this.eventService.event$.subscribe(async (event: BaseEvent<EventSource, ItemEventType>) => {
                 //console.log('Event received:', event);
                 if (event.source === EventSource.ITEM) {
-                    if (event.type === ItemEventType.UPDATE_LABEL) {
-                      if (this.data.id === event.payload.id)
-                      this.shortLabel = event.payload.label;
+                  console.log("event source", event)
+                    if (event.type === ItemEventType.UPDATE_DATA) {
+                      console.log("update event", event);
+                      if (Number(this.data.id) === event.payload.itemDTO.id) {
+                        console.log("in event");
+                        this.shortLabel = event.payload.itemDTO.data.name;
+                        this.backgroundColor = this.editorService.getLevelColor(event.payload.itemDTO) as string;
+                      }
                     }
                 }
             }));
