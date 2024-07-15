@@ -13,13 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import uniba.fmph.traceability_tutor.config.security.SecretsManager;
 import uniba.fmph.traceability_tutor.config.security.SecurityConfig;
 import uniba.fmph.traceability_tutor.config.security.oauth.OAuth2Provider;
 import uniba.fmph.traceability_tutor.domain.*;
-import uniba.fmph.traceability_tutor.model.CreateItemDTO;
-import uniba.fmph.traceability_tutor.model.CreateRelationshipDTO;
-import uniba.fmph.traceability_tutor.model.ItemType;
-import uniba.fmph.traceability_tutor.model.RelationshipType;
+import uniba.fmph.traceability_tutor.model.*;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.ProjectRepository;
 import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
@@ -121,6 +119,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 .toList();
 
         relationshipRepository.saveAll(relationships);
+        //secretsManager.storeSecret(project.getOwner(), UserSecretType.GITHUB_ACCESS_TOKEN, githubSecret, project);
     }
 
     private Item mapToEntity(Project project, final CreateItemDTO createItemDTO) {
