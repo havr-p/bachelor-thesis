@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -96,15 +97,20 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         for (TempCreateItemDTO dto : tempItemDtos) {
             Item item = mapToEntity(project, dto);
-            item.setId(dto.getId());
             Item savedItem = itemRepository.saveAndFlush(item);
-
+            if (!dto.mapped)
             oldToNewIdMap.put(dto.getId(), savedItem.getId());
+            else {
+                itemRepository.updateIdById(dto.getId(), savedItem.getId());
+                oldToNewIdMap.put(dto.id, dto.id);
+            }
         }
 
         List<TempCreateRelationshipDTO> tempCreateRelationshipDTOS;
         try {
             tempCreateRelationshipDTOS = parseJsonCreateRelationshipDTOs();
+            log.info("tempDTOs for items : {}", tempItemDtos);
+            log.info("tempDTOs for relationship : {}", tempCreateRelationshipDTOS);
         } catch (IOException e) {
             e.printStackTrace();
             tempCreateRelationshipDTOS = List.of();
@@ -136,11 +142,14 @@ public class DatabaseInitializer implements CommandLineRunner {
     }
 
     private Relationship mapToEntity(final CreateRelationshipDTO dto, Map<Long, Long> oldToNewIdMap) {
+        assert itemRepository.existsById(13393L);
+        assert itemRepository.existsById(13406L);
+        assert itemRepository.existsById(13408L);
         Relationship relationship = new Relationship();
         relationship.setType(dto.getType());
         relationship.setDescription(dto.getDescription());
         relationship.setStartItem(itemRepository.findById(oldToNewIdMap.get(dto.getStartItem())).orElseThrow(() -> new NotFoundException("Item not found")));
-        relationship.setEndItem(itemRepository.findById(oldToNewIdMap.get(dto.getEndItem())).orElseThrow(() -> new NotFoundException("Item not found")));
+        relationship.setEndItem(itemRepository.findById(oldToNewIdMap.get(dto.getEndItem())).orElseThrow(() -> new NotFoundException("Item with id = " +  oldToNewIdMap.get(dto.getEndItem()) + " was not found")));
         return relationship;
     }
 
@@ -161,8 +170,10 @@ public class DatabaseInitializer implements CommandLineRunner {
     }
 
     @Getter
+    @ToString
     private static class TempCreateItemDTO extends CreateItemDTO {
         private final Long id;
+        private Boolean mapped = null;
 
         @JsonCreator
         public TempCreateItemDTO(
@@ -170,15 +181,18 @@ public class DatabaseInitializer implements CommandLineRunner {
                 @JsonProperty("projectId") @NotBlank Long projectId,
                 @JsonProperty("itemType") @NotNull ItemType itemType,
                 @JsonProperty("data") @NotNull Map<String, String> data,
-                @JsonProperty("status") @Size(max = 255) String status) {
+                @JsonProperty("status") @Size(max = 255) String status,
+                @JsonProperty(value = "mapped", required = false) Boolean mapped) {
             super(projectId, itemType, data, status);
             this.id = id;
+            this.mapped = (mapped != null) ? mapped : false;
             this.setProjectId(TRACEABILITY_TUTOR_PROJECT.getId());
         }
 
     }
 
     @Getter
+    @ToString
     private static class TempCreateRelationshipDTO extends CreateRelationshipDTO {
         private final Long id;
 
