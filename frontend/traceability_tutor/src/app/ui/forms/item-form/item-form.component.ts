@@ -194,4 +194,13 @@ export class ItemFormComponent implements OnInit, OnChanges {
       this.resetItemForm();
     }
   }
+
+  isValidUrl(url: string): boolean {
+    try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
