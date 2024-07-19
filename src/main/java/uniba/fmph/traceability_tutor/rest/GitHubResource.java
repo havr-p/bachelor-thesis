@@ -39,29 +39,16 @@ public class GitHubResource {
     private final UserService userService;
     private final SecretsManager secretsManager;
     private final ProjectRepository projectRepository;
-    private final ItemRepository itemRepository;
-    private final ObjectMapper objectMapper;
-    private final ItemMapper itemMapper;
-    private final RelationshipService relationshipService;
-    private final RelationshipRepository relationshipRepository;
     private final GitHubService gitHubService;
 
     public GitHubResource(@Qualifier("github") WebClient webClient, UserService userService,
                           SecretsManager secretsManager,
                           ProjectRepository projectRepository,
-                          ItemRepository itemRepository,
-                          ObjectMapper objectMapper,
-                          ItemMapper itemMapper,
-                          RelationshipService relationshipService, RelationshipRepository relationshipRepository, GitHubService gitHubService) {
+                          GitHubService gitHubService) {
         this.webClient = webClient;
         this.userService = userService;
         this.secretsManager = secretsManager;
         this.projectRepository = projectRepository;
-        this.itemRepository = itemRepository;
-        this.objectMapper = objectMapper;
-        this.itemMapper = itemMapper;
-        this.relationshipService = relationshipService;
-        this.relationshipRepository = relationshipRepository;
         this.gitHubService = gitHubService;
     }
 

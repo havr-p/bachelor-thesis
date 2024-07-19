@@ -39,6 +39,12 @@ npm i
 npm start
 ```
 
+to disable Hyper-V run:  
+Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All  
+to enable it back:  
+Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All  
+restart is required after each command
+
 
 ## Further readings
 
