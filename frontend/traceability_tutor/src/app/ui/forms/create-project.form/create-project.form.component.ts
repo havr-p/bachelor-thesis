@@ -12,7 +12,6 @@ import {
 } from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
 import {EventService} from '../../../services/event/event.service';
-import {ProjectResourceService} from '../../../../../gen/services/project-resource';
 import {StateManager} from '../../../models/state';
 import {AuthService} from '../../../services/auth/auth.service';
 import {NavigationService} from '../../../services/navigation.service';
@@ -22,6 +21,7 @@ import {ButtonModule} from 'primeng/button';
 import {ColorPickerModule} from 'primeng/colorpicker';
 import {NgxColorsModule} from "ngx-colors";
 import {NgIf} from "@angular/common";
+import {ProjectResourceService} from "../../../../../gen/services/project-resource";
 
 export const babokLevels: LevelDTO[] = [
     {name: 'Business', color: '#fcf6bd'},

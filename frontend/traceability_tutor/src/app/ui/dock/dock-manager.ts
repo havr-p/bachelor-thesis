@@ -64,15 +64,6 @@ export class DockManager {
                 },
               ]
             },
-            {
-              label: 'Fetch code items',
-              tooltip: 'Use this command to fetch code items',
-              tooltipPosition: 'bottom',
-              command: async () => {
-                const data = {projectId: this.stateManager.currentProject?.id}
-                this.eventService.publishEditorEvent(EditorEventType.FETCH_CODE, data);
-              },
-            },
           ],
         },
         {
@@ -117,6 +108,15 @@ export class DockManager {
               label: 'Export',
               command: () => {
                 this.eventService.publishEditorEvent(EditorEventType.EXPORT);
+              },
+            },
+            {
+              label: 'Fetch code items',
+              tooltip: 'Use this command to fetch code items',
+              tooltipPosition: 'bottom',
+              command: async () => {
+                const data = {projectId: this.stateManager.currentProject?.id}
+                this.eventService.publishEditorEvent(EditorEventType.FETCH_CODE, data);
               },
             },
           ],

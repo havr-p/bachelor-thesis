@@ -12,6 +12,7 @@ export * from './createItemDTO';
 export * from './createItemDTOData';
 export * from './createProjectDTO';
 export * from './createRelationshipDTO';
+export * from './getCodeItemsResponse';
 export * from './getLoginParams';
 export * from './historyAction';
 export * from './itemDTO';

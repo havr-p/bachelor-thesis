@@ -21,10 +21,10 @@ export interface EditorState {
     providedIn: 'root'
 })
 export class StateManager {
-    public currentProject: ProjectDTO | undefined;
+    public currentProject: Project | undefined;
     public currentProjectSettings: ProjectSettings | undefined;
     public currentRelease: ReleaseDTO | undefined;
-    private projects: Map<number, ProjectDTO> = new Map();
+    private projects: Map<number, Project> = new Map();
     private editorState: EditorState | undefined;
 
     constructor(

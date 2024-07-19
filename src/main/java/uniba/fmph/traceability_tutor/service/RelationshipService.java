@@ -5,16 +5,14 @@ import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.Item;
 import uniba.fmph.traceability_tutor.domain.Relationship;
 import uniba.fmph.traceability_tutor.domain.Release;
-import uniba.fmph.traceability_tutor.model.CreateRelationshipDTO;
-import uniba.fmph.traceability_tutor.model.ItemDTO;
-import uniba.fmph.traceability_tutor.model.RelatedToItemRelRequest;
-import uniba.fmph.traceability_tutor.model.RelationshipDTO;
+import uniba.fmph.traceability_tutor.model.*;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
 import uniba.fmph.traceability_tutor.repos.ReleaseRepository;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -107,6 +105,25 @@ public class RelationshipService {
         return relationshipRepository.findNonReleaseByProjectId(projectId).stream()
                 .map(item -> mapToDTO(item, new RelationshipDTO()))
                 .toList();
+    }
+
+    public RelationshipDTO connectRequirementToCode(Long requirementId, Long codeId) {
+       return this.create(new CreateRelationshipDTO(RelationshipType.SATISFIES, "", requirementId, codeId));
+    }
+
+    public boolean existsBetween(Long startItemId, Long endItemId) {
+        return relationshipRepository.existsByStartItem_IdAndEndItem_Id(startItemId, endItemId);
+    }
+
+    public void deleteAllBetween(Long startItemId, Long endItemId) {
+        relationshipRepository.deleteByStartItem_IdAndEndItem_Id(startItemId, endItemId);
+    }
+
+    public void deleteAllConnectedWithCodeItems(Set<Long> codeItemIds) {
+        for (Long id :
+             codeItemIds) {
+            relationshipRepository.deleteByReleaseNullAndStartItem_IdOrEndItem_Id(id, id);
+        }
     }
 
 //    public List<RelationshipDTO> getRelationshipsWith(RelatedToItemRelRequest request) {

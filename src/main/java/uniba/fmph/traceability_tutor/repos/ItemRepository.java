@@ -31,4 +31,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Modifying
     @Query("update Item i set i.id = ?1 where i.id = ?2")
     int updateIdById(Long id, Long id1);
+
+    long deleteByItemTypeAndProjectAndRelease(ItemType itemType, Project project, Release release);
 }

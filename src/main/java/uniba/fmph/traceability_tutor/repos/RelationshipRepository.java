@@ -29,4 +29,10 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Long
     @Query("select r from Relationship r where r.release = ?1 and (r.startItem.id = ?2 " +
             " or r.endItem.id = ?2)")
     List<Relationship> findAllRelatedToItemAndRelease(Long releaseId, Long itemId);
+
+    boolean existsByStartItem_IdAndEndItem_Id(Long id, Long id1);
+
+    long deleteByStartItem_IdAndEndItem_Id(Long id, Long id1);
+
+    long deleteByReleaseNullAndStartItem_IdOrEndItem_Id(Long id, Long id1);
 }

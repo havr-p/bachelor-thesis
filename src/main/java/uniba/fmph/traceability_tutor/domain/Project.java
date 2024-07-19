@@ -74,6 +74,9 @@ public class Project {
     @OneToOne(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true, fetch = FetchType.EAGER)
     private UserSecret userSecret;
 
+    @Column
+    private OffsetDateTime lastCodeFetched;
+
     public Project() {
 
     }

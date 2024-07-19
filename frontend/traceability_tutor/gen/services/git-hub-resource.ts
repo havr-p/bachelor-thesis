@@ -18,6 +18,7 @@ import {
   Observable
 } from 'rxjs'
 import type {
+  GetCodeItemsResponse,
   GetLoginParams,
   JsonNode
 } from '../model'
@@ -44,7 +45,36 @@ type HttpClientOptions = {
 export class GitHubResourceService {
   constructor(
     private http: HttpClient,
-  ) {} getLogin<TData = string>(
+  ) {} tags<TData = JsonNode[]>(
+    projectId: number, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/git/${projectId}/tags`,options
+    );
+  }
+ commits<TData = JsonNode[]>(
+    projectId: number, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/git/${projectId}/commits`,options
+    );
+  }
+ commit<TData = JsonNode[]>(
+    projectId: number,
+    sha: string, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/git/${projectId}/commit/${sha}`,options
+    );
+  }
+ codeItems<TData = GetCodeItemsResponse>(
+    projectId: number, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/git/${projectId}/codeItems`,options
+    );
+  }
+ getLogin<TData = string>(
     params: GetLoginParams, options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.get<TData>(
@@ -53,14 +83,10 @@ export class GitHubResourceService {
         params: {...params, ...options?.params},}
     );
   }
- commits<TData = JsonNode[]>(
-    projectId: number, options?: HttpClientOptions
-  ): Observable<TData>  {
-    return this.http.get<TData>(
-      `/api/git/commits/${projectId}`,options
-    );
-  }
 };
 
-export type GetLoginClientResult = NonNullable<string>
+export type TagsClientResult = NonNullable<JsonNode[]>
 export type CommitsClientResult = NonNullable<JsonNode[]>
+export type CommitClientResult = NonNullable<JsonNode[]>
+export type CodeItemsClientResult = NonNullable<GetCodeItemsResponse>
+export type GetLoginClientResult = NonNullable<string>

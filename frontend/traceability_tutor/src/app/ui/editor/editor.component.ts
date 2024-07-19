@@ -157,7 +157,10 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
         await this.editorService.deleteItemWithConnections(event.payload);
         break;
       case EditorEventType.OPEN_SETTINGS:
-        this.openSettingsDialog()
+        this.openSettingsDialog();
+        break;
+      case EditorEventType.FETCH_CODE:
+        this.fetchCodeItems();
     }
   }
 
@@ -237,5 +240,9 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private openSettingsDialog() {
     this.settingsVisible = true;
+  }
+
+  private fetchCodeItems() {
+    this.editorService.fetchCodeItems();
   }
 }
