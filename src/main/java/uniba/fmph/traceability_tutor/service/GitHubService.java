@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import uniba.fmph.traceability_tutor.config.security.SecretsManager;
 import uniba.fmph.traceability_tutor.domain.Item;
 import uniba.fmph.traceability_tutor.domain.Project;
@@ -37,7 +35,6 @@ import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY
 @Service
 @SecurityRequirement(name = BEARER_SECURITY_SCHEME)
 public class GitHubService {
-    private final WebClient webClient;
     private final ObjectMapper objectMapper;
     @Setter
     private GitHub gitHub;
@@ -50,12 +47,11 @@ public class GitHubService {
     private final UserService userService;
     private final SecretsManager secretsManager;
 
-    public GitHubService(@Qualifier("github") WebClient webClient, ObjectMapper objectMapper,
+    public GitHubService(ObjectMapper objectMapper,
                          ProjectRepository projectRepository, ItemRepository itemRepository,
                          ItemMapper itemMapper, RelationshipService relationshipService,
                          RelationshipRepository relationshipRepository, UserService userService,
                          SecretsManager secretsManager) {
-        this.webClient = webClient;
         this.objectMapper = objectMapper;
         this.projectRepository = projectRepository;
         this.itemRepository = itemRepository;
