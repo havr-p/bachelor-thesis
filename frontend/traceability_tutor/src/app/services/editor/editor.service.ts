@@ -426,6 +426,11 @@ export class EditorService {
     ).subscribe({});
   }
 
+  /**
+   * fixme somewhere here there is an error that occurs on this.arrangeNodes - editor tries to move non existing inputs.
+   * it may be caused because area.update was not triggered at important place
+   * more info here: https://retejs.org/docs/faq#force-update
+   */
   async fetchCodeItems() {
     const projectId = this.state.currentProject?.id!;
 
