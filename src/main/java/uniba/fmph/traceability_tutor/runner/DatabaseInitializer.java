@@ -34,8 +34,9 @@ import java.util.*;
 @RequiredArgsConstructor
 @Component
 public class DatabaseInitializer implements CommandLineRunner {
-    private static final String ITEMS_JSON_FILE_PATH = "app/static/tt-requirements.json";
-    private static final String RELATIONSHIPS_JSON_FILE_PATH = "app/static/tt-relationships.json";
+    //todo change prefix to app when building through docker-compose
+    private static final String ITEMS_JSON_FILE_PATH = "src/main/resources/static/tt-requirements.json";
+    private static final String RELATIONSHIPS_JSON_FILE_PATH = "src/main/resources/static/tt-relationships.json";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final List<User> USERS = Arrays.asList(
             new User("admin@test.com", "admin", "admin", SecurityConfig.ADMIN, OAuth2Provider.LOCAL),

@@ -155,7 +155,7 @@
     "status": "OPEN"
   },
   {
-    "id": 15,
+    "id": 16177,
     "projectId": 100,
     "itemType": "REQUIREMENT",
     "data": {
@@ -163,7 +163,8 @@
       "description": "The system shall automatically derive relationships from git commits mentioning requirements IDs.",
       "level": "Solution"
     },
-    "status": "OPEN"
+    "status": "OPEN",
+    "mapped": true
   },
   {
     "id": 16,

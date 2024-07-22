@@ -12,7 +12,7 @@
   {"id": 11, "description": "Visual Management of Traceability Hierarchy", "endItem": 12, "startItem": 10, "type": "DERIVES"},
   {"id": 12, "description": "Display Traceability Hierarchy", "endItem": 13, "startItem": 12, "type": "DERIVES"},
   {"id": 13, "description": "Display Lineage of Hierarchy Item", "endItem": 13393, "startItem": 13, "type": "DERIVES"},
-  {"id": 14, "description": "Automatic Derivation of Relationships from Git Commits", "endItem": 15, "startItem": 13, "type": "DERIVES"},
+  {"id": 14, "description": "Automatic Derivation of Relationships from Git Commits", "endItem": 16177, "startItem": 13, "type": "DERIVES"},
   {"id": 15, "description": "Enforce Item Type Selection", "endItem": 16, "startItem": 7, "type": "DERIVES"},
   {"id": 16, "description": "Enforce User Level Selection", "endItem": 17, "startItem": 8, "type": "DERIVES"},
   {"id": 17, "description": "Support Internal Levels Within User Level Hierarchy", "endItem": 18, "startItem": 9, "type": "DERIVES"},

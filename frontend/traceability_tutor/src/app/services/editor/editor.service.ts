@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Injectable} from '@angular/core';
 import {ClassicPreset, NodeEditor} from "rete";
 import {AreaExtensions, AreaPlugin} from "rete-area-plugin";
 import {structures} from "rete-structures";
-import {concatMap, from, lastValueFrom, map, Observable, switchMap} from "rxjs";
+import {concatMap, firstValueFrom, from, lastValueFrom, map, Observable, switchMap} from "rxjs";
 
 import {
   CreateItemDTO,
@@ -409,50 +409,40 @@ export class EditorService {
 
   async fetchCodeItems() {
     const projectId = this.state.currentProject?.id!;
-   this.githubService.codeItems(projectId).subscribe(
-       {
-           next: result => {
-               console.log("result", result);
-               this.setupCodeItems(result.updatedItems).then(
-                    () => this.setupRelationshipsWithCodeItems(result.newRelationships).then(
-                        () => {
-                          setTimeout( async () => await this.arrangeNodes(), 3000);
-                        }
-                    )
-               )
-
-           }
-       }
-   )
+    try {
+      const result = await firstValueFrom(this.githubService.codeItems(projectId));
+      await this.setupCodeItems(result.updatedItems);
+      await this.setupRelationshipsWithCodeItems(result.newRelationships);
+      await this.arrangeNodes();
+  } catch (error) {
+      console.error('Error in fetchCodeItems:', error);
+    }
   }
 
   private async setupCodeItems(updatedItems: ItemDTO[] | undefined) {
-    this.deleteItemsByConditionFromEditor(item => item.itemType === ItemType.CODE).then(
-        async () => {
-          if (updatedItems) {
-            console.log("updatedItems", updatedItems);
-            await this.addItems(updatedItems);
-          }
-        }
-    )
-
+    await this.deleteItemsByConditionFromEditor(item => item.itemType === ItemType.CODE);
+    if (updatedItems) {
+      console.log("updatedItems", updatedItems);
+      await this.addItems(updatedItems);
+    }
   }
 
   private async setupRelationshipsWithCodeItems(newRelationships: RelationshipDTO[] | undefined) {
     const graph = structures(this.editor);
     let existingCodeItemIds = graph.filter(node => node.data.itemType === ItemType.CODE).nodes().map(n => n.id);
+
     await this.deleteFromEditorRelationshipsByCondition(relationship =>
       existingCodeItemIds.includes(relationship.startItem.toString()) ||
       existingCodeItemIds.includes(relationship.endItem.toString())
-    ).then(
-        async () => {
-          console.log("new relationships")
-          for (const rel of newRelationships!) {
-            await this.addConnectionToEditor(rel);
-          }
-        }
-    )
+    );
+
+    if (newRelationships) {
+      for (const rel of newRelationships) {
+        await this.addConnectionToEditor(rel);
+      }
+    }
   }
+
 
   private async deleteItemsByConditionFromEditor(predicate: (item: Item) => boolean) {
     const graph = structures(this.editor);

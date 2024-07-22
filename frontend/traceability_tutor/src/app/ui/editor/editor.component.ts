@@ -244,5 +244,6 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private fetchCodeItems() {
     this.editorService.fetchCodeItems();
+    window.location.reload();
   }
 }
