@@ -12,9 +12,14 @@ RUN apt-get update && apt-get install dos2unix -y && dos2unix mvnw && chmod +x m
 RUN ./mvnw install -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-RUN mkdir -p src/main/resources/static
-COPY src/main/resources/static/tt-requirements.json src/main/resources/static/
-COPY src/main/resources/static/tt-relationships.json src/main/resources/static/
+#RUN mkdir -p src/main/resources/static
+#RUN ls -l
+#COPY  src/main/resources/static/tt-requirements.json src/main/resources/static/
+#COPY src/main/resources/static/tt-relationships.json src/main/resources/static/
+#RUN ls -l
+# Copy the JSON files to the correct location in the final image
+COPY src/main/resources/static/tt-requirements.json /app/static/
+COPY src/main/resources/static/tt-relationships.json /app/static/
 
 FROM eclipse-temurin:21
 VOLUME /tmp

@@ -1,36 +1,32 @@
 version: '3.8'
 
 services:
-  postgres:
+  db:
     image: postgres:latest
-    container_name: postgres
+    container_name: db
     environment:
-      POSTGRES_DB: ttutor
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby
+      - POSTGRES_DB=ttutor
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby
     ports:
       - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d ttutor -U admin"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   app:
+    image: 'docker-spring-boot-postgres:latest'
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: app
     depends_on:
-      postgres:
-        condition: service_healthy
+      - db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ttutor
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
     ports:
       - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ttutor
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby
 
-volumes:
-  pgdata:
