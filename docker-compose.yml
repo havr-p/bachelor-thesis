@@ -7,9 +7,9 @@ services:
     environment:
       - POSTGRES_DB=ttutor
       - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby
+      - POSTGRES_PASSWORD=VYKP9QjBo472QFz
     ports:
-      - "5432:5432"
+      - "6543:5432"
 
   app:
     image: 'docker-spring-boot-postgres:latest'
@@ -21,10 +21,10 @@ services:
       - db
     environment:
       - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby
+      - POSTGRES_PASSWORD=VYKP9QjBo472QFz
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ttutor
       - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby
+      - SPRING_DATASOURCE_PASSWORD=VYKP9QjBo472QFz
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
     ports:

@@ -3,9 +3,9 @@ spring:
     name: traceability-tutor
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://postgres:5432/ttutor
+    url: jdbc:postgresql://localhost:6543/ttutor
     username: ${JDBC_DATABASE_USERNAME:admin}
-    password: ${JDBC_DATABASE_PASSWORD:UFvPDJudQbuYCp6mAiXwzjN7Mqf6hgby}
+    password: ${JDBC_DATABASE_PASSWORD:VYKP9QjBo472QFz}
     dbcp2:
       max-wait-millis: 30000
       validation-query: select 1
