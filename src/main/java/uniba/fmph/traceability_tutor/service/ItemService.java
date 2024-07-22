@@ -66,8 +66,8 @@ public class ItemService {
         itemRepository.save(item);
     }
 
-    public void delete(final Long id) {
-        itemRepository.deleteById(id);
+    public void deleteIfExists(final Long id) {
+        if (itemRepository.existsById(id)) itemRepository.deleteById(id);
     }
 
     private ItemDTO mapToDTO(final Item item, final ItemDTO itemDTO) {

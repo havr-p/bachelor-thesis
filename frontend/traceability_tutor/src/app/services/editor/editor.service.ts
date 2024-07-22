@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Injectable} from '@angular/core';
 import {ClassicPreset, NodeEditor} from "rete";
 import {AreaExtensions, AreaPlugin} from "rete-area-plugin";
 import {structures} from "rete-structures";
-import {concatMap, firstValueFrom, from, lastValueFrom, map, Observable, switchMap} from "rxjs";
+import {concatMap, firstValueFrom, from, map, Observable, switchMap} from "rxjs";
 
 import {
   CreateItemDTO,
@@ -28,7 +28,7 @@ import {Connection} from "../../connection";
 import {GraphCycleDetector} from "../../ui/editor/cycleValidation";
 import {AreaExtra, unselectAll} from "../../ui/editor/create-editor";
 import {RelationshipResourceService} from "../../../../gen/services/relationship-resource";
-import {CodeItemsClientResult, GitHubResourceService} from "../../../../gen/services/git-hub-resource";
+import {GitHubResourceService} from "../../../../gen/services/git-hub-resource";
 
 const socket = new ClassicPreset.Socket('socket');
 
@@ -71,13 +71,15 @@ export class EditorService {
     let node = new ItemNode(data);
     node.backgroundColor = lvlColor!;
     node.addOutput(node.id, new ClassicPreset.Output(socket, undefined, true));
+    await this.area.update('node', node.id);
     node.addInput(node.id, new ClassicPreset.Input(socket, undefined, true));
+    await this.area.update('node', node.id);
     if (!await this.editor.addNode(node)) throw new Error("Error while adding node");
   }
 
   async createItem(dto: CreateItemDTO) {
     this.itemService.createItem(dto).subscribe({
-      next: item => this.addItem(item)
+      next: async item => await this.addItem(item)
     });
   }
 
@@ -408,6 +410,22 @@ export class EditorService {
     });
   }
 
+  async deleteItemWithAllConnections(itemId: string) {
+    const graph = structures(this.editor);
+    let allConnections = graph.connections().filter(relationship => relationship.source === itemId || relationship.target === itemId);
+    from(this.editor.removeNode(itemId)).pipe(
+      concatMap(() => this.area.update('node', itemId))).pipe(
+      concatMap(() => from(allConnections).pipe(
+        concatMap(conn => from(this.editor.removeConnection(conn.id)).pipe(
+          concatMap(() => this.area.update('connection', conn.id)))
+          .pipe(
+            concatMap(() => from(this.relationshipService.deleteRelationship((conn.data as RelationshipDTO).id)))
+          )),
+        concatMap(() => from(this.itemService.deleteItem(Number(itemId)))),
+      ))
+    ).subscribe({});
+  }
+
   async fetchCodeItems() {
     const projectId = this.state.currentProject?.id!;
 
@@ -416,8 +434,9 @@ export class EditorService {
       await this.setupCodeItems(result.updatedItems);
       await this.setupRelationshipsWithCodeItems(result.newRelationships);
       await this.arrangeNodes();
-  } catch (error) {
+    } catch (error) {
       console.error('Error in fetchCodeItems:', error);
+      window.location.reload();
     }
   }
 
@@ -450,7 +469,7 @@ export class EditorService {
     const graph = structures(this.editor);
     let nodesToDelete = graph.filter(node => predicate(node.data)).nodes();
     for (const nodeToDelete of nodesToDelete) {
-      await this.editor.removeNode(nodeToDelete.id);
+      await this.deleteItemWithAllConnections(nodeToDelete.id);
     }
   }
 
@@ -459,6 +478,7 @@ export class EditorService {
     let connectionsToDelete = graph.connections().filter(conn => predicate(conn.data as RelationshipDTO));
     for (const connectionToDelete of connectionsToDelete) {
       await this.editor.removeConnection(connectionToDelete.id);
+      await this.area.update('connection', connectionToDelete.id);
     }
   }
 }

@@ -33,4 +33,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     int updateIdById(Long id, Long id1);
 
     long deleteByItemTypeAndProjectAndRelease(ItemType itemType, Project project, Release release);
+
 }

@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import uniba.fmph.traceability_tutor.model.CreateItemDTO;
 import uniba.fmph.traceability_tutor.model.ItemDTO;
 import uniba.fmph.traceability_tutor.service.ItemService;
-import uniba.fmph.traceability_tutor.util.ReferencedException;
-import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.util.List;
 
@@ -62,11 +60,11 @@ public class ItemResource {
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteItem(@PathVariable(name = "id") final Long id) {
-        final ReferencedWarning referencedWarning = itemService.getReferencedWarning(id);
-        if (referencedWarning != null) {
-            throw new ReferencedException(referencedWarning);
-        }
-        itemService.delete(id);
+//        final ReferencedWarning referencedWarning = itemService.getReferencedWarning(id);
+//        if (referencedWarning != null) {
+//            throw new ReferencedException(referencedWarning);
+//        }
+        itemService.deleteIfExists(id);
         return ResponseEntity.noContent().build();
     }
 

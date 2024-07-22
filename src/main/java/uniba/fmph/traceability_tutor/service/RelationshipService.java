@@ -56,7 +56,9 @@ public class RelationshipService {
     }
 
     public void delete(final Long id) {
-        relationshipRepository.deleteById(id);
+        if (relationshipRepository.existsById(id)) {
+            relationshipRepository.deleteById(id);
+        }
     }
 
     private RelationshipDTO mapToDTO(final Relationship relationship,

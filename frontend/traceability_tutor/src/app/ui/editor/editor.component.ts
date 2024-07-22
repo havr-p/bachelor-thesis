@@ -249,7 +249,9 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   protected fetchCodeItems() {
       const token = this.state.currentProjectSettings?.accessToken
       if (token && token.trim().length > 0)
-     this.editorService.fetchCodeItems().then( () => window.location.reload());
+     this.editorService.fetchCodeItems().then( () => {
+       //window.location.reload();
+     });
       else {
         this.settingsVisible = true;
       }
