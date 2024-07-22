@@ -21,6 +21,8 @@ import {lastValueFrom, Subscription} from "rxjs";
 import {DockManager} from "../dock/dock-manager";
 import {constructCreateItemDTO, Item} from "../../models/itemMapper";
 import {StateManager} from "../../models/state";
+import {log} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 const socket = new ClassicPreset.Socket('socket');
 
@@ -49,6 +51,8 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   settingsVisible = false;
   projectId = 0;
+
+  triggerFetchItemsAfterSettingsUpdate = false;
 
   constructor(
       private injector: Injector,
@@ -157,7 +161,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
         await this.editorService.deleteItemWithConnections(event.payload);
         break;
       case EditorEventType.OPEN_SETTINGS:
-        this.openSettingsDialog();
+        this.openSettingsDialog(event.payload as string);
         break;
       case EditorEventType.FETCH_CODE:
         this.fetchCodeItems();
@@ -238,12 +242,16 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
     //console.log("onItemEdit", $event);
   }
 
-  private openSettingsDialog() {
+  private openSettingsDialog(nextOperation?: string) {
     this.settingsVisible = true;
   }
 
-  private fetchCodeItems() {
-    this.editorService.fetchCodeItems();
-    window.location.reload();
+  protected fetchCodeItems() {
+      const token = this.state.currentProjectSettings?.accessToken
+      if (token && token.trim().length > 0)
+     this.editorService.fetchCodeItems().then( () => window.location.reload());
+      else {
+        this.settingsVisible = true;
+      }
   }
 }

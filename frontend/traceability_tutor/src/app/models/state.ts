@@ -11,6 +11,8 @@ import {ValidationService} from "../services/validation/validation.service";
 import {ItemProps} from "../types";
 import {Connection} from "../connection";
 import {Item} from "./itemMapper";
+import {ProjectResourceService} from "../../../gen/services/project-resource";
+import {firstValueFrom} from "rxjs";
 
 export interface EditorState {
     nodes: ItemProps[],
@@ -29,7 +31,8 @@ export class StateManager {
 
     constructor(
         private validationService: ValidationService,
-        private localStorageService: LocalStorageService
+        private localStorageService: LocalStorageService,
+        private projectService: ProjectResourceService,
     ) {
     }
 
@@ -73,4 +76,8 @@ export class StateManager {
     openProject(project: ProjectDTO) {
         // Implementation to open a project
     }
+
+  async setCurrentProjectSettings(project: Project) {
+    this.currentProjectSettings = await firstValueFrom(this.projectService.getProjectSettings(project.id));
+  }
 }

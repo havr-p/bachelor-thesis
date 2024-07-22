@@ -11,6 +11,7 @@ import {ProjectSettings} from "../../../../../gen/model";
 import {StateManager} from "../../../models/state";
 import {ProjectResourceService} from "../../../../../gen/services/project-resource";
 import {DialogModule} from "primeng/dialog";
+import {githubTokenValidator} from "../../../utils";
 
 @Component({
   selector: 'app-settings',
@@ -27,12 +28,13 @@ import {DialogModule} from "primeng/dialog";
     DialogModule
   ],
   template: `
-    <p-dialog [(visible)]="isVisible"
+    <p-dialog [(visible)]="visible"
               [style]="{ width: '900px' }"
               [header]="'Project settings'"
               [closable]="true"
               [draggable]="true"
-              [resizable]="true">
+              [resizable]="true"
+              (onHide)="onDialogHide()"  >
       <form [formGroup]="settingsForm" (ngSubmit)="submitForm()" class="app-form">
         <div class="form-field">
           <label for="name">Name</label>
@@ -45,6 +47,9 @@ import {DialogModule} from "primeng/dialog";
         <div class="form-field">
           <label for="accessToken">VCS token</label>
           <input id="accessToken" formControlName="accessToken" pInputText />
+          <small class="p-error" *ngIf="visible && settingsForm.controls['accessToken'].invalid">
+            Please set correct GitHub access token.
+          </small>
         </div>
         <p-button label="Save" type="submit" [disabled]="settingsForm.invalid"></p-button>
       </form>
@@ -55,15 +60,15 @@ export class SettingsComponent implements OnChanges {
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
-  isVisible = false;
 
   projectSettings!: ProjectSettings;
   projectId = 0;
 
+
   settingsForm = this.formBuilder.group({
     name: ['', [Validators.required]],
     repoName: ['', [Validators.required]],
-    accessToken: ['', [Validators.required]]
+    accessToken: ['', [Validators.required, githubTokenValidator]]
   });
 
   constructor(
@@ -73,22 +78,22 @@ export class SettingsComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['visible'] && changes['visible'].currentValue !== this.isVisible) {
-      this.isVisible = this.visible;
-      if (this.isVisible) {
+
+      if (this.visible) {
         this.loadProjectSettings();
       }
-    }
   }
 
   private loadProjectSettings() {
     this.projectId = this.state.currentProject?.id!;
-    this.projectService.getProjectSettings(this.projectId).subscribe({
-      next: (value) => {
-        this.projectSettings = value;
-        this.settingsForm.patchValue(value);
-      }
-    });
+    // this.projectService.getProjectSettings(this.projectId).subscribe({
+    //   next: (value) => {
+    //     this.projectSettings = value;
+    //     this.settingsForm.patchValue(value);
+    //   }
+    // });
+    this.projectSettings = this.state.currentProjectSettings!;
+    this.settingsForm.patchValue(this.projectSettings);
   }
 
   submitForm() {
@@ -96,6 +101,7 @@ export class SettingsComponent implements OnChanges {
       const formValue = this.settingsForm.getRawValue() as NonNullable<ProjectSettings>;
       this.projectService.updateProjectSettings(this.projectId, formValue).subscribe({
         next: () => {
+          this.state.currentProjectSettings = formValue;
           this.closeDialog();
         }
       });
@@ -103,8 +109,12 @@ export class SettingsComponent implements OnChanges {
   }
 
   private closeDialog() {
-    this.isVisible = false;
+    this.visible = false;
     this.visibleChange.emit(false);
     this.settingsForm.reset();
+  }
+
+  onDialogHide() {
+    this.closeDialog();
   }
 }

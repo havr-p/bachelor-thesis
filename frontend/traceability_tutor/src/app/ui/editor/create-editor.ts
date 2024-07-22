@@ -18,6 +18,7 @@ import {ConnectionPathPlugin, Transformers} from "rete-connection-path-plugin";
 import {ConnProps, EditorEventType, ItemProps} from "../../types";
 import copy from "copy-to-clipboard";
 import {RelationshipDTO} from "../../../../gen/model";
+import {addCustomBackground} from "../../customization/custom-background";
 
 type Schemes = GetSchemes<
     ItemProps,
@@ -314,7 +315,7 @@ export async function createEditor(
     // }))
 
 
-    //addCustomBackground(area);
+    addCustomBackground(area);
 
     editor.use(area);
     area.use(connection);

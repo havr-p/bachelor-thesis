@@ -1,31 +1,36 @@
 import {CreateItemDTO, HistoryAction, ItemDTO, ItemType} from "../../../gen/model";
 
+export type LinkOrComment = {
+  linkOrComment: string;
+  addedAt: Date;
+}
+
 export type RequirementData = {
     level: string;
     name: string;
     description: string;
-    links: string[];
+    links: LinkOrComment[];
 }
 
 export type DesignData = {
     level: 'Design';
     name: string;
     description: string;
-    links: string[];
+    links: LinkOrComment[];
 }
 
 export type CodeData = {
     level: 'Code';
     name: string;
     description: string;
-    links: string[];
+    links: LinkOrComment[];
 }
 
 export type TestData = {
     level: 'Test';
     name: string;
     description: string;
-    links: string[];
+    links: LinkOrComment[];
 }
 
 export type RequirementItem = {

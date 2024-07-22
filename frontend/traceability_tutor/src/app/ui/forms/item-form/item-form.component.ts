@@ -73,6 +73,7 @@ export class ItemFormComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.formData) {
       this.itemType = this.formData.itemType;
+      console.log("formData", this.formData);
       this.initializeForm();
     }
   }
@@ -80,14 +81,16 @@ export class ItemFormComponent implements OnInit, OnChanges {
   initializeForm(): void {
     if (this.formData) {
       const linksArray = this.formData.data.links.map(link => this.fb.group({
-        url: [link, Validators.required],
-        addedAt: [new Date(), Validators.required]
+        linkOrComment: [link.linkOrComment, Validators.required],
+        addedAt: [link.addedAt, Validators.required]
       }));
+      console.log("links array", linksArray);
+
       this.itemForm = this.fb.group({
         name: [this.formData.data.name, Validators.required],
         level: [this.formData.data.level, Validators.required],
         status: [this.formData.status, Validators.required],
-        description: [this.formData.data.description || ''],
+        description: [ {value: this.formData.data.description || '', disabled: this.itemType === ItemType.CODE}],
         links: this.fb.array(linksArray),
         newLink: ['']
       });
@@ -146,8 +149,9 @@ export class ItemFormComponent implements OnInit, OnChanges {
   addLink(): void {
     const newLinkControl = this.itemForm.get('newLink');
     if (newLinkControl && newLinkControl.value.trim() !== '') {
+      console.log("newLinkControl value", newLinkControl.value)
       this.links.push(this.fb.group({
-        url: [newLinkControl.value, Validators.required],
+        linkOrComment: [newLinkControl.value, Validators.required],
         addedAt: [new Date(), Validators.required]
       }));
       newLinkControl.reset();
@@ -203,4 +207,6 @@ export class ItemFormComponent implements OnInit, OnChanges {
       return false;
     }
   }
+
+  protected readonly ItemType = ItemType;
 }

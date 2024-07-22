@@ -61,6 +61,13 @@ public class DatabaseInitializer implements CommandLineRunner {
     private final ItemRepository itemRepository;
     private final RelationshipRepository relationshipRepository;
 
+    private static String normalizeText(String text) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+        return Character.toUpperCase(text.charAt(0)) + text.substring(1).toLowerCase();
+    }
+
     private static List<TempCreateItemDTO> parseJsonToCreateItemDTOs() throws IOException {
         return objectMapper.readValue(new File(DatabaseInitializer.ITEMS_JSON_FILE_PATH), new TypeReference<>() {
         });
@@ -89,6 +96,12 @@ public class DatabaseInitializer implements CommandLineRunner {
         List<TempCreateItemDTO> tempItemDtos;
         try {
             tempItemDtos = parseJsonToCreateItemDTOs();
+            tempItemDtos.forEach(dto -> {
+                    String description = dto.getData().get("description");
+                    String name = dto.getData().get("name");
+                    dto.getData().put("description", normalizeText(description));
+                dto.getData().put("name", normalizeText(name));
+                });
         } catch (IOException e) {
             e.printStackTrace();
             tempItemDtos = List.of();
@@ -110,6 +123,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         List<TempCreateRelationshipDTO> tempCreateRelationshipDTOS;
         try {
             tempCreateRelationshipDTOS = parseJsonCreateRelationshipDTOs();
+            tempCreateRelationshipDTOS.forEach(dto -> dto.setDescription(normalizeText(dto.getDescription())));
             log.info("tempDTOs for items : {}", tempItemDtos);
             log.info("tempDTOs for relationship : {}", tempCreateRelationshipDTOS);
         } catch (IOException e) {

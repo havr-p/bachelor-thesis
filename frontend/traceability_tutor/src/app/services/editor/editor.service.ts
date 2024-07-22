@@ -153,7 +153,8 @@ export class EditorService {
       }),
       switchMap((project: Project) => {
         this.state.currentProject = project;
-        return this.itemService.getProjectEditableItems(project.id).pipe(
+        return from(this.state.setCurrentProjectSettings(project)).pipe(
+          switchMap(() => this.itemService.getProjectEditableItems(project.id)),
           map((items: ItemDTO[]) => ({project, items}))
         );
       }),
@@ -409,6 +410,7 @@ export class EditorService {
 
   async fetchCodeItems() {
     const projectId = this.state.currentProject?.id!;
+
     try {
       const result = await firstValueFrom(this.githubService.codeItems(projectId));
       await this.setupCodeItems(result.updatedItems);

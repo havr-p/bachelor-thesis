@@ -1,5 +1,6 @@
 import {ClassicPreset} from 'rete';
 import {ActionSocket, TextSocket} from './sockets';
+import {Validators} from "@angular/forms";
 
 type Sockets = ActionSocket | TextSocket;
 type Input = ClassicPreset.Input<Sockets>;
@@ -29,3 +30,4 @@ export function isArray(value: any): value is any[] {
     return Array.isArray(value);
 }
 
+export const githubTokenValidator = Validators.pattern('^github_pat_[A-Za-z0-9_]+$');

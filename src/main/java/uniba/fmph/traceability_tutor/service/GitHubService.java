@@ -172,7 +172,7 @@ public class GitHubService {
         data.put("commits", objectMapper.writeValueAsString(commits));
         data.put("description", "Commits linked to requirement #" + requirementId);
         data.put("name", commits.stream().map(Commit::message).collect(Collectors.joining("\n")));
-        List<String> linksToCommits = commits.stream().map(Commit::htmlUrl).toList();
+        List<LinkOrComment> linksToCommits = commits.stream().map(commit -> new LinkOrComment(commit.htmlUrl(), commit.committedAt())).toList();
         data.put("links", objectMapper.writeValueAsString(linksToCommits));
         codeItem.setData(data);
         return itemRepository.save(codeItem);

@@ -3,13 +3,15 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {catchError, map, Observable, switchMap, throwError} from 'rxjs';
 import {Router} from '@angular/router';
 import {AuthService} from "../services/auth/auth.service";
+import {EventService} from "../services/event/event.service";
+import {EditorEventType} from "../types";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthInterceptor implements HttpInterceptor {
 
-    constructor(private router: Router, private authService: AuthService) {
+    constructor(private router: Router, private authService: AuthService, private eventService: EventService) {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -38,6 +40,9 @@ export class AuthInterceptor implements HttpInterceptor {
         console.log("error in auth interceptor", error)
         if (error.status === 401) {
             this.authService.logout();
+        } else if (error.status === 500 && error.url?.includes("codeItems")) {
+          this.eventService.notify("Please check whether GitHub access token is set correctly", 'error');
+          this.eventService.publishEditorEvent(EditorEventType.OPEN_SETTINGS, 'tokenCorrection');
         }
         return throwError(() => error);
     }

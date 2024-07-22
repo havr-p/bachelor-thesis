@@ -48,11 +48,11 @@
             <p-scrollPanel class="border-1 border-round" [style]="{ width: '100%', height: '300px', padding: '20px' }">
                 <div id="links" *ngFor="let linkCtrl of links.controls; let i = index">
                     <p>
-                        <ng-container *ngIf="isValidUrl(linkCtrl.value.url); else plainText">
-                            <a [href]="linkCtrl.value.url" target="_blank" rel="noopener noreferrer">{{ linkCtrl.value.url }}</a>
+                        <ng-container *ngIf="isValidUrl(linkCtrl.value.linkOrComment); else plainText">
+                            <a [href]="linkCtrl.value.linkOrComment" target="_blank" rel="noopener noreferrer">{{ linkCtrl.value.linkOrComment }}</a>
                         </ng-container>
                         <ng-template #plainText>
-                            {{ linkCtrl.value.url }}
+                            {{ linkCtrl.value.linkOrComment }}
                         </ng-template>
                         - {{ linkCtrl.value.addedAt | date:'short' }}
                     </p>
