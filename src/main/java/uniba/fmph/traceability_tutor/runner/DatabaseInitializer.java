@@ -12,8 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
 import uniba.fmph.traceability_tutor.config.security.SecretsManager;
 import uniba.fmph.traceability_tutor.config.security.SecurityConfig;
 import uniba.fmph.traceability_tutor.config.security.oauth.OAuth2Provider;
@@ -27,6 +30,9 @@ import uniba.fmph.traceability_tutor.util.NotFoundException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -34,9 +40,8 @@ import java.util.*;
 @RequiredArgsConstructor
 @Component
 public class DatabaseInitializer implements CommandLineRunner {
-    //todo change prefix to app when building through docker-compose
-    private static final String ITEMS_JSON_FILE_PATH = "src/main/resources/static/tt-requirements.json";
-    private static final String RELATIONSHIPS_JSON_FILE_PATH = "src/main/resources/static/tt-relationships.json";
+    private static final String ITEMS_JSON_FILE_PATH = "static/tt-requirements.json";
+    private static final String RELATIONSHIPS_JSON_FILE_PATH = "static/tt-relationships.json";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final List<User> USERS = Arrays.asList(
             new User("admin@test.com", "admin", "admin", SecurityConfig.ADMIN, OAuth2Provider.LOCAL),
@@ -69,15 +74,14 @@ public class DatabaseInitializer implements CommandLineRunner {
     }
 
     private static List<TempCreateItemDTO> parseJsonToCreateItemDTOs() throws IOException {
-        return objectMapper.readValue(new File(DatabaseInitializer.ITEMS_JSON_FILE_PATH), new TypeReference<>() {
-        });
+        String jsonContent = readResourceFile(ITEMS_JSON_FILE_PATH);
+        return objectMapper.readValue(jsonContent, new TypeReference<>() {});
     }
 
     private static List<TempCreateRelationshipDTO> parseJsonCreateRelationshipDTOs() throws IOException {
-        return objectMapper.readValue(new File(DatabaseInitializer.RELATIONSHIPS_JSON_FILE_PATH), new TypeReference<>() {
-        });
+        String jsonContent = readResourceFile(RELATIONSHIPS_JSON_FILE_PATH);
+        return objectMapper.readValue(jsonContent, new TypeReference<>() {});
     }
-
     @Override
     public void run(String... args) {
         if (userService.getUsers().isEmpty()) {
@@ -222,6 +226,13 @@ public class DatabaseInitializer implements CommandLineRunner {
             this.id = id;
         }
 
+    }
+
+    private static String readResourceFile(String resourcePath) throws IOException {
+        Resource resource = new ClassPathResource(resourcePath);
+        try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
+            return FileCopyUtils.copyToString(reader);
+        }
     }
 }
 

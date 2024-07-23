@@ -17,9 +17,7 @@ RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 #COPY  src/main/resources/static/tt-requirements.json src/main/resources/static/
 #COPY src/main/resources/static/tt-relationships.json src/main/resources/static/
 #RUN ls -l
-# Copy the JSON files to the correct location in the final image
-COPY src/main/resources/static/tt-requirements.json /app/static/
-COPY src/main/resources/static/tt-relationships.json /app/static/
+COPY src/main/resources /app/
 
 FROM eclipse-temurin:21
 VOLUME /tmp
