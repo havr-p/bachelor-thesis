@@ -1,15 +1,19 @@
 import {Structures} from "rete-structures/_types/types";
 import {ConnProps, ItemProps, Schemes} from "../../types";
+import {NodeEditor} from "rete";
+import {structures} from "rete-structures";
+import {CreateRelationshipDTO, RelationshipType} from "../../../../gen/model";
+import {Connection} from "../../connection";
 
-export class GraphCycleDetector {
-    private readonly graph:  Structures<ItemProps, ConnProps>
+export class GraphCycleValidator {
+    private readonly editor: NodeEditor<Schemes>
 
-    constructor(graph:  Structures<ItemProps, ConnProps>) {
-        this.graph = graph;
+    constructor(editor: NodeEditor<Schemes>) {
+        this.editor = editor;
     }
 
     public isCyclic(): boolean {
-        const nodes = this.graph.nodes();
+        const nodes = structures(this.editor).nodes();
         const visited: { [key: string]: boolean } = {};
         const dfs: { [key: string]: boolean } = {};
 
@@ -20,7 +24,7 @@ export class GraphCycleDetector {
 
         for (const node of nodes) {
             if (!visited[node.id]) {
-                if (this.checkCycle(node.id, this.graph, visited, dfs)) {
+                if (this.checkCycle(node.id, structures(this.editor), visited, dfs)) {
                     return true;
                 }
             }
@@ -48,4 +52,18 @@ export class GraphCycleDetector {
         dfs[nodeId] = false;
         return false;
     }
+
+  private async addConnectionForCheck(startItemId: number, endItemId: number) {
+    const startItem = this.editor.getNode(startItemId.toString());
+    const endItem = this.editor.getNode(endItemId.toString());
+    const relationship: CreateRelationshipDTO = {
+      startItem: startItemId,
+      endItem: endItemId,
+      type: RelationshipType.DERIVES,
+      description: 'Temporary connection for cycle check'
+    };
+    const newConnection = new Connection(startItem, startItem.id, endItem, endItem.id, relationship);
+    await this.editor.addConnection(newConnection);
+    return newConnection.id;
+  }
 }

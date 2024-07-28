@@ -1,6 +1,5 @@
 package uniba.fmph.traceability_tutor.rest;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -12,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import uniba.fmph.traceability_tutor.model.ValidationResult;
 import uniba.fmph.traceability_tutor.service.ItemService;
 import uniba.fmph.traceability_tutor.service.RelationshipService;
-import uniba.fmph.traceability_tutor.service.ReleaseService;
+import uniba.fmph.traceability_tutor.service.IterationService;
+import uniba.fmph.traceability_tutor.service.ValidationService;
 
 import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY_SCHEME;
 
@@ -24,7 +24,8 @@ public class ValidationResource {
 
     private final RelationshipService relationshipService;
     private final ItemService itemService;
-    private final ReleaseService releaseService;
+    private final IterationService iterationService;
+    private final ValidationService validationService;
 
 
 //     @Operation(security = {@SecurityRequirement(name = BEARER_SECURITY_SCHEME)})
@@ -32,4 +33,9 @@ public class ValidationResource {
 //    public ResponseEntity<> getProjectEditableRelationships(@PathVariable(name = "id") final Long projectId) {
 //        return (ResponseEntity) ResponseEntity.ok();
 //    }
+    @GetMapping("/item/update/{id}")
+    public ResponseEntity<ValidationResult> validateItemEdit(@PathVariable(name = "id") final Long itemId) {
+        var result = this.validationService.validateItemEdit(itemId);
+        return ResponseEntity.ok(result);
+    }
 }

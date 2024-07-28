@@ -1,4 +1,6 @@
 package uniba.fmph.traceability_tutor.model;
 
-public record ValidationResult(boolean isValid, String message) {
+import org.springframework.lang.NonNull;
+
+public record ValidationResult(@NonNull boolean isValid, String[] messages) {
 }
