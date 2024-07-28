@@ -5,7 +5,7 @@ import {structures} from "rete-structures";
 import {concatMap, firstValueFrom, from, map, Observable, switchMap} from "rxjs";
 
 import {
-  CreateItemDTO, CreatePopulatedIterationRequest,
+  CreateItemDTO, CreateIterationRequest,
   CreateRelationshipDTO,
   ItemDTO,
   ItemType,
@@ -488,10 +488,10 @@ export class EditorService {
     const graph = structures(this.editor);
     const nodeIds = graph.nodes().map(n => Number(n.id));
     const relationshipIds = graph.connections().map(c => Number(c.id));
-    const req: CreatePopulatedIterationRequest = {projectId: this.state.currentProject?.id,
+    const req: CreateIterationRequest = {projectId: this.state.currentProject?.id,
                                                   itemIds: nodeIds,
                                                   relationshipIds: relationshipIds}
-    this.iterationService.createPopulatedIteration(req).subscribe(
+    this.iterationService.createIteration(req).subscribe(
         {
           next: (iteration: IterationDTO) => {
             this.state.currentProject?.addIteration(iteration);
