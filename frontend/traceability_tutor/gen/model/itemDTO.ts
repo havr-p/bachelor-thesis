@@ -11,10 +11,10 @@ export interface ItemDTO {
   data: ItemDTOData;
   historyAction?: HistoryAction;
   id: number;
-  internalProjectUUID: string;
+  internalId: number;
   itemType: ItemType;
+  iterationId?: number;
   projectId?: number;
-  releaseId?: number;
   /**
    * @minLength 0
    * @maxLength 255

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ProjectDTO} from "../../../../gen/model";
 import {DataViewModule} from "primeng/dataview";
 import {DatePipe, NgClass, NgForOf} from "@angular/common";
@@ -10,7 +10,7 @@ import {DockComponent} from "../dock/dock.component";
 import {EventService} from "../../services/event/event.service";
 import {BaseEvent, EventSource, ProjectEventType} from "../../types";
 import {AuthService} from "../../services/auth/auth.service";
-import {of, switchMap} from "rxjs";
+import {of, Subject, switchMap, takeUntil} from "rxjs";
 import {NavigationService} from "../../services/navigation.service";
 import {OrderListModule} from "primeng/orderlist";
 import {RouterLink} from "@angular/router";
@@ -33,10 +33,11 @@ import {RouterLink} from "@angular/router";
     ],
     standalone: true
 })
-export class ProjectMenuComponent implements OnInit {
+export class ProjectMenuComponent implements OnInit, OnDestroy {
 
     projects: ProjectDTO[] = [];
     createNewProjectDialogVisible = false;
+  private destroy$ = new Subject<void>();
 
     constructor(private projectService: ProjectResourceService,
                 private eventService: EventService,
@@ -46,7 +47,9 @@ export class ProjectMenuComponent implements OnInit {
 
     ngOnInit(): void {
         this.fetchUserProjects();
-        this.eventService.event$.subscribe(
+        this.eventService.event$.pipe(
+          takeUntil(this.destroy$)
+        ).subscribe(
             async (event: BaseEvent<EventSource, ProjectEventType>) => {
                 if (event.source === EventSource.PROJECT_MENU) {
                     switch (event.type) {
@@ -94,4 +97,9 @@ export class ProjectMenuComponent implements OnInit {
             }
         )
     }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

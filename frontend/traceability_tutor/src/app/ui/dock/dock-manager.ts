@@ -78,13 +78,21 @@ export class DockManager {
           ],
         },
         {
-          label: 'Iteration',
+          label: 'Iterations',
           items: [
             {
               label: 'Save as iteration',
               command: () => {
                 this.eventService.publishEditorEvent(EditorEventType.SAVE_ITERATION);
               },
+
+            },
+            {
+              label: 'View iterations',
+              command: () => {
+                this.eventService.publishEditorEvent(EditorEventType.VIEW_ITERATIONS);
+              },
+
             },
           ],
         },

@@ -7,9 +7,9 @@ import {MenuItem} from "primeng/api";
 import {DockManager, DockMode} from "./dock-manager";
 import {AuthService} from "../../services/auth/auth.service";
 
-export interface ReleaseIdentifier {
+export interface IterationIdentifier {
     projectName: string;
-    releaseId: number;
+    iterationId: number;
     savedAt?: Date;
 }
 
@@ -32,7 +32,7 @@ export class DockComponent implements OnInit {
     }
 
 
-    get locationTitle(): string | ReleaseIdentifier {
+    get locationTitle(): string | IterationIdentifier {
         switch (this.mode) {
             case "editor":
                 return this.stateManager.currentProject ? this.stateManager.currentProject.name : "Editor";
