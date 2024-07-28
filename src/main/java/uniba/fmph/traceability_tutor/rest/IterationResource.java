@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uniba.fmph.traceability_tutor.domain.Iteration;
-import uniba.fmph.traceability_tutor.model.CreatePopulatedIterationRequest;
+import uniba.fmph.traceability_tutor.model.CreateIterationRequest;
 import uniba.fmph.traceability_tutor.model.IterationDTO;
 import uniba.fmph.traceability_tutor.service.ItemService;
 import uniba.fmph.traceability_tutor.service.IterationService;
@@ -44,9 +44,24 @@ public class IterationResource {
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createIteration(@RequestBody @Valid final IterationDTO iterationDTO) {
-        final Long createdId = iterationService.create(iterationDTO).getId();
-        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+    public ResponseEntity<IterationDTO> createIteration(@RequestBody @Valid final CreateIterationRequest request) {
+        try {
+            Iteration iteration = iterationService.createLastestIteration(request.projectId());
+            for (Long itemId:
+                    request.itemIds()) {
+                this.itemService.setIteration(itemId, iteration);
+            }
+            for (Long relationshipId:
+                    request.relationshipIds()) {
+                this.relationshipService.setIteration(relationshipId, iteration);
+            }
+            IterationDTO dto = new IterationDTO();
+            dto = iterationService.mapToDTO(iteration, dto);
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @PutMapping("/{id}")
@@ -65,28 +80,6 @@ public class IterationResource {
         }
         iterationService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/populated")
-    @ApiResponse(responseCode = "201")
-    public ResponseEntity<IterationDTO> createPopulatedIteration(@RequestBody @Valid final CreatePopulatedIterationRequest request) {
-        try {
-            Iteration iteration = iterationService.createLastestIteration(request.projectId());
-            for (Long itemId:
-                    request.itemIds()) {
-                this.itemService.setIteration(itemId, iteration);
-            }
-            for (Long relationshipId:
-                    request.relationshipIds()) {
-                this.relationshipService.setIteration(relationshipId, iteration);
-            }
-            IterationDTO dto = new IterationDTO();
-            dto = iterationService.mapToDTO(iteration, dto);
-            return new ResponseEntity<>(dto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 }

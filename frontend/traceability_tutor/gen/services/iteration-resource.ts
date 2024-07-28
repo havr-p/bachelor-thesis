@@ -18,7 +18,7 @@ import {
   Observable
 } from 'rxjs'
 import type {
-  CreatePopulatedIterationRequest,
+  CreateIterationRequest,
   IterationDTO
 } from '../model'
 
@@ -74,27 +74,18 @@ export class IterationResourceService {
       `/api/iterations`,options
     );
   }
- createIteration<TData = number>(
-    iterationDTO: IterationDTO, options?: HttpClientOptions
+ createIteration<TData = IterationDTO>(
+    createIterationRequest: CreateIterationRequest, options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.post<TData>(
       `/api/iterations`,
-      iterationDTO,options
+      createIterationRequest,options
     );
   }
- createPopulatedIteration<TData = IterationDTO>(
-    createPopulatedIterationRequest: CreatePopulatedIterationRequest, options?: HttpClientOptions
-  ): Observable<TData>  {
-    return this.http.post<TData>(
-      `/api/iterations/populated`,
-      createPopulatedIterationRequest,options
-    );
-  }
-}
+};
 
 export type GetIterationClientResult = NonNullable<IterationDTO>
 export type UpdateIterationClientResult = NonNullable<number>
 export type DeleteIterationClientResult = NonNullable<void>
 export type GetAllIterationsClientResult = NonNullable<IterationDTO[]>
-export type CreateIterationClientResult = NonNullable<number>
-export type CreatePopulatedIterationClientResult = NonNullable<IterationDTO>
+export type CreateIterationClientResult = NonNullable<IterationDTO>

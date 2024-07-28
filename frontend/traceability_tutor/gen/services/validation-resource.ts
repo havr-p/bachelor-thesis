@@ -50,6 +50,6 @@ export class ValidationResourceService {
       `/api/validations/item/update/${id}`,options
     );
   }
-}
+};
 
 export type ValidateItemEditClientResult = NonNullable<ValidationResult>

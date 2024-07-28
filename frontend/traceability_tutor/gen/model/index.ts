@@ -10,7 +10,7 @@ export * from './apiFieldErrorRejectedValue';
 export * from './authResponse';
 export * from './createItemDTO';
 export * from './createItemDTOData';
-export * from './createPopulatedIterationRequest';
+export * from './createIterationRequest';
 export * from './createProjectDTO';
 export * from './createRelationshipDTO';
 export * from './getCodeItemsResponse';

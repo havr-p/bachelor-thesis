@@ -83,7 +83,7 @@ export class GitHubResourceService {
         params: {...params, ...options?.params},}
     );
   }
-}
+};
 
 export type TagsClientResult = NonNullable<JsonNode[]>
 export type CommitsClientResult = NonNullable<JsonNode[]>

@@ -120,7 +120,7 @@ export class ProjectResourceService {
       `/api/projects/demo`,options
     );
   }
-}
+};
 
 export type GetProjectClientResult = NonNullable<ProjectDTO>
 export type UpdateProjectClientResult = NonNullable<number>

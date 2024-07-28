@@ -89,7 +89,7 @@ export class ItemResourceService {
       `/api/items/project/${id}`,options
     );
   }
-}
+};
 
 export type GetItemClientResult = NonNullable<ItemDTO>
 export type UpdateItemClientResult = NonNullable<number>
