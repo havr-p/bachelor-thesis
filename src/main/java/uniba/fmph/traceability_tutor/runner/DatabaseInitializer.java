@@ -17,7 +17,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
-import uniba.fmph.traceability_tutor.config.security.SecretsManager;
 import uniba.fmph.traceability_tutor.config.security.SecurityConfig;
 import uniba.fmph.traceability_tutor.config.security.oauth.OAuth2Provider;
 import uniba.fmph.traceability_tutor.domain.*;
@@ -28,7 +27,6 @@ import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
 import uniba.fmph.traceability_tutor.service.UserService;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -49,17 +47,17 @@ public class DatabaseInitializer implements CommandLineRunner {
     );
     private static final String TRACEABILITY_TUTOR_PROJECT_NAME = "Traceability Tutor";
     private static final String TRACEABILITY_TUTOR_PROJECT_REPO_NAME = "traceability-tutor";
-    private static final Project TRACEABILITY_TUTOR_PROJECT = Project.builder().lastOpened(OffsetDateTime.now())
+    private static Project traceabilityTutorProject = Project.builder().lastOpened(OffsetDateTime.now())
             .name(TRACEABILITY_TUTOR_PROJECT_NAME)
             .repoUrl("https://github.com/havr-p/traceability-tutor.git")
             .build();
     private static final List<Level> BABOK_LEVELS = Arrays.asList(
-            new Level(null, "#fcf6bd", "Business", TRACEABILITY_TUTOR_PROJECT),
-            new Level(null, "#ff99c8", "Stakeholder", TRACEABILITY_TUTOR_PROJECT),
-            new Level(null, "#d0f4de", "Solution", TRACEABILITY_TUTOR_PROJECT),
-            new Level(null, "#FFD275", "Design", TRACEABILITY_TUTOR_PROJECT),
-            new Level(null, "#a9def9", "Code", TRACEABILITY_TUTOR_PROJECT),
-            new Level(null, "#e4c1f9", "Test", TRACEABILITY_TUTOR_PROJECT));
+            new Level(null, "#fcf6bd", "Business", null),
+            new Level(null, "#ff99c8", "Stakeholder", null),
+            new Level(null, "#d0f4de", "Solution", null),
+            new Level(null, "#FFD275", "Design", null),
+            new Level(null, "#a9def9", "Code", null),
+            new Level(null, "#e4c1f9", "Test", null));
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final ProjectRepository projectRepository;
@@ -110,76 +108,79 @@ public class DatabaseInitializer implements CommandLineRunner {
             e.printStackTrace();
             tempItemDtos = List.of();
         }
+        var list = tempItemDtos.stream().map(dto ->  mapToEntity(project, dto)).toList();
+        itemRepository.saveAllAndFlush(list);
 
-        Map<Long, Long> oldToNewIdMap = new HashMap<>();
-
-        for (TempCreateItemDTO dto : tempItemDtos) {
-            Item item = mapToEntity(project, dto);
-            Item savedItem = itemRepository.saveAndFlush(item);
-            if (!dto.mapped)
-            oldToNewIdMap.put(dto.getId(), savedItem.getId());
-            else {
-                itemRepository.updateIdById(dto.getId(), savedItem.getId());
-                oldToNewIdMap.put(dto.id, dto.id);
-            }
-        }
 
         List<TempCreateRelationshipDTO> tempCreateRelationshipDTOS;
         try {
             tempCreateRelationshipDTOS = parseJsonCreateRelationshipDTOs();
             tempCreateRelationshipDTOS.forEach(dto -> dto.setDescription(normalizeText(dto.getDescription())));
-            log.info("tempDTOs for items : {}", tempItemDtos);
-            log.info("tempDTOs for relationship : {}", tempCreateRelationshipDTOS);
         } catch (IOException e) {
             e.printStackTrace();
             tempCreateRelationshipDTOS = List.of();
         }
 
+        assert itemRepository.existsByInternalId(13393);
+        assert itemRepository.existsByInternalId(13406);
+        assert itemRepository.existsByInternalId(13408);
+        assert itemRepository.existsByInternalId(16177);
+
         List<Relationship> relationships = tempCreateRelationshipDTOS.stream()
-                .map(dto -> {
-                    Relationship relationship = mapToEntity(dto, oldToNewIdMap);
-                    relationship.setId(dto.getId());
-                    return relationship;
-                })
+                .map(dto ->
+                    mapToEntity(dto, project))
                 .toList();
 
         relationshipRepository.saveAll(relationships);
         //secretsManager.storeSecret(project.getOwner(), UserSecretType.GITHUB_ACCESS_TOKEN, githubSecret, project);
     }
 
-    private Item mapToEntity(Project project, final CreateItemDTO createItemDTO) {
+    private Item mapToEntity(Project project, final TempCreateItemDTO dto) {
         Item item = new Item();
 
-        var data = createItemDTO.getData();
-        item.setItemType(createItemDTO.getItemType());
+        var data = dto.getData();
+        item.setItemType(dto.getItemType());
         item.setData(data);
-        item.setStatus(createItemDTO.getStatus());
-        item.setInternalProjectUUID(UUID.randomUUID().toString());
-
+        item.setStatus(dto.getStatus());
         item.setProject(project);
+        item.setInternalId(dto.internalId);
         return item;
     }
 
-    private Relationship mapToEntity(final CreateRelationshipDTO dto, Map<Long, Long> oldToNewIdMap) {
-        assert itemRepository.existsById(13393L);
-        assert itemRepository.existsById(13406L);
-        assert itemRepository.existsById(13408L);
+    private Relationship mapToEntity(final CreateRelationshipDTO dto, Project project) {
         Relationship relationship = new Relationship();
         relationship.setType(dto.getType());
         relationship.setDescription(dto.getDescription());
-        relationship.setStartItem(itemRepository.findById(oldToNewIdMap.get(dto.getStartItem())).orElseThrow(() -> new NotFoundException("Item not found")));
-        relationship.setEndItem(itemRepository.findById(oldToNewIdMap.get(dto.getEndItem())).orElseThrow(() -> new NotFoundException("Item with id = " +  oldToNewIdMap.get(dto.getEndItem()) + " was not found")));
+        Long startItemId = itemRepository.findNonIterationByProjectInternalId(project, dto.getStartItem()).get().getId();
+        Long endItemId = itemRepository.findNonIterationByProjectInternalId(project, dto.getEndItem()).get().getId();
+        relationship.setStartItem(itemRepository.findById(startItemId).orElseThrow(() -> new NotFoundException("Start item with id = " +  startItemId + " was not found")));
+        relationship.setEndItem(itemRepository.findById(endItemId).orElseThrow(() -> new NotFoundException("End item with id = " +  endItemId + " was not found")));
         return relationship;
     }
 
     private Project createDemoProjectInDb(User user) {
-        TRACEABILITY_TUTOR_PROJECT.setLevels(BABOK_LEVELS);
-        String projectName =  TRACEABILITY_TUTOR_PROJECT_NAME
-                + " # " + (projectRepository.countByOwner(user) + 1);
-        TRACEABILITY_TUTOR_PROJECT.setName(projectName);
-        TRACEABILITY_TUTOR_PROJECT.setOwner(user);
-        TRACEABILITY_TUTOR_PROJECT.setRepoName(TRACEABILITY_TUTOR_PROJECT_REPO_NAME);
-        return projectRepository.save(TRACEABILITY_TUTOR_PROJECT);
+        traceabilityTutorProject = Project.builder()
+                .repoUrl("https://github.com/havr-p/traceability-tutor.git")
+                .name(TRACEABILITY_TUTOR_PROJECT_NAME + " # " + (projectRepository.countByOwner(user) + 1))
+                .repoName(TRACEABILITY_TUTOR_PROJECT_REPO_NAME)
+                .owner(user)
+                .lastOpened(OffsetDateTime.now())
+                .levels(new ArrayList<>(BABOK_LEVELS))
+                .build();
+
+        List<Level> levels = BABOK_LEVELS.stream()
+                .map(level -> {
+                    Level newLevel = new Level();
+                    newLevel.setColor(level.getColor());
+                    newLevel.setName(level.getName());
+                    newLevel.setProject(traceabilityTutorProject);
+                    return newLevel;
+                })
+                .toList();
+
+        traceabilityTutorProject.setLevels(levels);
+
+        return projectRepository.save(traceabilityTutorProject);
     }
 
     public Long createDemoProject(User user) {
@@ -191,21 +192,20 @@ public class DatabaseInitializer implements CommandLineRunner {
     @Getter
     @ToString
     private static class TempCreateItemDTO extends CreateItemDTO {
-        private final Long id;
-        private Boolean mapped = null;
+
+        public Long internalId;
 
         @JsonCreator
         public TempCreateItemDTO(
-                @JsonProperty("id") Long id,
+                @JsonProperty("id") Long internalId,
                 @JsonProperty("projectId") @NotBlank Long projectId,
                 @JsonProperty("itemType") @NotNull ItemType itemType,
                 @JsonProperty("data") @NotNull Map<String, String> data,
                 @JsonProperty("status") @Size(max = 255) String status,
                 @JsonProperty(value = "mapped", required = false) Boolean mapped) {
             super(projectId, itemType, data, status);
-            this.id = id;
-            this.mapped = (mapped != null) ? mapped : false;
-            this.setProjectId(TRACEABILITY_TUTOR_PROJECT.getId());
+            this.setProjectId(traceabilityTutorProject.getId());
+            this.internalId = internalId;
         }
 
     }
@@ -213,7 +213,6 @@ public class DatabaseInitializer implements CommandLineRunner {
     @Getter
     @ToString
     private static class TempCreateRelationshipDTO extends CreateRelationshipDTO {
-        private final Long id;
 
         @JsonCreator
         public TempCreateRelationshipDTO(
@@ -223,7 +222,6 @@ public class DatabaseInitializer implements CommandLineRunner {
                 @JsonProperty("startItem") @NotNull Long startItem,
                 @JsonProperty("endItem") @NotNull Long endItem) {
             super(relationshipType, description, startItem, endItem);
-            this.id = id;
         }
 
     }
