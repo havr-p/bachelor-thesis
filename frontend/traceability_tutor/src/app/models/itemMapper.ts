@@ -53,14 +53,7 @@ export type TestItem = {
     data: TestData;
 } & BaseItem;
 
-export type BaseItem = {
-    id: number;
-    internalProjectUUID: string;
-    projectId: number;
-    releaseId?: number;
-    status?: string;
-    historyAction?: HistoryAction;
-};
+export type BaseItem = Omit<ItemDTO, 'data' | 'itemType'>
 
 export type Item = RequirementItem | DesignItem | CodeItem | TestItem;
 

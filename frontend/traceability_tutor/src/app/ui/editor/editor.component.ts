@@ -165,6 +165,10 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
         break;
       case EditorEventType.FETCH_CODE:
         this.fetchCodeItems();
+        break;
+      case EditorEventType.SAVE_ITERATION:
+        this.saveIteration();
+        break;
     }
   }
 
@@ -255,5 +259,9 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
       else {
         this.settingsVisible = true;
       }
+  }
+
+  private saveIteration() {
+    this.editorService.saveIteration()
   }
 }

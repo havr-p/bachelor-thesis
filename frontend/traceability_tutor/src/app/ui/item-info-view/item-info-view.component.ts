@@ -26,6 +26,7 @@ import { StateManager } from "../../models/state";
 import { Item } from "../../models/itemMapper";
 import {RelationshipTableComponent} from "../relationship-table/relationship-table.component";
 import {ItemFormComponent} from "../forms/item-form/item-form.component";
+import {ValidationService} from "../../services/validation/validation.service";
 
 @Component({
   selector: 'app-item-info-view',
@@ -68,14 +69,25 @@ export class ItemInfoViewComponent implements AfterViewInit, OnChanges {
   constructor(
       private cdr: ChangeDetectorRef,
       private state: StateManager,
+      private validationService: ValidationService,
   ) {
   }
 
 
-  saveChanges() {
+  async saveChanges() {
     this.itemForm.prepareFormData();
-    this.editorService.editItem(this.item);
-    this.toggleVisible.emit(false);
+   this.validationService.validateItemEdits(this.item).then(validationResult => {
+     console.log(validationResult);
+     if (validationResult.isValid) {
+       this.editorService.editItem(this.item);
+       this.toggleVisible.emit(false);
+     } else {
+       for (const msg of validationResult.messages!) {
+         console.log(msg);
+       }
+     }
+   });
+
   }
 
   cancelChanges() {

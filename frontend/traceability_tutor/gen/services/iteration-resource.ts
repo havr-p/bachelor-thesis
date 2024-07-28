@@ -18,8 +18,8 @@ import {
   Observable
 } from 'rxjs'
 import type {
-  CreateItemDTO,
-  ItemDTO
+  CreatePopulatedIterationRequest,
+  IterationDTO
 } from '../model'
 
 
@@ -41,59 +41,60 @@ type HttpClientOptions = {
 
 
 @Injectable({ providedIn: 'root' })
-export class ItemResourceService {
+export class IterationResourceService {
   constructor(
     private http: HttpClient,
-  ) {} getItem<TData = ItemDTO>(
+  ) {} getIteration<TData = IterationDTO>(
     id: number, options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.get<TData>(
-      `/api/items/${id}`,options
+      `/api/iterations/${id}`,options
     );
   }
- updateItem<TData = number>(
+ updateIteration<TData = number>(
     id: number,
-    itemDTO: ItemDTO, options?: HttpClientOptions
+    iterationDTO: IterationDTO, options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.put<TData>(
-      `/api/items/${id}`,
-      itemDTO,options
+      `/api/iterations/${id}`,
+      iterationDTO,options
     );
   }
- deleteItem<TData = void>(
+ deleteIteration<TData = void>(
     id: number, options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.delete<TData>(
-      `/api/items/${id}`,options
+      `/api/iterations/${id}`,options
     );
   }
- getAllItems<TData = ItemDTO[]>(
+ getAllIterations<TData = IterationDTO[]>(
      options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.get<TData>(
-      `/api/items`,options
+      `/api/iterations`,options
     );
   }
- createItem<TData = ItemDTO>(
-    createItemDTO: CreateItemDTO, options?: HttpClientOptions
+ createIteration<TData = number>(
+    iterationDTO: IterationDTO, options?: HttpClientOptions
   ): Observable<TData>  {
     return this.http.post<TData>(
-      `/api/items`,
-      createItemDTO,options
+      `/api/iterations`,
+      iterationDTO,options
     );
   }
- getProjectEditableItems<TData = ItemDTO[]>(
-    id: number, options?: HttpClientOptions
+ createPopulatedIteration<TData = IterationDTO>(
+    createPopulatedIterationRequest: CreatePopulatedIterationRequest, options?: HttpClientOptions
   ): Observable<TData>  {
-    return this.http.get<TData>(
-      `/api/items/project/${id}`,options
+    return this.http.post<TData>(
+      `/api/iterations/populated`,
+      createPopulatedIterationRequest,options
     );
   }
 }
 
-export type GetItemClientResult = NonNullable<ItemDTO>
-export type UpdateItemClientResult = NonNullable<number>
-export type DeleteItemClientResult = NonNullable<void>
-export type GetAllItemsClientResult = NonNullable<ItemDTO[]>
-export type CreateItemClientResult = NonNullable<ItemDTO>
-export type GetProjectEditableItemsClientResult = NonNullable<ItemDTO[]>
+export type GetIterationClientResult = NonNullable<IterationDTO>
+export type UpdateIterationClientResult = NonNullable<number>
+export type DeleteIterationClientResult = NonNullable<void>
+export type GetAllIterationsClientResult = NonNullable<IterationDTO[]>
+export type CreateIterationClientResult = NonNullable<number>
+export type CreatePopulatedIterationClientResult = NonNullable<IterationDTO>

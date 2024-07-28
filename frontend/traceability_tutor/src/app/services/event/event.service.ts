@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
+import {shareReplay, Subject} from 'rxjs';
 import {
     BaseEvent,
     EditorEvent,
@@ -17,7 +17,7 @@ import {IndividualConfig, ToastrService} from 'ngx-toastr';
 })
 export class EventService {
     private eventSource = new Subject<BaseEvent<EventSource, any>>();
-    event$ = this.eventSource.asObservable();
+    event$ = this.eventSource.asObservable().pipe(shareReplay(1));
 
     constructor(private toastr: ToastrService) {
     }

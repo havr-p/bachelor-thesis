@@ -42,7 +42,7 @@ export class AuthInterceptor implements HttpInterceptor {
             this.authService.logout();
         } else if (error.status === 500 && error.url?.includes("codeItems")) {
           this.eventService.notify("Please check whether GitHub access token is set correctly", 'error');
-          this.eventService.publishEditorEvent(EditorEventType.OPEN_SETTINGS, 'tokenCorrection');
+          //this.eventService.publishEditorEvent(EditorEventType.OPEN_SETTINGS, 'tokenCorrection');
         }
         return throwError(() => error);
     }

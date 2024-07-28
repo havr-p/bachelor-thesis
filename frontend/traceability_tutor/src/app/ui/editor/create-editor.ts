@@ -139,19 +139,19 @@ export async function createEditor(
                     list: [
                         {
                             key: '1',
-                            label: 'Show backward lineage',
-                            //fixme maybe we can use parent-child relationship to show lineage
+                            label: 'Show backward traceability',
+                            //fixme maybe we can use parent-child relationship to show traceability
                             handler: showBackwardLineage
                         },
                       {
                         key: '2',
-                        label: 'Show forward lineage',
-                        //fixme maybe we can use parent-child relationship to show lineage
+                        label: 'Show forward traceability',
+                        //fixme maybe we can use parent-child relationship to show traceability
                         handler: showForwardLineage
                       },
 
                         {
-                          label: 'Show forward and backward lineage',
+                          label: 'Show forward and backward traceability',
                           key: '4',
                           handler: () => {
                               showForwardLineage();

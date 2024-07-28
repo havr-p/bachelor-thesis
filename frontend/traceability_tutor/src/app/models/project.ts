@@ -1,5 +1,4 @@
-import {LevelDTO, ProjectDTO} from "../../../gen/model";
-import {Release} from "./release";
+import {IterationDTO, LevelDTO, ProjectDTO} from "../../../gen/model";
 
 export class Project implements Omit<ProjectDTO, 'levels'> {
     id: number
@@ -7,7 +6,7 @@ export class Project implements Omit<ProjectDTO, 'levels'> {
     owner: number;
     repoUrl: string;
     repoName: string;
-    releases: Release[] = [];
+    iterations: IterationDTO[] = [];
     levels: Map<string, LevelDTO> = new Map();
     lastOpened: Date;
 
@@ -21,8 +20,8 @@ export class Project implements Omit<ProjectDTO, 'levels'> {
         this.lastOpened = projectDTO.lastOpened;
     }
 
-    addRelease(release: Release) {
-        this.releases.push(release);
+    addIteration(iterationDTO: IterationDTO) {
+        this.iterations.push(iterationDTO);
     }
 
 }

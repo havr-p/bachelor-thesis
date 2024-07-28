@@ -80,7 +80,7 @@ export class UserResourceService {
       `/api/users/me`,options
     );
   }
-};
+}
 
 export type GetUserClientResult = NonNullable<UserDTO>
 export type UpdateUserClientResult = NonNullable<number>

@@ -89,7 +89,7 @@ export class RelationshipResourceService {
       `/api/relationships/project/${id}`,options
     );
   }
-};
+}
 
 export type GetRelationshipClientResult = NonNullable<RelationshipDTO>
 export type UpdateRelationshipClientResult = NonNullable<RelationshipDTO>

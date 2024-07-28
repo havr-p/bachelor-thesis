@@ -8,5 +8,6 @@ import type { ItemDTO } from './itemDTO';
 
 export interface GetCodeItemsResponse {
   newRelationships?: RelationshipDTO[];
+  unmappedInternalIds?: number[];
   updatedItems?: ItemDTO[];
 }

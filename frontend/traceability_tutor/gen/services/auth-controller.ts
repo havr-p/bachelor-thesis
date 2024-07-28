@@ -61,7 +61,7 @@ export class AuthControllerService {
       loginRequest,options
     );
   }
-};
+}
 
 export type SignUpClientResult = NonNullable<AuthResponse>
 export type LoginClientResult = NonNullable<AuthResponse>
