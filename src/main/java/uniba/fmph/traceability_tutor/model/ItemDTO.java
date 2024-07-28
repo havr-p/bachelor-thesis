@@ -23,9 +23,9 @@ public class ItemDTO {
     @Positive
     private Long projectId;
 
-    @NotBlank
-    @UUID
-    String internalProjectUUID;
+    @Positive
+    @NotNull
+    Long internalId;
 
     @NotNull
     private ItemType itemType;
@@ -38,6 +38,6 @@ public class ItemDTO {
 
     private HistoryAction historyAction;
 
-    private Long releaseId;
+    private Long iterationId;
 
 }

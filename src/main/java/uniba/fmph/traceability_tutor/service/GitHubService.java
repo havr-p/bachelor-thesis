@@ -1,6 +1,5 @@
 package uniba.fmph.traceability_tutor.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.Setter;
@@ -11,11 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import uniba.fmph.traceability_tutor.config.security.SecretsManager;
-import uniba.fmph.traceability_tutor.domain.Item;
-import uniba.fmph.traceability_tutor.domain.Project;
-import uniba.fmph.traceability_tutor.domain.User;
+import uniba.fmph.traceability_tutor.domain.*;
 import uniba.fmph.traceability_tutor.mapper.ItemMapper;
 import uniba.fmph.traceability_tutor.model.*;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
@@ -42,6 +38,7 @@ public class GitHubService {
     @Setter
     private GitHub gitHub;
     private Project currentProject;
+    private Iteration currentIteration;
     private final ProjectRepository projectRepository;
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
@@ -49,12 +46,13 @@ public class GitHubService {
     private final RelationshipRepository relationshipRepository;
     private final UserService userService;
     private final SecretsManager secretsManager;
+    private final InternalIdGenerator internalIdGenerator;
 
     public GitHubService(@Qualifier("github") WebClient webClient, ObjectMapper objectMapper,
                          ProjectRepository projectRepository, ItemRepository itemRepository,
                          ItemMapper itemMapper, RelationshipService relationshipService,
                          RelationshipRepository relationshipRepository, UserService userService,
-                         SecretsManager secretsManager) {
+                         SecretsManager secretsManager, InternalIdGenerator internalIdGenerator) {
         this.webClient = webClient;
         this.objectMapper = objectMapper;
         this.projectRepository = projectRepository;
@@ -64,6 +62,7 @@ public class GitHubService {
         this.relationshipRepository = relationshipRepository;
         this.userService = userService;
         this.secretsManager = secretsManager;
+        this.internalIdGenerator = internalIdGenerator;
     }
 
     public void setCurrentProject(Long currentProjectId) {
@@ -101,9 +100,9 @@ public class GitHubService {
         project.setLastCodeFetched(OffsetDateTime.now());
         projectRepository.save(project);
 
-        Map<Long, Item> existingCodeItems = itemRepository.findByItemTypeAndProjectOrderByIdAsc(ItemType.CODE, project)
+        Map<Long, Item> existingCodeItems = itemRepository.findByItemTypeAndProjectOrderByInternalIdAsc(ItemType.CODE, project)
                 .stream()
-                .collect(Collectors.toMap(Item::getId, Function.identity()));
+                .collect(Collectors.toMap(Item::getInternalId, Function.identity()));
 
         clearFromCodeData(project, existingCodeItems);
 
@@ -119,28 +118,36 @@ public class GitHubService {
 
         List<Item> updatedItems = new ArrayList<>();
         List<RelationshipDTO> relationshipDTOs = new ArrayList<>();
+        List<Long> unmappedInternalIds = new ArrayList<>();
 
         for (Map.Entry<Long, List<Commit>> entry : requirementToCommits.entrySet()) {
-            Long requirementId = entry.getKey();
-            List<Commit> commits = entry.getValue();
+            Long internalId = entry.getKey();
+            var item = itemRepository.findByInternalIdAndProject_IdAndIterationNull(internalId, projectId);
+            if (item != null) {
+                Long requirementId = item.getId();
+                List<Commit> commits = entry.getValue();
 
-            Item codeItem = createOrUpdateCodeItem(project, requirementId, commits, existingCodeItems);
-            updatedItems.add(codeItem);
+                Item codeItem = createOrUpdateCodeItem(project, internalId, commits, existingCodeItems);
+                updatedItems.add(codeItem);
 
-            if (itemRepository.existsById(requirementId)) {
-                RelationshipDTO dto = relationshipService.connectRequirementToCode(requirementId, codeItem.getId());
-                relationshipDTOs.add(dto);
+                if (itemRepository.existsById(requirementId)) {
+                    RelationshipDTO dto = relationshipService.connectRequirementToCode(requirementId, codeItem.getId());
+                    relationshipDTOs.add(dto);
+                } else {
+                    throw new AppException("Commit was mapped with requirement id = " + requirementId + " that is not present in database", HttpStatus.BAD_REQUEST);
+                }
             } else {
-                throw new AppException("Commit was mapped with requirement id = " + requirementId + " that is not present in database", HttpStatus.BAD_REQUEST);
+                unmappedInternalIds.add(internalId);
+                //throw new AppException("Commit was mapped with requirement internal id = " + internalId + " that is not present in database", HttpStatus.BAD_REQUEST);
             }
         }
 
-        return new GetCodeItemsResponse(updatedItems.stream().map(itemMapper::toDto).toList(), relationshipDTOs);
+        return new GetCodeItemsResponse(updatedItems.stream().map(itemMapper::toDto).toList(), relationshipDTOs, unmappedInternalIds);
     }
 
     @Transactional
     public void clearFromCodeData(Project project, Map<Long, Item> existingCodeItems) {
-        itemRepository.deleteByItemTypeAndProjectAndRelease(ItemType.CODE, project, null);
+        itemRepository.deleteByItemTypeAndProjectAndIteration(ItemType.CODE, project, null);
         relationshipService.deleteAllConnectedWithCodeItems(existingCodeItems.keySet());
     }
 
@@ -154,7 +161,7 @@ public class GitHubService {
                     info.getCommitDate(),
                     commitObject.getHtmlUrl().toString());
 
-            List<Long> requirements = extractRequirementIds(info.getMessage());
+            List<Long> requirements = extractRequirementInternalIds(info.getMessage());
             for (Long req : requirements) {
                 requirementToCommits.computeIfAbsent(req, _ -> new ArrayList<>()).add(commit);
             }
@@ -162,15 +169,15 @@ public class GitHubService {
         return requirementToCommits;
     }
 
-    private Item createOrUpdateCodeItem(Project project, Long requirementId, List<Commit> commits, Map<Long, Item> existingCodeItems) throws IOException {
-        Item codeItem = existingCodeItems.getOrDefault(requirementId, new Item());
+    private Item createOrUpdateCodeItem(Project project, Long requirementInternalId, List<Commit> commits, Map<Long, Item> existingCodeItems) throws IOException {
+        Item codeItem = existingCodeItems.getOrDefault(requirementInternalId, new Item());
         codeItem.setProject(project);
         codeItem.setItemType(ItemType.CODE);
-        codeItem.setInternalProjectUUID(UUID.randomUUID().toString());
+        codeItem.setInternalId(internalIdGenerator.generateNextInternalId());
         Map<String, String> data = new HashMap<>(codeItem.getData() != null ? codeItem.getData() : new HashMap<>());
-        data.put("requirementId", requirementId.toString());
+        data.put("requirementId", requirementInternalId.toString());
         data.put("commits", objectMapper.writeValueAsString(commits));
-        data.put("description", "Commits linked to requirement #" + requirementId);
+        data.put("description", "Commits linked to requirement #" + requirementInternalId);
         data.put("name", commits.stream().map(Commit::message).collect(Collectors.joining("\n")));
         List<LinkOrComment> linksToCommits = commits.stream().map(commit -> new LinkOrComment(commit.htmlUrl(), commit.committedAt())).toList();
         data.put("links", objectMapper.writeValueAsString(linksToCommits));
@@ -178,7 +185,7 @@ public class GitHubService {
         return itemRepository.save(codeItem);
     }
 
-    private List<Long> extractRequirementIds(String message) {
+    private List<Long> extractRequirementInternalIds(String message) {
         List<Long> ids = new ArrayList<>();
         Pattern pattern = Pattern.compile("tt\\[(.*?)]");
         Matcher matcher = pattern.matcher(message);

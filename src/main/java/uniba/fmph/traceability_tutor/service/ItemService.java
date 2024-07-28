@@ -1,23 +1,23 @@
 package uniba.fmph.traceability_tutor.service;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import uniba.fmph.traceability_tutor.domain.Item;
-import uniba.fmph.traceability_tutor.domain.Project;
-import uniba.fmph.traceability_tutor.domain.Relationship;
-import uniba.fmph.traceability_tutor.domain.Release;
+import uniba.fmph.traceability_tutor.domain.*;
+import uniba.fmph.traceability_tutor.mapper.ItemMapper;
 import uniba.fmph.traceability_tutor.model.CreateItemDTO;
 import uniba.fmph.traceability_tutor.model.ItemDTO;
+import uniba.fmph.traceability_tutor.model.ItemType;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.ProjectRepository;
 import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
-import uniba.fmph.traceability_tutor.repos.ReleaseRepository;
+import uniba.fmph.traceability_tutor.repos.IterationRepository;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.util.List;
-import java.util.UUID;
 
 import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY_SCHEME;
 
@@ -28,16 +28,20 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final ProjectRepository projectRepository;
-    private final ReleaseRepository releaseRepository;
+    private final IterationRepository iterationRepository;
     private final RelationshipRepository relationshipRepository;
+    private final ItemMapper itemMapper;
+    private final InternalIdGenerator internalIdGenerator;
 
     public ItemService(final ItemRepository itemRepository,
-                       final ProjectRepository projectRepository, final ReleaseRepository releaseRepository,
-                       final RelationshipRepository relationshipRepository) {
+                       final ProjectRepository projectRepository, final IterationRepository iterationRepository,
+                       final RelationshipRepository relationshipRepository, ItemMapper itemMapper, InternalIdGenerator internalIdGenerator) {
         this.itemRepository = itemRepository;
         this.projectRepository = projectRepository;
-        this.releaseRepository = releaseRepository;
+        this.iterationRepository = iterationRepository;
         this.relationshipRepository = relationshipRepository;
+        this.itemMapper = itemMapper;
+        this.internalIdGenerator = internalIdGenerator;
     }
 
     public List<ItemDTO> findAll() {
@@ -55,8 +59,8 @@ public class ItemService {
 
     public ItemDTO create(final CreateItemDTO createItemDTO) {
         ItemDTO dto = new ItemDTO();
-        mapToDTO(itemRepository.save(mapToEntity(createItemDTO)), dto);
-        return dto;
+        var item = itemRepository.save(mapToEntity(createItemDTO));
+        return itemMapper.toDto(item);
     }
 
     public void update(final Long id, final ItemDTO itemDTO) {
@@ -71,15 +75,7 @@ public class ItemService {
     }
 
     private ItemDTO mapToDTO(final Item item, final ItemDTO itemDTO) {
-        itemDTO.setId(item.getId());
-        itemDTO.setItemType(item.getItemType());
-        itemDTO.setData(item.getData());
-        itemDTO.setStatus(item.getStatus());
-        itemDTO.setInternalProjectUUID(item.getInternalProjectUUID());
-        itemDTO.setHistoryAction(item.getHistoryAction());
-        itemDTO.setProjectId(item.getProject() == null ? null : item.getProject().getId());
-        itemDTO.setReleaseId(item.getRelease() == null ? null : item.getRelease().getId());
-        return itemDTO;
+        return itemMapper.toDto(item);
     }
 
     private Item mapToEntity(final ItemDTO itemDTO) {
@@ -94,8 +90,8 @@ public class ItemService {
         item.setItemType(createItemDTO.getItemType());
         item.setData(data);
         item.setStatus(createItemDTO.getStatus());
-        // UUID will be the same in all iterations
-        item.setInternalProjectUUID(UUID.randomUUID().toString());
+        // internal id will be the same in all iterations
+        item.setInternalId(internalIdGenerator.generateNextInternalId());
         final Project project = createItemDTO.getProjectId() == null ? null : projectRepository.findById(createItemDTO.getProjectId())
                 .orElseThrow(() -> new NotFoundException("Project with id " + createItemDTO.getProjectId() + "was not found when creating the new item."));
         item.setProject(project);
@@ -106,14 +102,14 @@ public class ItemService {
             item.setItemType(itemDTO.getItemType());
             item.setData(itemDTO.getData());
             item.setStatus(itemDTO.getStatus());
-            item.setInternalProjectUUID(itemDTO.getInternalProjectUUID());
             item.setHistoryAction(itemDTO.getHistoryAction());
             final Project project = itemDTO.getProjectId() == null ? null : projectRepository.findById(itemDTO.getProjectId())
                     .orElseThrow(() -> new NotFoundException("project not found"));
             item.setProject(project);
-            final Release release = itemDTO.getReleaseId() == null ? null : releaseRepository.findById(itemDTO.getReleaseId())
-                    .orElseThrow(() -> new NotFoundException("release not found"));
-            item.setRelease(release);
+            final Iteration iteration = itemDTO.getIterationId() == null ? null : iterationRepository.findById(itemDTO.getIterationId())
+                    .orElseThrow(() -> new NotFoundException("iteration not found"));
+            item.setIteration(iteration);
+            item.setInternalId(itemDTO.getInternalId());
     }
 
     public ReferencedWarning getReferencedWarning(final Long id) {
@@ -136,8 +132,16 @@ public class ItemService {
     }
 
     public List<ItemDTO> getProjectEditableItems(Long projectId) {
-        return itemRepository.findNonReleaseByProjectId(projectId).stream()
-                .map(item -> mapToDTO(item, new ItemDTO()))
+        return itemRepository.findNonIterationByProjectId(projectId).stream()
+                .map(itemMapper::toDto)
                 .toList();
+    }
+
+    public void setIteration(Long itemId, Iteration iteration) {
+        itemRepository.updateIterationById(iteration, itemId);
+    }
+
+    public Item findLastestCodeItem(Long projectId) {
+        return itemRepository.findFirstByProject_IdAndItemTypeOrderByDateCreatedDesc(projectId, ItemType.CODE);
     }
 }
