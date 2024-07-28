@@ -33,6 +33,7 @@ export enum EditorEventType {
     REARRANGE = 'rearrange',
     OPEN_SETTINGS = 'open settings',
     FETCH_CODE = 'fetch code',
+    VIEW_ITERATIONS = 'view iterations',
 }
 
 export enum ProjectEventType {

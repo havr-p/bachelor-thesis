@@ -52,8 +52,8 @@ public class Relationship {
     private Item endItem;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "release_id")
-    private Release release;
+    @JoinColumn(name = "iteration_id")
+    private Iteration iteration;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

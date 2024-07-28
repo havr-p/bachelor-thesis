@@ -3,12 +3,12 @@ package uniba.fmph.traceability_tutor.service;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.Item;
+import uniba.fmph.traceability_tutor.domain.Iteration;
 import uniba.fmph.traceability_tutor.domain.Relationship;
-import uniba.fmph.traceability_tutor.domain.Release;
 import uniba.fmph.traceability_tutor.model.*;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
-import uniba.fmph.traceability_tutor.repos.ReleaseRepository;
+import uniba.fmph.traceability_tutor.repos.IterationRepository;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 
 import java.util.List;
@@ -20,13 +20,13 @@ public class RelationshipService {
 
     private final RelationshipRepository relationshipRepository;
     private final ItemRepository itemRepository;
-    private final ReleaseRepository releaseRepository;
+    private final IterationRepository iterationRepository;
 
     public RelationshipService(final RelationshipRepository relationshipRepository,
-                               final ItemRepository itemRepository, final ReleaseRepository releaseRepository) {
+                               final ItemRepository itemRepository, final IterationRepository iterationRepository) {
         this.relationshipRepository = relationshipRepository;
         this.itemRepository = itemRepository;
-        this.releaseRepository = releaseRepository;
+        this.iterationRepository = iterationRepository;
     }
 
     public List<RelationshipDTO> findAll() {
@@ -69,7 +69,7 @@ public class RelationshipService {
         relationshipDTO.setDescription(relationship.getDescription());
         relationshipDTO.setStartItem(relationship.getStartItem() == null ? null : relationship.getStartItem().getId());
         relationshipDTO.setEndItem(relationship.getEndItem() == null ? null : relationship.getEndItem().getId());
-        relationshipDTO.setRelease(relationship.getRelease() == null ? null : relationship.getRelease().getId());
+        relationshipDTO.setRelease(relationship.getIteration() == null ? null : relationship.getIteration().getId());
         return relationshipDTO;
     }
 
@@ -97,14 +97,14 @@ public class RelationshipService {
         final Item endItem = relationshipDTO.getEndItem() == null ? null : itemRepository.findById(relationshipDTO.getEndItem())
                 .orElseThrow(() -> new NotFoundException("EndItem not found"));
         relationship.setEndItem(endItem);
-        final Release release = relationshipDTO.getRelease() == null ? null : releaseRepository.findById(relationshipDTO.getRelease())
+        final Iteration iteration = relationshipDTO.getRelease() == null ? null : iterationRepository.findById(relationshipDTO.getRelease())
                 .orElseThrow(() -> new NotFoundException("release not found"));
-        relationship.setRelease(release);
+        relationship.setIteration(iteration);
         return relationship;
     }
 
     public List<RelationshipDTO> getProjectEditableRelationships(Long projectId) {
-        return relationshipRepository.findNonReleaseByProjectId(projectId).stream()
+        return relationshipRepository.findNonIterationByProjectId(projectId).stream()
                 .map(item -> mapToDTO(item, new RelationshipDTO()))
                 .toList();
     }
@@ -124,8 +124,12 @@ public class RelationshipService {
     public void deleteAllConnectedWithCodeItems(Set<Long> codeItemIds) {
         for (Long id :
              codeItemIds) {
-            relationshipRepository.deleteByReleaseNullAndStartItem_IdOrEndItem_Id(id, id);
+            relationshipRepository.deleteByIterationNullAndStartItem_IdOrEndItem_Id(id, id);
         }
+    }
+
+    public void setIteration(Long relationshipId, Iteration iteration) {
+        relationshipRepository.updateIterationById(iteration, relationshipId);
     }
 
 //    public List<RelationshipDTO> getRelationshipsWith(RelatedToItemRelRequest request) {

@@ -8,13 +8,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ReleaseDTO {
+public class IterationDTO {
 
     private Long id;
 
     @NotNull
     @Size(max = 255)
-    private String releaseCommitId;
+    private String iterationCommitSha;
 
     @NotNull
     @Size(max = 255)

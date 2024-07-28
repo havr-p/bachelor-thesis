@@ -1,6 +1,8 @@
 package uniba.fmph.traceability_tutor.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,7 +16,9 @@ import java.time.OffsetDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class Release {
+@Builder
+@AllArgsConstructor
+public class Iteration {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -30,10 +34,10 @@ public class Release {
     )
     private Long id;
 
-    @Column(nullable = false)
-    private String releaseCommitId;
+    @Column(nullable = true)
+    private String iterationCommitSha;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String semanticId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,4 +52,7 @@ public class Release {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
+    public Iteration() {
+
+    }
 }

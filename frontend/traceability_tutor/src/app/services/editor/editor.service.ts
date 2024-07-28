@@ -5,30 +5,29 @@ import {structures} from "rete-structures";
 import {concatMap, firstValueFrom, from, map, Observable, switchMap} from "rxjs";
 
 import {
-  CreateItemDTO,
+  CreateItemDTO, CreatePopulatedIterationRequest,
   CreateRelationshipDTO,
   ItemDTO,
   ItemType,
+  IterationDTO,
   ProjectDTO,
   RelationshipDTO,
   RelationshipType,
-  ReleaseDTO
 } from "../../../../gen/model";
 import {Item, mapGenericModel, toItemDTO} from "../../models/itemMapper";
 import {ItemNode} from "../../items/item-node";
 import {ConnProps, ItemEventType, Schemes} from "../../types";
 import {Project} from "../../models/project";
-import {Release} from "../../models/release";
 import {EventService} from "../event/event.service";
 import {StateManager} from "../../models/state";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";
-import {ReleaseResourceService} from "../../../../gen/services/release-resource";
 import {ItemResourceService} from "../../../../gen/services/item-resource";
 import {Connection} from "../../connection";
-import {GraphCycleDetector} from "../../ui/editor/cycleValidation";
 import {AreaExtra, unselectAll} from "../../ui/editor/create-editor";
 import {RelationshipResourceService} from "../../../../gen/services/relationship-resource";
 import {GitHubResourceService} from "../../../../gen/services/git-hub-resource";
+import {IterationResourceService} from "../../../../gen/services/iteration-resource";
+import {GraphCycleValidator} from "../validation/cycleValidation";
 
 const socket = new ClassicPreset.Socket('socket');
 
@@ -45,7 +44,7 @@ export class EditorService {
   constructor(
     private state: StateManager,
     private projectService: ProjectResourceService,
-    private releaseService: ReleaseResourceService,
+    private iterationService: IterationResourceService,
     private itemService: ItemResourceService,
     private relationshipService: RelationshipResourceService,
     private eventService: EventService,
@@ -66,6 +65,7 @@ export class EditorService {
   }
 
   async addItem(item: ItemDTO) {
+    console.log("item", item)
     const data = mapGenericModel(item);
     const lvlColor = this.getLevelColor(data);
     let node = new ItemNode(data);
@@ -78,6 +78,7 @@ export class EditorService {
   }
 
   async createItem(dto: CreateItemDTO) {
+    console.log("createItemDTO", dto)
     this.itemService.createItem(dto).subscribe({
       next: async item => await this.addItem(item)
     });
@@ -145,11 +146,10 @@ export class EditorService {
     items: ItemDTO[]
   }> {
     const project = new Project(projectDTO);
-    return this.releaseService.getAllReleases({params: {projectId: projectId}}).pipe(
-      map((releases: ReleaseDTO[]) => {
+    return this.iterationService.getAllIterations({params: {projectId: projectId}}).pipe(
+      map((releases: IterationDTO[]) => {
         releases.forEach(releaseDTO => {
-          const release = new Release(releaseDTO);
-          project.addRelease(release);
+          project.addIteration(releaseDTO);
         });
         return project;
       }),
@@ -181,8 +181,8 @@ export class EditorService {
   async arrangeNodes(): Promise<void> {
     await this.arrange.layout({
       options: {
-        'elk.spacing.nodeNode': 100,
-        'elk.layered.spacing.nodeNodeBetweenLayers': 300,
+        'elk.spacing.nodeNode': 200,
+        'elk.layered.spacing.nodeNodeBetweenLayers': 200,
         'elk.alignment': 'RIGHT',
         'elk.layered.nodePlacement.strategy': 'LINEAR_SEGMENTS',
         'elk.direction': 'RIGHT',
@@ -283,8 +283,7 @@ export class EditorService {
 
   public async notCreateCycle(startItem: number, endItem: number): Promise<boolean> {
     const tempConnection = await this.addConnectionForCheck(startItem, endItem);
-    const graph = structures(this.editor);
-    const graphCycleDetector = new GraphCycleDetector(graph);
+    const graphCycleDetector = new GraphCycleValidator(this.editor);
 
     const cycleDetected = graphCycleDetector.isCyclic();
     await this.editor.removeConnection(tempConnection);
@@ -398,16 +397,7 @@ export class EditorService {
   }
 
   async deleteItemWithConnections(payload: { item: string, relationships: number[] }) {
-    from(this.editor.removeNode(payload.item)).pipe(
-      concatMap(() => from(payload.relationships).pipe(
-        concatMap(conn => from(this.editor.removeConnection(conn.toString())).pipe(
-          concatMap(() => from(this.relationshipService.deleteRelationship(conn)))
-        )),
-        concatMap(() => from(this.itemService.deleteItem(Number(payload.item)))),
-      ))
-    ).subscribe({
-      complete: () => this.eventService.notify(`Item ${payload.item} with its adjacent edges was deleted successfully`, 'success')
-    });
+    await this.deleteItemWithAllConnections(payload.item);
   }
 
   async deleteItemWithAllConnections(itemId: string) {
@@ -423,7 +413,9 @@ export class EditorService {
           )),
         concatMap(() => from(this.itemService.deleteItem(Number(itemId)))),
       ))
-    ).subscribe({});
+    ).subscribe({
+      complete: () => this.eventService.notify(`Item #${itemId} with its adjacent edges was deleted successfully`, 'success')
+    });
   }
 
   /**
@@ -438,6 +430,11 @@ export class EditorService {
       const result = await firstValueFrom(this.githubService.codeItems(projectId));
       await this.setupCodeItems(result.updatedItems);
       await this.setupRelationshipsWithCodeItems(result.newRelationships);
+      if (result.unmappedInternalIds) {
+        const message = "Internal IDs mentioned in commits, but corresponding requirements not found: \n"
+        + result.unmappedInternalIds.join(", ");
+        this.eventService.notify(message, "warning", "Mapping error")
+      }
       await this.arrangeNodes();
     } catch (error) {
       console.error('Error in fetchCodeItems:', error);
@@ -485,5 +482,26 @@ export class EditorService {
       await this.editor.removeConnection(connectionToDelete.id);
       await this.area.update('connection', connectionToDelete.id);
     }
+  }
+
+  saveIteration() {
+    const graph = structures(this.editor);
+    const nodeIds = graph.nodes().map(n => Number(n.id));
+    const relationshipIds = graph.connections().map(c => Number(c.id));
+    const req: CreatePopulatedIterationRequest = {projectId: this.state.currentProject?.id,
+                                                  itemIds: nodeIds,
+                                                  relationshipIds: relationshipIds}
+    this.iterationService.createPopulatedIteration(req).subscribe(
+        {
+          next: (iteration: IterationDTO) => {
+            this.state.currentProject?.addIteration(iteration);
+    },
+          error: err => {
+            console.log(err);
+          }
+        }
+    )
+
+
   }
 }

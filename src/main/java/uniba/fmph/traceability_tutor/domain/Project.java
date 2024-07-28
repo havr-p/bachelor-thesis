@@ -55,7 +55,7 @@ public class Project {
     private Set<Item> projectItems;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Release> releases;
+    private Set<Iteration> iterations;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -27,7 +27,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
-    private final ReleaseRepository releaseRepository;
+    private final IterationRepository iterationRepository;
     private final ProjectMapper projectMapper;
     private final LevelMapper levelMapper;
     private final SecretsManager secretsManager;
@@ -35,13 +35,13 @@ public class ProjectService {
     private final UserService userService;
 
     public ProjectService(ProjectRepository projectRepository, UserRepository userRepository,
-                          ItemRepository itemRepository, ReleaseRepository releaseRepository,
+                          ItemRepository itemRepository, IterationRepository iterationRepository,
                           ProjectMapper projectMapper, LevelMapper levelMapper, SecretsManager secretsManager,
                           DatabaseInitializer databaseInitializer, UserService userService) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
-        this.releaseRepository = releaseRepository;
+        this.iterationRepository = iterationRepository;
         this.projectMapper = projectMapper;
         this.levelMapper = levelMapper;
         this.secretsManager = secretsManager;
@@ -116,10 +116,10 @@ public class ProjectService {
             referencedWarning.addParam(projectItem.getId());
             return referencedWarning;
         }
-        final Release projectRelease = releaseRepository.findFirstByProject(project);
-        if (projectRelease != null) {
+        final Iteration projectIteration = iterationRepository.findFirstByProject(project);
+        if (projectIteration != null) {
             referencedWarning.setKey("project.release.project.referenced");
-            referencedWarning.addParam(projectRelease.getId());
+            referencedWarning.addParam(projectIteration.getId());
             return referencedWarning;
         }
         return null;

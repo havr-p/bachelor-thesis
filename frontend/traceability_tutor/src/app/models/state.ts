@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Project} from "./project";
-import {ProjectDTO, ProjectSettings, RelationshipType, ReleaseDTO} from "../../../gen/model";
-import {Release} from "./release";
+import {IterationDTO, ProjectDTO, ProjectSettings, RelationshipType} from "../../../gen/model";
 import {
-  CURRENT_PROJECT_KEY,
-  EDITOR_STATE_KEY,
-  LocalStorageService
+    CURRENT_PROJECT_KEY,
+    EDITOR_STATE_KEY,
+    LocalStorageService
 } from "../services/local-storage/local-storage.service";
 import {ValidationService} from "../services/validation/validation.service";
 import {ItemProps} from "../types";
@@ -25,7 +24,7 @@ export interface EditorState {
 export class StateManager {
     public currentProject: Project | undefined;
     public currentProjectSettings: ProjectSettings | undefined;
-    public currentRelease: ReleaseDTO | undefined;
+    public currentRelease: IterationDTO | undefined;
     private projects: Map<number, Project> = new Map();
     private editorState: EditorState | undefined;
 
@@ -51,14 +50,13 @@ export class StateManager {
         this.localStorageService.saveData(CURRENT_PROJECT_KEY, this.currentProject);
     }
 
-    addRelease(projectId: number, commitHash: string, semanticId?: string): Release {
+    addRelease(projectId: number, commitHash: string, semanticId?: string): IterationDTO {
         const project = this.projects.get(projectId);
         if (!project) {
             throw new Error('Project not found');
         }
-        const release = new Release({project: project.id!, releaseCommitId: commitHash, semanticId: semanticId ?? `0.0.${commitHash}`});
         //project.addRelease(release);
-        return release;
+        return {project: project.id!, iterationCommitSha: commitHash, semanticId: semanticId ?? `0.0.${commitHash}`} as IterationDTO;
     }
 
     validateConnection(fromItem: Item, toItem: Item, relationshipType: RelationshipType): boolean {
