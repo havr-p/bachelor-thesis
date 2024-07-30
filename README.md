@@ -18,19 +18,12 @@ Lombok must be supported by your IDE. For IntelliJ install the Lombok plugin and
 After starting the application is accessible under `localhost:8080`.
 
 
-# Traceability Tutor Setup Guide
+# Setup Guide
 
 ## Build
 
-To run the frontend locally, execute the following commands:
 
-```bash
-cd frontend/traceability_tutor
-npm install
-npm start
-```
-
-## Server Setup
+### Server setup
 
 To run the server, you need to have Docker installed on your system. The server and database are combined using Docker Compose.
 
@@ -45,8 +38,17 @@ To stop and remove the containers:
 ```bash
 docker-compose down
 ```
+## Angular client setup
 
-## Local Testing
+You need to have npm and node installed on your system. To run the frontend locally, execute the following commands:
+
+```bash
+cd frontend/traceability_tutor
+npm install
+npm start
+```
+
+### Local testing
 
 A test project with sample data has been prepared to allow users to evaluate the application. To access this project:
 
