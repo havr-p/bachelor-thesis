@@ -27,7 +27,7 @@ After starting the application is accessible under `localhost:8080`.
 
 To run the server, you need to have Docker installed on your system. The server and database are combined using Docker Compose.
 
-To start the server and database:
+To start the server and database run 2 following commands from the project root:
 
 ```bash
 docker-compose up --build
@@ -41,11 +41,11 @@ docker-compose down
 ## Angular client setup
 
 You need to have npm and node installed on your system. To run the frontend locally, execute the following 3 commands:
-1. From project root go to directory that contains frontend files 
+1. From project root go to directory that contains frontend files: 
 ```bash
 cd frontend/traceability_tutor
 ```
-2. Install all needed dependencies
+2. Install all needed dependencies:
 ```bash
 npm install
 ```
