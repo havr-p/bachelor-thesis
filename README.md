@@ -1,9 +1,7 @@
 # TraceabilityTutor
 
 ## Demo
-The application is fully hosted on cloud application hosting services such as Vercel and Render. You can access the application [here](https://traceability-tutor.vercel.app/).   
-An application database was populated with demo project and user. You can access a demo project using "Sign in as test user".
-
+The application frontend is fully hosted on cloud application hosting service named Vercel. Backend can now run only locally. For detailed instructions on installation see next sections.
 ## Development
 
 Currently app uses database hosted inside Docker container. You can update your local database connection in `application.yml` or create your own `application-local.yml` file to override
