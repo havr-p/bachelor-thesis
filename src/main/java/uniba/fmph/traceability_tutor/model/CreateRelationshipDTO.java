@@ -17,8 +17,9 @@ public class CreateRelationshipDTO {
     private String description;
 
     @NotNull
-    private Long startItem;
+    private Long startItemInternalId;
 
     @NotNull
-    private Long endItem;
+    private Long endItemInternalId;
+
 }

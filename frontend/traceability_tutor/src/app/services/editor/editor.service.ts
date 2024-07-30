@@ -5,8 +5,9 @@ import {structures} from "rete-structures";
 import {concatMap, firstValueFrom, from, map, Observable, switchMap} from "rxjs";
 
 import {
+  ContentsDTO,
   CreateItemDTO, CreateIterationRequest,
-  CreateRelationshipDTO,
+  CreateRelationshipDTO, ImportFileParams,
   ItemDTO,
   ItemType,
   IterationDTO,
@@ -104,6 +105,12 @@ export class EditorService {
     await this.editor.addConnection(
       new Connection(startItem, startItem.id, endItem, endItem.id, relationship)
     );
+  }
+
+  async addConnectionsToEditor(relationships: RelationshipDTO[]) {
+    for (const relationship of relationships) {
+      this.addConnectionToEditor(relationship);
+    }
   }
 
   async createConnection(relationship: CreateRelationshipDTO) {
@@ -254,16 +261,31 @@ export class EditorService {
     this.downloadExportData(exportData);
   }
 
+  public importEditorContents(file: File) {
+    return new Observable((observer) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fileContent = e.target?.result as string;
+        const params: ImportFileParams = { id: Number(this.state.currentProject?.id) };
+
+        this.projectService.importFile<ContentsDTO>(fileContent, params).subscribe({
+          next: (result) => observer.next(result),
+          error: (error) => observer.error(error),
+          complete: () => observer.complete()
+        });
+      };
+      reader.onerror = (error) => observer.error(error);
+      reader.readAsText(file);
+    });
+  }
+
   private prepareExportData() {
     let nodesData = this.editor.getNodes()
-      .filter(node => node instanceof ItemNode)
       .map(node => (node as ItemNode).data);
 
-    let connectionData = this.editor.getConnections().map(connection => ({
-      startItem: Number(connection.source),
-      endItem: Number(connection.target),
-      description: connection.data.description,
-    }));
+    let connectionData = this.editor.getConnections().map(connection => {
+      return connection.data
+    });
 
     return {items: nodesData, relationships: connectionData};
   }

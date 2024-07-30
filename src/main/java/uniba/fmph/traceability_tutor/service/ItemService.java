@@ -1,8 +1,6 @@
 package uniba.fmph.traceability_tutor.service;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.*;
@@ -10,6 +8,7 @@ import uniba.fmph.traceability_tutor.mapper.ItemMapper;
 import uniba.fmph.traceability_tutor.model.CreateItemDTO;
 import uniba.fmph.traceability_tutor.model.ItemDTO;
 import uniba.fmph.traceability_tutor.model.ItemType;
+import uniba.fmph.traceability_tutor.model.RelationshipDTO;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.ProjectRepository;
 import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
@@ -18,6 +17,7 @@ import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY_SCHEME;
 
@@ -47,20 +47,29 @@ public class ItemService {
     public List<ItemDTO> findAll() {
         final List<Item> items = itemRepository.findAll(Sort.by("id"));
         return items.stream()
-                .map(item -> mapToDTO(item, new ItemDTO()))
+                .map(this::mapToDTO)
                 .toList();
     }
 
     public ItemDTO get(final Long id) {
         return itemRepository.findById(id)
-                .map(item -> mapToDTO(item, new ItemDTO()))
+                .map(this::mapToDTO)
                 .orElseThrow(NotFoundException::new);
     }
 
     public ItemDTO create(final CreateItemDTO createItemDTO) {
-        ItemDTO dto = new ItemDTO();
         var item = itemRepository.save(mapToEntity(createItemDTO));
         return itemMapper.toDto(item);
+    }
+
+    public ItemDTO create(final ItemDTO itemDTO) {
+        var item = itemRepository.save(mapToEntity(itemDTO));
+        return itemMapper.toDto(item);
+    }
+    public List<ItemDTO> createMultiple(final List<ItemDTO> itemDTOs) {
+        var mapped = itemDTOs.stream().map(this::mapToEntity).toList();
+        List<Item> items = itemRepository.saveAllAndFlush(mapped);
+        return items.stream().map(itemMapper::toDto).toList();
     }
 
     public void update(final Long id, final ItemDTO itemDTO) {
@@ -74,7 +83,7 @@ public class ItemService {
         if (itemRepository.existsById(id)) itemRepository.deleteById(id);
     }
 
-    private ItemDTO mapToDTO(final Item item, final ItemDTO itemDTO) {
+    private ItemDTO mapToDTO(final Item item) {
         return itemMapper.toDto(item);
     }
 
@@ -143,5 +152,9 @@ public class ItemService {
 
     public Item findLastestCodeItem(Long projectId) {
         return itemRepository.findFirstByProject_IdAndItemTypeOrderByDateCreatedDesc(projectId, ItemType.CODE);
+    }
+
+    public void deleteAllEditable(Long projectId) {
+        itemRepository.deleteByProject_IdAndIterationNull(projectId);
     }
 }

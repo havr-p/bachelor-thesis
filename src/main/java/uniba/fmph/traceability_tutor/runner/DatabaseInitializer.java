@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uniba.fmph.traceability_tutor.config.security.SecurityConfig;
 import uniba.fmph.traceability_tutor.config.security.oauth.OAuth2Provider;
 import uniba.fmph.traceability_tutor.domain.Project;
@@ -35,11 +36,11 @@ public class DatabaseInitializer implements CommandLineRunner {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
                 userService.saveUser(user);
             });
-            Project project = projectService.createDemoProjectInDb(USERS.get(0));
-            projectService.setSampleProjectData(project);
+            projectService.createDemoProjectWithData(USERS.get(0));
             log.info("Database initialized");
         }
     }
+
 
 
 

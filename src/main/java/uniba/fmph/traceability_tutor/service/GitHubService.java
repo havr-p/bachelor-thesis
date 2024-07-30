@@ -96,7 +96,7 @@ public class GitHubService {
         var projectId = currentProject.getId();
         var project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Project with id " + projectId + " was not found."));
-
+        relationshipService.setCurrentProject(project);
         project.setLastCodeFetched(OffsetDateTime.now());
         projectRepository.save(project);
 
@@ -123,15 +123,15 @@ public class GitHubService {
         for (Map.Entry<Long, List<Commit>> entry : requirementToCommits.entrySet()) {
             Long internalId = entry.getKey();
             var item = itemRepository.findByInternalIdAndProject_IdAndIterationNull(internalId, projectId);
-            if (item != null) {
-                Long requirementId = item.getId();
+            if (item.isPresent()) {
+                Long requirementId = item.get().getId();
                 List<Commit> commits = entry.getValue();
 
                 Item codeItem = createOrUpdateCodeItem(project, internalId, commits, existingCodeItems);
                 updatedItems.add(codeItem);
 
                 if (itemRepository.existsById(requirementId)) {
-                    RelationshipDTO dto = relationshipService.connectRequirementToCode(requirementId, codeItem.getId());
+                    RelationshipDTO dto = relationshipService.connectRequirementToCode(item.get(), codeItem, projectId);
                     relationshipDTOs.add(dto);
                 } else {
                     throw new AppException("Commit was mapped with requirement id = " + requirementId + " that is not present in database", HttpStatus.BAD_REQUEST);

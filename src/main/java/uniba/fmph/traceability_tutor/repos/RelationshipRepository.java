@@ -41,4 +41,6 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Long
     @Modifying
     @Query("update Relationship r set r.iteration = ?1 where r.id = ?2")
     int updateIterationById(Iteration iteration, Long id);
+
+    long deleteByStartItem_Project_IdAndEndItem_Project_IdAndIterationNull(Long id, Long id1);
 }

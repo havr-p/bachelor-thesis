@@ -18,8 +18,11 @@ import {
   Observable
 } from 'rxjs'
 import type {
+  ContentsDTO,
   CreateProjectDTO,
+  ImportFileParams,
   ProjectDTO,
+  ProjectFromFile,
   ProjectSettings
 } from '../model'
 
@@ -91,6 +94,17 @@ export class ProjectResourceService {
       `/api/projects/open/${id}`,undefined,options
     );
   }
+ importFile<TData = ContentsDTO>(
+    importFileBody: string,
+    params: ImportFileParams, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.put<TData>(
+      `/api/projects/importEditorContents`,
+      importFileBody,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
  getAllProjects<TData = ProjectDTO[]>(
      options?: HttpClientOptions
   ): Observable<TData>  {
@@ -104,6 +118,14 @@ export class ProjectResourceService {
     return this.http.post<TData>(
       `/api/projects`,
       createProjectDTO,options
+    );
+  }
+ createFromFile<TData = ProjectFromFile>(
+    createFromFileBody: string, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.post<TData>(
+      `/api/projects/createFromFile`,
+      createFromFileBody,options
     );
   }
  getUserProjects<TData = ProjectDTO[]>(
@@ -128,7 +150,9 @@ export type DeleteProjectClientResult = NonNullable<void>
 export type GetProjectSettingsClientResult = NonNullable<ProjectSettings>
 export type UpdateProjectSettingsClientResult = NonNullable<number>
 export type UpdateLastOpenedClientResult = NonNullable<number>
+export type ImportFileClientResult = NonNullable<ContentsDTO>
 export type GetAllProjectsClientResult = NonNullable<ProjectDTO[]>
 export type CreateProjectClientResult = NonNullable<number>
+export type CreateFromFileClientResult = NonNullable<ProjectFromFile>
 export type GetUserProjectsClientResult = NonNullable<ProjectDTO[]>
 export type SetupDemoProjectClientResult = NonNullable<number>

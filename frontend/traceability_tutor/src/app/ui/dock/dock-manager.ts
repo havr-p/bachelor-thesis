@@ -79,6 +79,7 @@ export class DockManager {
         },
         {
           label: 'Iterations',
+          disabled: true,
           items: [
             {
               label: 'Save as iteration',
@@ -107,7 +108,6 @@ export class DockManager {
             },
             {
               label: 'Import',
-              disabled: true,
               command: () => {
                 this.eventService.publishEditorEvent(EditorEventType.IMPORT);
               },

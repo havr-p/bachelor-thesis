@@ -38,6 +38,8 @@
 
     <app-settings [(visible)]="settingsVisible"></app-settings>
 
+<input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" accept=".json">
+
 
 
 

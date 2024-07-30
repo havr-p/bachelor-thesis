@@ -43,15 +43,18 @@ public class Relationship {
     @Column
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    //todo: changed to EAGER from LAZY because of RelationshipMapper. is it needed?
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "start_item_id", nullable = false)
     private Item startItem;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "end_item_id", nullable = false)
     private Item endItem;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "iteration_id")
     private Iteration iteration;
 
@@ -62,5 +65,9 @@ public class Relationship {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
 }

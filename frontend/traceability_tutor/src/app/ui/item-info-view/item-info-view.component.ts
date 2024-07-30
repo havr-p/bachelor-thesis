@@ -76,17 +76,19 @@ export class ItemInfoViewComponent implements AfterViewInit, OnChanges {
 
   async saveChanges() {
     this.itemForm.prepareFormData();
-   this.validationService.validateItemEdits(this.item).then(validationResult => {
-     console.log(validationResult);
-     if (validationResult.isValid) {
-       this.editorService.editItem(this.item);
-       this.toggleVisible.emit(false);
-     } else {
-       for (const msg of validationResult.messages!) {
-         console.log(msg);
-       }
-     }
-   });
+   // this.validationService.validateItemEdits(this.item).then(validationResult => {
+   //   console.log(validationResult);
+   //   if (validationResult.isValid) {
+   //     this.editorService.editItem(this.item);
+   //     this.toggleVisible.emit(false);
+   //   } else {
+   //     for (const msg of validationResult.messages!) {
+   //       console.log(msg);
+   //     }
+   //   }
+   // });
+    this.editorService.editItem(this.item);
+    this.toggleVisible.emit(false);
 
   }
 

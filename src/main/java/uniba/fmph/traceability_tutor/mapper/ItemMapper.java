@@ -8,9 +8,10 @@ import uniba.fmph.traceability_tutor.domain.Project;
 import uniba.fmph.traceability_tutor.model.CreateItemDTO;
 import uniba.fmph.traceability_tutor.model.ItemDTO;
 import uniba.fmph.traceability_tutor.repos.ProjectRepository;
+import uniba.fmph.traceability_tutor.service.JsonItemDTO;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 
-@Mapper(componentModel = "spring", uses = InternalIdGenerator.class)
+@Mapper(componentModel = "spring", uses = {InternalIdGenerator.class, ItemMapperQualifier.class})
 public interface ItemMapper {
     @Mapping(target = "projectId", source = "project.id")
     @Mapping(target = "iterationId", source = "iteration.id")
@@ -29,6 +30,9 @@ public interface ItemMapper {
             item.setProject(project);
         }
     }
+
+    @Mapping(target = "data", qualifiedByName = "mapData")
+    ItemDTO jsonItemDtoToItemDto(JsonItemDTO jsonItemDTO);
 
     default Item toEntity(CreateItemDTO dto) {
         return toEntity(dto, null, null);

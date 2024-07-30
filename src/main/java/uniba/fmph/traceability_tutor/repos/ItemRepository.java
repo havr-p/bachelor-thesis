@@ -56,5 +56,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findNonIterationByProjectInternalId(Project project, Long internalId);
 
     @Query("select i from Item i where i.internalId = ?1 and i.project.id = ?2 and i.iteration is null")
-    Item findByInternalIdAndProject_IdAndIterationNull(Long internalId, Long id);
+    Optional<Item> findByInternalIdAndProject_IdAndIterationNull(Long internalId, Long id);
+
+    long deleteByProject_IdAndIterationNull(Long id);
 }

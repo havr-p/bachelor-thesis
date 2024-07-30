@@ -15,14 +15,14 @@ import {ItemNode} from '../../items/item-node';
 import {EventService} from 'src/app/services/event/event.service';
 import {ActivatedRoute, Router} from "@angular/router";
 import {createEditor} from "./create-editor";
-import {ItemType} from "../../../../gen/model";
+import {ContentsDTO, ItemType, RelationshipDTO} from "../../../../gen/model";
 import {EditorService} from "../../services/editor/editor.service";
-import {lastValueFrom, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {DockManager} from "../dock/dock-manager";
 import {constructCreateItemDTO, Item} from "../../models/itemMapper";
 import {StateManager} from "../../models/state";
-import {log} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
-import {error} from "@angular/compiler-cli/src/transformers/util";
+import {FileUpload, FileUploadHandlerEvent} from "primeng/fileupload";
+import {withJsonpSupport} from "@angular/common/http";
 
 const socket = new ClassicPreset.Socket('socket');
 
@@ -51,6 +51,8 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   settingsVisible = false;
   projectId = 0;
+
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   triggerFetchItemsAfterSettingsUpdate = false;
 
@@ -150,6 +152,9 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
         break;
       case EditorEventType.EXPORT:
         this.editorService.exportEditorContents();
+        break;
+      case EditorEventType.IMPORT:
+        this.fileInput?.nativeElement.click();
         break;
       case EditorEventType.CHOOSE_SECOND_ITEM:
         await this.handleSecondItemSelection(event.payload);
@@ -264,4 +269,27 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   private saveIteration() {
     this.editorService.saveIteration()
   }
+
+
+    onFileSelected(event: any) {
+        const file: File = event.target.files[0];
+        if (file) {
+            this.editorService.importEditorContents(file).subscribe(
+              {
+            next: async value => {
+                console.log(value);
+                let result = value as ContentsDTO
+                await this.editor.clear();
+                await this.editorService.addItems(result.items);
+                await this.editorService.addConnectionsToEditor(result.relationships);
+                setTimeout(() => this.editorService.arrangeNodes(), 1500)
+            },
+                error: err => {
+                    this.eventService.notify(err, 'error');
+                },
+                  complete: () => this.editorService.arrangeNodes()
+            });
+        }
+    }
+
 }

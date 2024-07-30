@@ -1,14 +1,17 @@
 package uniba.fmph.traceability_tutor.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 import uniba.fmph.traceability_tutor.config.security.SecretsManager;
 import uniba.fmph.traceability_tutor.domain.*;
+import uniba.fmph.traceability_tutor.mapper.ItemMapper;
 import uniba.fmph.traceability_tutor.mapper.ProjectMapper;
+import uniba.fmph.traceability_tutor.mapper.RelationshipMapper;
 import uniba.fmph.traceability_tutor.model.*;
 import uniba.fmph.traceability_tutor.repos.*;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
@@ -16,10 +19,7 @@ import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static uniba.fmph.traceability_tutor.service.TempCreateRelationshipDTO.readResourceFile;
@@ -40,11 +40,14 @@ public class ProjectService {
     private final ItemService itemService;
     private final RelationshipService relationshipService;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RelationshipMapper relationshipMapper;
+    private final ItemMapper itemMapper;
 
     public ProjectService(ProjectRepository projectRepository, UserRepository userRepository,
                           ItemRepository itemRepository, IterationRepository iterationRepository,
                           RelationshipRepository relationshipRepository, ProjectMapper projectMapper, SecretsManager secretsManager,
-                          UserService userService, ItemService itemService, RelationshipService relationshipService) {
+                          UserService userService, ItemService itemService, RelationshipService relationshipService, RelationshipMapper relationshipMapper,
+                          ItemMapper itemMapper) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
@@ -55,6 +58,8 @@ public class ProjectService {
         this.userService = userService;
         this.itemService = itemService;
         this.relationshipService = relationshipService;
+        this.relationshipMapper = relationshipMapper;
+        this.itemMapper = itemMapper;
     }
 
     public List<ProjectDTO> findAll() {
@@ -154,9 +159,10 @@ public class ProjectService {
         return projectRepository.existsByOwnerAndName(userService.getCurrentUser(), projectName);
     }
 
+    @Transactional
     public Long createDemoProject() {
         var user = userService.getCurrentUser();
-        return createDemoProjectInDb(user).getId();
+        return createDemoProjectWithData(user);
     }
 
     public void setVCSSecret(Long projectId) {
@@ -199,42 +205,53 @@ public class ProjectService {
         return projectRepository.findById(id).orElseThrow(() -> new NotFoundException("project with id = " + id + " not found"));
     }
 
-    public Project setProjectData(Project project, MultipartFile file) throws IOException {
-        String content = new String(file.getBytes());
+    @Transactional
+    public Long createDemoProjectWithData(User user) {
+        Project project = createDemoProjectInDb(user);
+        setSampleProjectData(project);
+        return project.getId();
+    }
+
+    public Project setProjectData(Project project, String content) throws IOException {
+        this.relationshipService.setCurrentProject(project);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(content);
 
-        List<TempCreateItemDTO> tempItemDtos = mapper.readValue(
+        List<JsonItemDTO> itemDTOS = mapper.readValue(
                 rootNode.get("items").toString(),
-                mapper.getTypeFactory().constructCollectionType(List.class, TempCreateItemDTO.class)
+                mapper.getTypeFactory().constructCollectionType(List.class, JsonItemDTO.class)
         );
+        List<ItemDTO> normalDTOs = itemDTOS.stream().map(itemMapper::jsonItemDtoToItemDto).toList();
 
-        tempItemDtos.forEach(dto -> {
-            String description = dto.getData().get("description");
-            String name = dto.getData().get("name");
-            dto.getData().put("description", normalizeText(description));
-            dto.getData().put("name", normalizeText(name));
-        });
+        for (ItemDTO dto:
+             normalDTOs) {
+            var data = dto.getData();
+            String description = data.get("description");
+            String name = data.get("name");
+            data.put("description", normalizeText(description));
+            data.put("name", normalizeText(name));
+        }
 
         Project finalProject = project;
-        List<Item> items = tempItemDtos.stream()
+        List<Item> items = itemDTOS.stream()
                 .map(dto -> mapToEntity(finalProject, dto))
                 .toList();
         itemRepository.saveAllAndFlush(items);
 
-        List<TempCreateRelationshipDTO> tempCreateRelationshipDTOS = mapper.readValue(
+        List<JsonRelationshipDTO> jsonRelationshipDTOS = mapper.readValue(
                 rootNode.get("relationships").toString(),
-                mapper.getTypeFactory().constructCollectionType(List.class, TempCreateRelationshipDTO.class)
+                mapper.getTypeFactory().constructCollectionType(List.class, JsonRelationshipDTO.class)
         );
 
-        tempCreateRelationshipDTOS.forEach(dto -> dto.setDescription(normalizeText(dto.getDescription())));
+        jsonRelationshipDTOS.forEach(dto -> dto.setDescription(normalizeText(dto.getDescription())));
 
-        Project finalProject1 = project;
-        List<Relationship> relationships = tempCreateRelationshipDTOS.stream()
-                .map(dto -> mapToEntity(dto, finalProject1))
-                .toList();
-        relationshipRepository.saveAll(relationships);
 
+
+        jsonRelationshipDTOS
+                .forEach(dto -> {
+                    CreateRelationshipDTO normalDTO = relationshipMapper.jsonToDto(dto);
+                    relationshipService.create(normalDTO);
+                });
         if (rootNode.has("projectSettings")) {
             ProjectSettings settings = mapper.treeToValue(rootNode.get("projectSettings"), ProjectSettings.class);
             project = processProjectSettings(project, settings);
@@ -255,18 +272,38 @@ public class ProjectService {
         return item;
     }
 
-    private Relationship mapToEntity(final CreateRelationshipDTO dto, Project project) {
-        Relationship relationship = new Relationship();
-        relationship.setType(dto.getType());
-        relationship.setDescription(dto.getDescription());
-        Long startItemId = itemRepository.findNonIterationByProjectInternalId(project, dto.getStartItem()).get().getId();
-        Long endItemId = itemRepository.findNonIterationByProjectInternalId(project, dto.getEndItem()).get().getId();
-        relationship.setStartItem(itemRepository.findById(startItemId).orElseThrow(() -> new NotFoundException("Start item with id = " + startItemId + " was not found")));
-        relationship.setEndItem(itemRepository.findById(endItemId).orElseThrow(() -> new NotFoundException("End item with id = " + endItemId + " was not found")));
-        return relationship;
+    public Item mapToEntity(Project project, final JsonItemDTO dto) {
+        Item item = new Item();
+
+        item.setItemType(dto.getItemType());
+
+        Map<String, String> stringData = dto.getData().entrySet().stream()
+                .filter(entry -> entry.getValue() != null)  // Filter out null values
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> {
+                            Object value = entry.getValue();
+                            if (value instanceof List) {
+                                // Handle lists (like "links") by converting to JSON string
+                                try {
+                                    return new ObjectMapper().writeValueAsString(value);
+                                } catch (JsonProcessingException e) {
+                                    throw new RuntimeException("Error converting list to JSON", e);
+                                }
+                            }
+                            return value.toString();
+                        }
+                ));
+
+        item.setData(stringData);
+        item.setStatus(dto.getStatus());
+        item.setProject(project);
+        item.setInternalId(dto.getInternalId());
+        return item;
     }
 
 
+    @Transactional
     public void setSampleProjectData(Project project) {
         List<TempCreateItemDTO> tempItemDtos;
         try {
@@ -301,10 +338,11 @@ public class ProjectService {
 
         List<Relationship> relationships = tempCreateRelationshipDTOS.stream()
                 .map(dto ->
-                        this.mapToEntity(dto, project))
+                        this.relationshipService.mapToEntity(dto, project))
                 .toList();
 
         relationshipRepository.saveAll(relationships);
+
     }
 
     private List<TempCreateItemDTO> parseJsonToCreateItemDTOs() throws IOException {
@@ -359,5 +397,9 @@ public class ProjectService {
     public void clearProjectEditableContent(Long projectId) {
         this.itemService.deleteAllEditable(projectId);
         this.relationshipService.deleteAllEditable(projectId);
+    }
+
+    public ProjectDTO toDto(Project project) {
+        return projectMapper.toDto(project);
     }
 }

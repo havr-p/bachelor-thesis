@@ -55,6 +55,9 @@ public class Project {
     private Set<Item> projectItems;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Relationship> projectRelationships;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Iteration> iterations;
 
     @CreatedDate

@@ -31,6 +31,16 @@ public class RelationshipDTO {
     @NotNull
     private Long endItem;
 
-    private Long release;
+    @NotNull
+    private Long startItemInternalId;
+
+    @NotNull
+    private Long endItemInternalId;
+
+    @NotNull
+    private Long iterationId;
+
+    @NotNull
+    private Long projectId;
 
 }
