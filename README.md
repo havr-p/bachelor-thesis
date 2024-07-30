@@ -40,11 +40,17 @@ docker-compose down
 ```
 ## Angular client setup
 
-You need to have npm and node installed on your system. To run the frontend locally, execute the following commands:
-
+You need to have npm and node installed on your system. To run the frontend locally, execute the following 3 commands:
+1. From project root go to directory that contains frontend files 
 ```bash
 cd frontend/traceability_tutor
+```
+2. Install all needed dependencies
+```bash
 npm install
+```
+3. Build Angular project and start development server:
+```bash
 npm start
 ```
 
