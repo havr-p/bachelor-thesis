@@ -6,7 +6,7 @@ An application database was populated with demo project and user. You can access
 
 ## Development
 
-Currently app uses database hosted on Render. You can update your local database connection in `application.yml` or create your own `application-local.yml` file to override
+Currently app uses database hosted inside Docker container. You can update your local database connection in `application.yml` or create your own `application-local.yml` file to override
 settings for development.
 
 During development it is recommended to use the `local` profile. In IntelliJ `-Dspring.profiles.active=local` can be
@@ -18,32 +18,48 @@ Lombok must be supported by your IDE. For IntelliJ install the Lombok plugin and
 After starting the application is accessible under `localhost:8080`.
 
 
+# Traceability Tutor Setup Guide
+
 ## Build
 
-The application can be built using the following command:
+To run the frontend locally, execute the following commands:
 
-```
-mvnw clean package
-```
-
-Start your application with the following command - here with the profile `production`:
-
-```
-java -Dspring.profiles.active=production -jar ./target/traceability-tutor-0.0.1-SNAPSHOT.jar
-```
-
-To run the frontend locally run following commands:
-```
+```bash
 cd frontend/traceability_tutor
-npm i
+npm install
 npm start
 ```
 
-to disable Hyper-V run:  
-Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All  
-to enable it back:  
-Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All  
-restart is required after each command
+## Server Setup
+
+To run the server, you need to have Docker installed on your system. The server and database are combined using Docker Compose.
+
+To start the server and database:
+
+```bash
+docker-compose up --build
+```
+
+To stop and remove the containers:
+
+```bash
+docker-compose down
+```
+
+## Local Testing
+
+A test project with sample data has been prepared to allow users to evaluate the application. To access this project:
+
+1. Launch the application as described in the Build and Server Setup sections.
+2. On the login page, click the "Sign in as test user" button.
+
+This will log you in as a local user with access to the pre-configured test project, allowing you to explore the features and functionality of the application without setting up your own data.
+
+#to disable Hyper-V run:  
+#Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All  
+#to enable it back:  
+#Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All  
+#restart is required after each command
 
 
 ## Further readings
