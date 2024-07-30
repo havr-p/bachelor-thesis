@@ -16,7 +16,8 @@ export interface RelationshipDTO {
   endItemInternalId: number;
   historyAction?: HistoryAction;
   id: number;
-  iterationId?: number;
+  iterationId: number;
+  projectId: number;
   startItem: number;
   startItemInternalId: number;
   type: RelationshipType;

@@ -31,8 +31,8 @@ public interface RelationshipMapper {
                 .internalIdToItem(dto.getEndItem(), dto.getProjectId());
     }
 
-    @Mapping(target = "startItem", source = "startItem.id")
-    @Mapping(target = "endItem", source = "endItem.id")
+    @Mapping(target = "startItem", source = "startItem.internalId")
+    @Mapping(target = "endItem", source = "endItem.internalId")
     @Mapping(target = "startItemInternalId", source = "startItem.internalId")
     @Mapping(target = "endItemInternalId", source = "endItem.internalId")
     @Mapping(target = "iterationId", source = "iteration.id")

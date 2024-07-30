@@ -37,7 +37,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
 
     private handleErrorRes(error: HttpErrorResponse): Observable<never> {
-        console.log("error in auth interceptor", error)
         if (error.status === 401) {
             this.authService.logout();
         } else if (error.status === 500 && error.url?.includes("codeItems")) {

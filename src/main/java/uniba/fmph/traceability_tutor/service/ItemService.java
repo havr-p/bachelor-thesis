@@ -1,6 +1,8 @@
 package uniba.fmph.traceability_tutor.service;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.*;
@@ -8,7 +10,6 @@ import uniba.fmph.traceability_tutor.mapper.ItemMapper;
 import uniba.fmph.traceability_tutor.model.CreateItemDTO;
 import uniba.fmph.traceability_tutor.model.ItemDTO;
 import uniba.fmph.traceability_tutor.model.ItemType;
-import uniba.fmph.traceability_tutor.model.RelationshipDTO;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.ProjectRepository;
 import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
@@ -17,7 +18,6 @@ import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static uniba.fmph.traceability_tutor.config.SwaggerConfig.BEARER_SECURITY_SCHEME;
 
@@ -32,16 +32,19 @@ public class ItemService {
     private final RelationshipRepository relationshipRepository;
     private final ItemMapper itemMapper;
     private final InternalIdGenerator internalIdGenerator;
+    private Project currentProject;
+    private final ApplicationEventPublisher eventPublisher;
 
     public ItemService(final ItemRepository itemRepository,
                        final ProjectRepository projectRepository, final IterationRepository iterationRepository,
-                       final RelationshipRepository relationshipRepository, ItemMapper itemMapper, InternalIdGenerator internalIdGenerator) {
+                       final RelationshipRepository relationshipRepository, ItemMapper itemMapper, InternalIdGenerator internalIdGenerator, ApplicationEventPublisher eventPublisher) {
         this.itemRepository = itemRepository;
         this.projectRepository = projectRepository;
         this.iterationRepository = iterationRepository;
         this.relationshipRepository = relationshipRepository;
         this.itemMapper = itemMapper;
         this.internalIdGenerator = internalIdGenerator;
+        this.eventPublisher = eventPublisher;
     }
 
     public List<ItemDTO> findAll() {
@@ -141,6 +144,8 @@ public class ItemService {
     }
 
     public List<ItemDTO> getProjectEditableItems(Long projectId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(NotFoundException::new);
+        eventPublisher.publishEvent(new CurrentProjectChangedEvent(project));
         return itemRepository.findNonIterationByProjectId(projectId).stream()
                 .map(itemMapper::toDto)
                 .toList();
@@ -156,5 +161,9 @@ public class ItemService {
 
     public void deleteAllEditable(Long projectId) {
         itemRepository.deleteByProject_IdAndIterationNull(projectId);
+    }
+    @EventListener
+    public void handleCurrentProjectChanged(CurrentProjectChangedEvent event) {
+        this.currentProject = event.getProject();
     }
 }

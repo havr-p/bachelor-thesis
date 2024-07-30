@@ -18,7 +18,7 @@
         <label for="description">Description</label>
         <textarea id="description" formControlName="description" pInputTextarea></textarea>
     </div>
-    <p-button label="{{ mode === 'create' ? 'Create Relationship' : 'Update Relationship' }}" type="submit" [disabled]="relationshipForm.invalid"></p-button>
+    <p-button label="{{ mode === 'create' ? 'Create relationship' : 'Update relationship' }}" type="submit" [disabled]="relationshipForm.invalid"></p-button>
     <div *ngIf="relationshipForm.errors?.['notCreatingCycle']" class="p-error">
         Creating this relationship would create a cycle.
     </div>

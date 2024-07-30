@@ -35,7 +35,7 @@ public class Level {
     private String color;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 

@@ -1,7 +1,6 @@
 package uniba.fmph.traceability_tutor.service;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uniba.fmph.traceability_tutor.domain.Item;
@@ -14,6 +13,7 @@ import uniba.fmph.traceability_tutor.model.RelationshipDTO;
 import uniba.fmph.traceability_tutor.model.RelationshipType;
 import uniba.fmph.traceability_tutor.repos.ItemRepository;
 import uniba.fmph.traceability_tutor.repos.IterationRepository;
+import uniba.fmph.traceability_tutor.repos.ProjectRepository;
 import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 
@@ -28,17 +28,17 @@ public class RelationshipService {
     private final ItemRepository itemRepository;
     private final IterationRepository iterationRepository;
     private final RelationshipMapper relationshipMapper;
-
-    @Getter
-    @Setter
     private Project currentProject;
+    private final ProjectRepository projectRepository;
 
     public RelationshipService(final RelationshipRepository relationshipRepository,
-                               final ItemRepository itemRepository, final IterationRepository iterationRepository, RelationshipMapper relationshipMapper) {
+                               final ItemRepository itemRepository, final IterationRepository iterationRepository, RelationshipMapper relationshipMapper,
+                               ProjectRepository projectRepository) {
         this.relationshipRepository = relationshipRepository;
         this.itemRepository = itemRepository;
         this.iterationRepository = iterationRepository;
         this.relationshipMapper = relationshipMapper;
+        this.projectRepository = projectRepository;
     }
 
     public List<RelationshipDTO> findAll() {
@@ -55,7 +55,9 @@ public class RelationshipService {
     }
 
     public RelationshipDTO create(final CreateRelationshipDTO relationshipDTO) {
-        final Relationship relationship = mapToEntity(relationshipDTO,  currentProject);
+        Project managedProject = projectRepository.findById(currentProject.getId())
+                .orElseThrow(() -> new NotFoundException("Project not found"));
+        final Relationship relationship = mapToEntity(relationshipDTO, managedProject);
         return mapToDTO(relationshipRepository.save(relationship));
     }
 
@@ -141,22 +143,23 @@ public class RelationshipService {
     }
 
     Relationship mapToEntity(final CreateRelationshipDTO dto, Project project) {
+
         Relationship relationship = new Relationship();
         relationship.setType(dto.getType());
         relationship.setDescription(dto.getDescription());
         var startItem = itemRepository.findNonIterationByProjectInternalId(project, dto.getStartItemInternalId())
                 .orElseThrow(() -> new NotFoundException("Start item with internal id = " + dto.getStartItemInternalId() + " was not found"));
-        var endItemId = itemRepository.findNonIterationByProjectInternalId(project, dto.getEndItemInternalId())
+        var endItem = itemRepository.findNonIterationByProjectInternalId(project, dto.getEndItemInternalId())
                 .orElseThrow(() -> new NotFoundException("End item with internal id = " + dto.getEndItemInternalId() + " was not found"));
         relationship.setStartItem(startItem);
-        relationship.setEndItem(endItemId);
-        relationship.setProject(project);
+        relationship.setEndItem(endItem);
+        Project pr = projectRepository.findById(project.getId()).orElseThrow(NotFoundException::new);
+        relationship.setProject(pr);
         return relationship;
     }
 
-//    public List<RelationshipDTO> getRelationshipsWith(RelatedToItemRelRequest request) {
-//        return relationshipRepository.findAllRelatedToItemAndRelease(request.releaseId().get(), request.itemId()).stream()
-//                .map(item -> mapToDTO(item, new RelationshipDTO()))
-//                .toList();
-//    }
+@EventListener
+public void handleCurrentProjectChanged(CurrentProjectChangedEvent event) {
+    this.currentProject = event.getProject();
+}
 }

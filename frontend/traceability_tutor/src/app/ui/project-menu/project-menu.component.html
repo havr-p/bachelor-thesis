@@ -12,7 +12,7 @@
                                     <h6 class="mb-1">
                                         {{ project.name }}
                                     </h6>
-                                    <span class="text-muted small">
+                                    <span class="text-muted small" *ngIf="project.lastOpened">
                 Last opened: {{ project.lastOpened | date:'MMM dd, yyyy \'at\' HH:mm' }}
               </span>
                                 </div>
@@ -30,5 +30,7 @@
 <p-dialog [(visible)]="createNewProjectDialogVisible" [draggable]="true"
           [resizable]="true" [style]="{ width: '75vw', }" header="Create project">
     <app-create-project-form></app-create-project-form>
+
+    <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" accept=".json">
 
 </p-dialog>

@@ -14,6 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class LevelDTO {
     @NotBlank
     private String color;

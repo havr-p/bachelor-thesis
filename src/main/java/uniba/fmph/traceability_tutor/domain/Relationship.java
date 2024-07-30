@@ -66,7 +66,7 @@ public class Relationship {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 

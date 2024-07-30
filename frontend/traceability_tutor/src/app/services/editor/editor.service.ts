@@ -66,7 +66,6 @@ export class EditorService {
   }
 
   async addItem(item: ItemDTO) {
-    console.log("item", item)
     const data = mapGenericModel(item);
     const lvlColor = this.getLevelColor(data);
     let node = new ItemNode(data);
@@ -116,9 +115,11 @@ export class EditorService {
   async createConnection(relationship: CreateRelationshipDTO) {
     this.relationshipService.createRelationship(relationship).subscribe({
       next: async result => {
+        console.log("next connection", result);
         await this.addConnectionToEditor(result);
       }
     });
+    setTimeout(() => this.arrangeNodes(), 500);
   }
 
   public loadProjectFromPath(params: any) {
@@ -173,7 +174,6 @@ export class EditorService {
   public loadEditableRelationships(projectId: number): void {
     this.relationshipService.getProjectEditableRelationships(projectId).pipe().subscribe({
       next: async (relationships: RelationshipDTO[]) => {
-        console.log('Editable relationships:', relationships);
         for (const relationship of relationships) {
           await this.addConnectionToEditor(relationship);
         }
@@ -249,7 +249,7 @@ export class EditorService {
   }
 
   getLevelColor(item: Item): string | undefined {
-    return this.state.currentProject?.levels.get(item.data['level'].toLowerCase())?.color;
+    return this.state.currentProject?.levels.get(item.data['level'])?.color;
   }
 
   getLevelName(item: Item): string | undefined {
@@ -286,8 +286,8 @@ export class EditorService {
     let connectionData = this.editor.getConnections().map(connection => {
       return connection.data
     });
-
-    return {items: nodesData, relationships: connectionData};
+    let projectConfiguration = this.state.currentProject?.toDto();
+    return {items: nodesData, relationships: connectionData, project: projectConfiguration};
   }
 
   private downloadExportData(exportData: any) {
@@ -317,8 +317,8 @@ export class EditorService {
     const startItem = this.editor.getNode(startItemId.toString());
     const endItem = this.editor.getNode(endItemId.toString());
     const relationship: CreateRelationshipDTO = {
-      startItem: startItemId,
-      endItem: endItemId,
+      startItemInternalId: startItemId,
+      endItemInternalId: endItemId,
       type: RelationshipType.DERIVES,
       description: 'Temporary connection for cycle check'
     };
@@ -385,7 +385,7 @@ export class EditorService {
 
   async updateRelationship(changedData: CreateRelationshipDTO) {
     const existing = this.editor.getConnections().find(conn =>
-      conn.source === changedData.startItem.toString() && conn.target === changedData.endItem.toString()
+      conn.source === changedData.startItemInternalId.toString() && conn.target === changedData.endItemInternalId.toString()
     );
     if (existing) {
       this.updateExistingRelationship(existing, changedData);
@@ -423,20 +423,30 @@ export class EditorService {
   }
 
   async deleteItemWithAllConnections(itemId: string) {
-    const graph = structures(this.editor);
-    let allConnections = graph.connections().filter(relationship => relationship.source === itemId || relationship.target === itemId);
-    from(this.editor.removeNode(itemId)).pipe(
-      concatMap(() => this.area.update('node', itemId))).pipe(
-      concatMap(() => from(allConnections).pipe(
-        concatMap(conn => from(this.editor.removeConnection(conn.id)).pipe(
-          concatMap(() => this.area.update('connection', conn.id)))
-          .pipe(
-            concatMap(() => from(this.relationshipService.deleteRelationship((conn.data as RelationshipDTO).id)))
-          )),
-        concatMap(() => from(this.itemService.deleteItem(Number(itemId)))),
-      ))
-    ).subscribe({
-      complete: () => this.eventService.notify(`Item #${itemId} with its adjacent edges was deleted successfully`, 'success')
+
+    this.itemService.deleteItem(Number(itemId)).subscribe({
+      next: () => {
+        this.editor.removeNode(itemId).then(() => {
+          this.area.update('node', itemId);
+
+          const graph = structures(this.editor);
+          const allConnections = graph.connections().filter(relationship =>
+              relationship.source === itemId || relationship.target === itemId
+          );
+
+          allConnections.forEach(conn => {
+            this.editor.removeConnection(conn.id).then(() => {
+              this.area.update('connection', conn.id);
+            });
+          });
+
+          //this.eventService.notify(`Item #${itemId} with its adjacent edges was deleted successfully`, 'success');
+        });
+      },
+      error: (error) => {
+        console.error('Error deleting item from database:', error);
+        this.eventService.notify(`Error deleting item #${itemId} from database`, 'error');
+      }
     });
   }
 
@@ -467,7 +477,6 @@ export class EditorService {
   private async setupCodeItems(updatedItems: ItemDTO[] | undefined) {
     await this.deleteItemsByConditionFromEditor(item => item.itemType === ItemType.CODE);
     if (updatedItems) {
-      console.log("updatedItems", updatedItems);
       await this.addItems(updatedItems);
     }
   }

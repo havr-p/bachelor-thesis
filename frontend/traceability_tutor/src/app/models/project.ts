@@ -16,12 +16,23 @@ export class Project implements Omit<ProjectDTO, 'levels'> {
         this.owner = projectDTO.owner;
         this.repoUrl = projectDTO?.repoUrl || '';
         this.repoName = projectDTO?.repoName || '';
-        projectDTO?.levels.forEach(level => this.levels.set(level.name.toLowerCase(), level));
+        projectDTO?.levels.forEach(level => {
+            let levelName = level.name.toLowerCase();
+            levelName = levelName[0].toUpperCase() + levelName.substring(1);
+            this.levels.set(levelName, level);
+        });
         this.lastOpened = projectDTO.lastOpened;
     }
 
     addIteration(iterationDTO: IterationDTO) {
         this.iterations.push(iterationDTO);
+    }
+
+    toDto(): ProjectDTO {
+        return {
+            ...this,
+            levels: Array.from(this.levels.values())
+        }
     }
 
 }

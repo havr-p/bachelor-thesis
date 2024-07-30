@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,6 @@ public class GitHubService {
     private final ObjectMapper objectMapper;
     @Setter
     private GitHub gitHub;
-    private Project currentProject;
     private Iteration currentIteration;
     private final ProjectRepository projectRepository;
     private final ItemRepository itemRepository;
@@ -47,6 +47,8 @@ public class GitHubService {
     private final UserService userService;
     private final SecretsManager secretsManager;
     private final InternalIdGenerator internalIdGenerator;
+
+    private Project currentProject;
 
     public GitHubService(@Qualifier("github") WebClient webClient, ObjectMapper objectMapper,
                          ProjectRepository projectRepository, ItemRepository itemRepository,
@@ -66,7 +68,7 @@ public class GitHubService {
     }
 
     public void setCurrentProject(Long currentProjectId) {
-        this.currentProject = projectRepository.findById(currentProjectId)
+        currentProject = projectRepository.findById(currentProjectId)
                 .orElseThrow(() -> new NotFoundException("Project with id " + currentProjectId + " was not found."));
         this.gitHub = getGitHubWithAuth(currentProjectId);
     }
@@ -96,7 +98,7 @@ public class GitHubService {
         var projectId = currentProject.getId();
         var project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Project with id " + projectId + " was not found."));
-        relationshipService.setCurrentProject(project);
+        currentProject = project;
         project.setLastCodeFetched(OffsetDateTime.now());
         projectRepository.save(project);
 
@@ -194,5 +196,10 @@ public class GitHubService {
             ids.addAll(Arrays.stream(idArray).map(Long::parseLong).toList());
         }
         return ids;
+    }
+
+    @EventListener
+    public void handleCurrentProjectChanged(CurrentProjectChangedEvent event) {
+        this.currentProject = event.getProject();
     }
 }

@@ -127,10 +127,10 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
   async onItemCreate($event: any) {
     const newItem = constructCreateItemDTO($event);
     await this.editorService.createItem(newItem);
+    this.createItemVisible = false;
   }
 
   private async handleEditorEvent(event: BaseEvent<EventSource, EditorEventType>): Promise<void> {
-    console.log('Handling editor event:', event);
     switch (event.type) {
       case EditorEventType.ADD_ITEM:
         this.createItemVisible = true;

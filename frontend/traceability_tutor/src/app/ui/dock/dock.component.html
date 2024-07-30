@@ -10,4 +10,5 @@
     </p-menubar>
 
     <ng-content></ng-content>
+    <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" accept=".json">
 </div>

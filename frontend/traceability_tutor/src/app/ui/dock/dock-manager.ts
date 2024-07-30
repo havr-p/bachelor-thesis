@@ -62,6 +62,25 @@ export class DockManager {
                     this.eventService.publishEditorEvent(EditorEventType.ADD_ITEM, data);
                   },
                 },
+                {
+                  label: 'Design item',
+                  tooltip: 'Use this command to add design item',
+                  tooltipPosition: 'bottom',
+                  command: async () => {
+                    const data = ItemType.DESIGN
+                    this.eventService.publishEditorEvent(EditorEventType.ADD_ITEM, data);
+                  },
+                },
+                {
+                  label: 'Test item',
+                  tooltip: 'Use this command to add test item',
+                  tooltipPosition: 'bottom',
+                  command: async () => {
+                    const data = ItemType.TEST
+                    this.eventService.publishEditorEvent(EditorEventType.ADD_ITEM, data);
+                  },
+                },
+
               ]
             },
           ],
@@ -153,10 +172,21 @@ export class DockManager {
     } else if (mode === 'projects') {
       items = [
         {
-          label: 'New Project',
-          command: () => {
-            this.eventService.publishProjectMenuEvent(ProjectEventType.CREATE);
-          }
+          label: 'New Project...',
+          items: [
+            {
+              label: 'Create empty',
+              command: () => {
+                this.eventService.publishProjectMenuEvent(ProjectEventType.CREATE);
+              }
+            },
+            {
+              label: 'Create from file',
+              command: () => {
+                this.eventService.publishProjectMenuEvent(ProjectEventType.CREATE_FROM_FILE);
+              }
+            }
+          ]
         },
         {
           label: 'Setup demo project',

@@ -11,7 +11,7 @@ export class ItemNode extends ClassicPreset.Node {
     constructor(itemDTO: Item) {
         super(itemDTO.data['name']);
         this.data = itemDTO;
-        this.id = itemDTO.id.toString();
+        this.id = itemDTO.internalId.toString();
         this.selected = false;
     }
 
@@ -23,6 +23,5 @@ export class ItemNode extends ClassicPreset.Node {
             this.label = this.data.data.name
 
         }
-      console.log("data changed");
     }
 }

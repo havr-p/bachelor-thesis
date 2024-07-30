@@ -42,6 +42,7 @@ export enum ProjectEventType {
     EDIT = 'edit',
     SELECT = 'select',
     SETUP_DEMO = "setup demo",
+    CREATE_FROM_FILE = 'create from file',
 }
 
 export enum ItemViewEventType {

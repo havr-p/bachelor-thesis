@@ -6,6 +6,7 @@ import {ButtonModule} from "primeng/button";
 import {MenuItem} from "primeng/api";
 import {DockManager, DockMode} from "./dock-manager";
 import {AuthService} from "../../services/auth/auth.service";
+import {ContentsDTO} from "../../../../gen/model";
 
 export interface IterationIdentifier {
     projectName: string;
@@ -75,4 +76,7 @@ export class DockComponent implements OnInit {
         });
     }
 
+    onFileSelected($event: Event) {
+        
+    }
 }

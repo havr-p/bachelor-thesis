@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -68,11 +69,8 @@ public class Project {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
-    @Column(nullable = false)
+    @Column
     private OffsetDateTime lastOpened;
-
-    @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Level> levels;
 
     @OneToOne(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true, fetch = FetchType.EAGER)
     private UserSecret userSecret;
@@ -84,11 +82,24 @@ public class Project {
 
     }
 
-    public void setProjectItems(Set<Item> projectItems) {
-        if (projectItems != null) {
-            this.projectItems.clear();
-            this.projectItems.addAll(projectItems);
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Level> levels = new ArrayList<>();
+
+    public void setLevels(List<Level> levels) {
+        if (this.levels == null) this.levels = new ArrayList<>();
+        if (levels != null) {
+            levels.forEach(this::addLevel);
         }
+    }
+
+    public void addLevel(Level level) {
+        levels.add(level);
+        level.setProject(this);
+    }
+
+    public void removeLevel(Level level) {
+        levels.remove(level);
+        level.setProject(null);
     }
 
 }

@@ -4,22 +4,30 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uniba.fmph.traceability_tutor.config.security.SecretsManager;
 import uniba.fmph.traceability_tutor.domain.*;
 import uniba.fmph.traceability_tutor.mapper.ItemMapper;
+import uniba.fmph.traceability_tutor.mapper.LevelMapper;
 import uniba.fmph.traceability_tutor.mapper.ProjectMapper;
 import uniba.fmph.traceability_tutor.mapper.RelationshipMapper;
 import uniba.fmph.traceability_tutor.model.*;
 import uniba.fmph.traceability_tutor.repos.*;
+import uniba.fmph.traceability_tutor.util.AppException;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 import uniba.fmph.traceability_tutor.util.ReferencedWarning;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static uniba.fmph.traceability_tutor.service.TempCreateRelationshipDTO.readResourceFile;
@@ -42,12 +50,10 @@ public class ProjectService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RelationshipMapper relationshipMapper;
     private final ItemMapper itemMapper;
+    private final LevelMapper levelMapper;
+    private ApplicationEventPublisher eventPublisher;
 
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository,
-                          ItemRepository itemRepository, IterationRepository iterationRepository,
-                          RelationshipRepository relationshipRepository, ProjectMapper projectMapper, SecretsManager secretsManager,
-                          UserService userService, ItemService itemService, RelationshipService relationshipService, RelationshipMapper relationshipMapper,
-                          ItemMapper itemMapper) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, ItemRepository itemRepository, IterationRepository iterationRepository, RelationshipRepository relationshipRepository, ProjectMapper projectMapper, SecretsManager secretsManager, UserService userService, ItemService itemService, RelationshipService relationshipService, RelationshipMapper relationshipMapper, ItemMapper itemMapper, LevelMapper levelMapper, ApplicationEventPublisher eventPublisher) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
@@ -60,7 +66,10 @@ public class ProjectService {
         this.relationshipService = relationshipService;
         this.relationshipMapper = relationshipMapper;
         this.itemMapper = itemMapper;
+        this.levelMapper = levelMapper;
+        this.eventPublisher = eventPublisher;
     }
+
 
     public List<ProjectDTO> findAll() {
         return projectRepository.findAll(Sort.by("id")).stream()
@@ -79,6 +88,7 @@ public class ProjectService {
         User owner = userService.getCurrentUser();
         project.setOwner(owner);
         project.setLastOpened(OffsetDateTime.now());
+        project.setRepoName(getRepoName(projectDTO));
 
         if (projectDTO.getLevels() != null) {
             List<Level> levels = projectDTO.getLevels().stream()
@@ -96,6 +106,18 @@ public class ProjectService {
         secretsManager.storeSecret(owner, UserSecretType.GITHUB_ACCESS_TOKEN, projectDTO.getAccessToken(), savedProject);
 
         return savedProject.getId();
+    }
+
+    private static String getRepoName(CreateProjectDTO projectDTO) {
+        String repoUrl = projectDTO.getRepoUrl();
+        Pattern pattern = Pattern.compile("https://github\\.com/[\\w-]+/([\\w-]+)(\\.git)?");
+        Matcher matcher = pattern.matcher(repoUrl);
+
+        String repoName = null;
+        if (matcher.find()) {
+            repoName = matcher.group(1);
+        }
+        return repoName;
     }
 
 
@@ -141,7 +163,8 @@ public class ProjectService {
     public Long updateLastOpened(final Long id) {
         Project project = projectRepository.findById(id).orElseThrow(NotFoundException::new);
         project.setLastOpened(OffsetDateTime.now());
-        return projectRepository.save(project).getId();
+        var currentProject = projectRepository.save(project);
+        return currentProject.getId();
     }
 
     public List<ProjectDTO> findByOwner(final Long id) {
@@ -192,12 +215,18 @@ public class ProjectService {
         );
     }
 
-    private Project processProjectSettings(Project project, ProjectSettings settings) {
-        project.setName(project.getName());
-        project.setRepoName(project.getRepoName());
-        project = projectRepository.save(project);
+    private Project processProjectConfiguration(Project project, ProjectDTO configuration) {
+        project.setName(configuration.getName());
+        project.setRepoName(configuration.getRepoName());
+        project.setRepoUrl(configuration.getRepoUrl());
+        project.getLevels().clear();
+        configuration.getLevels().stream()
+                .map(levelMapper::toLevel)
+                .forEach(project::addLevel);
         var user = userService.getCurrentUser();
-        secretsManager.storeSecret(user, UserSecretType.GITHUB_ACCESS_TOKEN, settings.accessToken(), project);
+        project.setOwner(user);
+        project = projectRepository.save(project);
+        //secretsManager.storeSecret(user, UserSecretType.GITHUB_ACCESS_TOKEN, configuration.accessToken(), project);
         return project;
     }
 
@@ -213,9 +242,14 @@ public class ProjectService {
     }
 
     public Project setProjectData(Project project, String content) throws IOException {
-        this.relationshipService.setCurrentProject(project);
-        ObjectMapper mapper = new ObjectMapper();
+        eventPublisher.publishEvent(new CurrentProjectChangedEvent(project));
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
         JsonNode rootNode = mapper.readTree(content);
+        if (rootNode.has("project")) {
+            ProjectDTO projectConfig = mapper.treeToValue(rootNode.get("project"), ProjectDTO.class);
+            project = processProjectConfiguration(project, projectConfig);
+        }
+        else throw new AppException("Project configuration is missing in input JSON", HttpStatus.BAD_REQUEST);
 
         List<JsonItemDTO> itemDTOS = mapper.readValue(
                 rootNode.get("items").toString(),
@@ -252,10 +286,7 @@ public class ProjectService {
                     CreateRelationshipDTO normalDTO = relationshipMapper.jsonToDto(dto);
                     relationshipService.create(normalDTO);
                 });
-        if (rootNode.has("projectSettings")) {
-            ProjectSettings settings = mapper.treeToValue(rootNode.get("projectSettings"), ProjectSettings.class);
-            project = processProjectSettings(project, settings);
-        }
+
 
         return project;
     }
@@ -362,34 +393,30 @@ public class ProjectService {
     public Project createDemoProjectInDb(User user) {
         String TRACEABILITY_TUTOR_PROJECT_REPO_NAME = "traceability-tutor";
         String TRACEABILITY_TUTOR_PROJECT_NAME = "Traceability Tutor";
-        List<Level> BABOK_LEVELS = Arrays.asList(
-                new Level(null, "#fcf6bd", "Business", null),
-                new Level(null, "#ff99c8", "Stakeholder", null),
-                new Level(null, "#d0f4de", "Solution", null),
-                new Level(null, "#FFD275", "Design", null),
-                new Level(null, "#a9def9", "Code", null),
-                new Level(null, "#e4c1f9", "Test", null)
-        );
+
         Project traceabilityTutorProject = Project.builder()
                 .repoUrl("https://github.com/havr-p/traceability-tutor.git")
                 .name(TRACEABILITY_TUTOR_PROJECT_NAME + " # " + (projectRepository.countByOwner(user) + 1))
                 .repoName(TRACEABILITY_TUTOR_PROJECT_REPO_NAME)
                 .owner(user)
                 .lastOpened(OffsetDateTime.now())
-                .levels(new ArrayList<>(BABOK_LEVELS))
+                .levels(new ArrayList<>())
                 .build();
 
-        List<Level> levels = BABOK_LEVELS.stream()
-                .map(level -> {
-                    Level newLevel = new Level();
-                    newLevel.setColor(level.getColor());
-                    newLevel.setName(level.getName());
-                    newLevel.setProject(traceabilityTutorProject);
-                    return newLevel;
-                })
-                .toList();
+        traceabilityTutorProject = projectRepository.save(traceabilityTutorProject);
 
-        traceabilityTutorProject.setLevels(levels);
+        List<Level> BABOK_LEVELS = Arrays.asList(
+                new Level(null, "#fcf6bd", "Business", traceabilityTutorProject),
+                new Level(null, "#ff99c8", "Stakeholder", traceabilityTutorProject),
+                new Level(null, "#d0f4de", "Solution", traceabilityTutorProject),
+                new Level(null, "#FFD275", "Design", traceabilityTutorProject),
+                new Level(null, "#a9def9", "Code", traceabilityTutorProject),
+                new Level(null, "#e4c1f9", "Test", traceabilityTutorProject)
+        );
+
+        for (Level level : BABOK_LEVELS) {
+            traceabilityTutorProject.addLevel(level);
+        }
 
         return projectRepository.save(traceabilityTutorProject);
     }
@@ -401,5 +428,14 @@ public class ProjectService {
 
     public ProjectDTO toDto(Project project) {
         return projectMapper.toDto(project);
+    }
+
+    public void setCurrentProject(Project project) {
+        eventPublisher.publishEvent(new CurrentProjectChangedEvent(project));
+    }
+
+    @EventListener
+    public void handleCurrentProjectChanged(CurrentProjectChangedEvent event) {
+        Project currentProject = event.getProject();
     }
 }

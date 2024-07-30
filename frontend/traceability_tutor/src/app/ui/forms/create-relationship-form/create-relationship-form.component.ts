@@ -38,6 +38,7 @@ import {DialogModule} from "primeng/dialog";
 export class CreateRelationshipFormComponent {
   @Output() onRelationshipCreation = new EventEmitter<boolean>();
   @Input() visible = false;
+  @Output() visibleChange = new EventEmitter<boolean>();
 
   relationshipForm!: FormGroup;
   relationshipTypes = Object.values(RelationshipType);
@@ -100,8 +101,8 @@ export class CreateRelationshipFormComponent {
     if (this.relationshipForm.valid) {
       const formValue = this.relationshipForm.getRawValue();
       const createRelationshipDTO: CreateRelationshipDTO = {
-        startItem: formValue.startItem,
-        endItem: formValue.endItem,
+        startItemInternalId: formValue.startItem,
+        endItemInternalId: formValue.endItem,
         type: formValue.type,
         description: formValue.description
       };
@@ -110,8 +111,9 @@ export class CreateRelationshipFormComponent {
         this.editorService.createConnection(createRelationshipDTO).then(
           () => {
             this.relationshipForm.reset();
-            this.eventService.notify('Relationship was created successfully.', 'success');
+            //this.eventService.notify('Relationship was created successfully.', 'success');
             this.onRelationshipCreation.emit(true);
+            this.visibleChange.emit(false);
           }
         );
       } else if (this.mode === 'update') {

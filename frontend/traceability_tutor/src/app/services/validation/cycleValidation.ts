@@ -53,17 +53,17 @@ export class GraphCycleValidator {
         return false;
     }
 
-  private async addConnectionForCheck(startItemId: number, endItemId: number) {
-    const startItem = this.editor.getNode(startItemId.toString());
-    const endItem = this.editor.getNode(endItemId.toString());
-    const relationship: CreateRelationshipDTO = {
-      startItem: startItemId,
-      endItem: endItemId,
-      type: RelationshipType.DERIVES,
-      description: 'Temporary connection for cycle check'
-    };
-    const newConnection = new Connection(startItem, startItem.id, endItem, endItem.id, relationship);
-    await this.editor.addConnection(newConnection);
-    return newConnection.id;
-  }
+  // private async addConnectionForCheck(startItemId: number, endItemId: number) {
+  //   const startItem = this.editor.getNode(startItemId.toString());
+  //   const endItem = this.editor.getNode(endItemId.toString());
+  //   const relationship: CreateRelationshipDTO = {
+  //     startItem: startItemId,
+  //     endItem: endItemId,
+  //     type: RelationshipType.DERIVES,
+  //     description: 'Temporary connection for cycle check'
+  //   };
+  //   const newConnection = new Connection(startItem, startItem.id, endItem, endItem.id, relationship);
+  //   await this.editor.addConnection(newConnection);
+  //   return newConnection.id;
+  // }
 }

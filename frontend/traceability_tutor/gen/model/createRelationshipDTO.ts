@@ -11,7 +11,7 @@ export interface CreateRelationshipDTO {
    * @maxLength 255
    */
   description?: string;
-  endItem: number;
-  startItem: number;
+  endItemInternalId: number;
+  startItemInternalId: number;
   type: RelationshipType;
 }

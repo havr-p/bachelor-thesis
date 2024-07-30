@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ProjectDTO} from "../../../../gen/model";
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ContentsDTO, ProjectDTO} from "../../../../gen/model";
 import {DataViewModule} from "primeng/dataview";
-import {DatePipe, NgClass, NgForOf} from "@angular/common";
+import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {ButtonModule} from "primeng/button";
 import {ProjectResourceService} from "../../../../gen/services/project-resource";
 import {CreateProjectFormComponent} from "../forms/create-project.form/create-project.form.component";
@@ -29,7 +29,8 @@ import {RouterLink} from "@angular/router";
         DockComponent,
         DatePipe,
         OrderListModule,
-        RouterLink
+        RouterLink,
+        NgIf
     ],
     standalone: true
 })
@@ -38,6 +39,8 @@ export class ProjectMenuComponent implements OnInit, OnDestroy {
     projects: ProjectDTO[] = [];
     createNewProjectDialogVisible = false;
   private destroy$ = new Subject<void>();
+
+    @ViewChild('fileInput') fileInput!: ElementRef;
 
     constructor(private projectService: ProjectResourceService,
                 private eventService: EventService,
@@ -59,6 +62,8 @@ export class ProjectMenuComponent implements OnInit, OnDestroy {
                         case ProjectEventType.SETUP_DEMO:
                             this.setupDemo();
                             break;
+                        case ProjectEventType.CREATE_FROM_FILE:
+                            this.createNewProjectFromFile();
                     }
                 }
 
@@ -102,4 +107,25 @@ export class ProjectMenuComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+    private createNewProjectFromFile() {
+        this.fileInput.nativeElement.click();
+    }
+
+    async onFileSelected(event: any) {
+        const file: File = event.target.files[0];
+        if (file) {
+            this.projectService.createFromFile(await file.text()).subscribe(
+                {
+                    next: async value => {
+                        this.navigationService.navigateToProjectMenu();
+                        this.fetchUserProjects();
+                        this.eventService.notify("Your new project was created from file. You can now access it via project menu.", 'success');
+                    },
+                    error: err => {
+                        this.eventService.notify("Error occured while creating project from file: <br>" + err.error.message, 'error');
+                    }
+                });
+        }
+    }
 }
