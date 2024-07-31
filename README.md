@@ -61,11 +61,6 @@ A test project with sample data has been prepared to allow users to evaluate the
 
 This will log you in as a local user with access to the pre-configured test project, allowing you to explore the features and functionality of the application without setting up your own data.
 
-#to disable Hyper-V run:  
-#Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All  
-#to enable it back:  
-#Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All  
-#restart is required after each command
 
 
 ## Further readings
