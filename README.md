@@ -61,9 +61,9 @@ A test project with sample data has been prepared to allow users to evaluate the
 
 This will log you in as a local user with access to the pre-configured test project, allowing you to explore the features and functionality of the application without setting up your own data.
 
-## Authomatic code mapping
-The application offers automatic mapping between requirements and implementation artifacts with the help of Git. To create code artifacts, we use commits.
-Each code artifact contains one or more commits. To automatically includecode artifacts in the current hierarchy, the user should click Data -> Fetch code items. The application will then use the GitHub API to find relevant commits in the repository specified in the project configuration and include them in the hierarchy. For a commit to be included in the hierarchy, it must be pushed to the remote GitHub repository and contain a special substring tt[id1] in its message, where id1 is the arbitrary ID of a requirement, which the user can find in the top left corner of each item. Multiple identifiers for connected requriements can also be entered like this: tt[id1 id2 id3]
+## Automatic code mapping
+The application offers automatic mapping between requirements and implementation artifacts with the help of Git. To create code artifacts, we use commits.  
+Each code artifact contains one or more commits. To automatically includecode artifacts in the current hierarchy, the user should click Data -> Fetch code items. The application will then use the GitHub API to find relevant commits in the repository specified in the project configuration and include them in the hierarchy.   For a commit to be included in the hierarchy, it must be pushed to the remote GitHub repository and contain a special substring tt[id1] in its message, where id1 is the arbitrary ID of a requirement, which the user can find in the top left corner of each item.   Multiple identifiers for connected requriements can also be entered like this: tt[id1 id2 id3]
 
 
 
