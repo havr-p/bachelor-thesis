@@ -5,11 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import uniba.fmph.traceability_tutor.config.security.SecretsManager;
@@ -22,6 +21,7 @@ import uniba.fmph.traceability_tutor.repos.RelationshipRepository;
 import uniba.fmph.traceability_tutor.service.GitHubService;
 import uniba.fmph.traceability_tutor.service.RelationshipService;
 import uniba.fmph.traceability_tutor.service.UserService;
+import uniba.fmph.traceability_tutor.util.AppException;
 import uniba.fmph.traceability_tutor.util.NotFoundException;
 
 import java.io.IOException;
@@ -130,6 +130,16 @@ public class GitHubResource {
         gitHubService.setCurrentProject(projectId);
         return gitHubService.getGetCodeItemsResponse();
     }
+    @GetMapping("/testAuth")
+    public ResponseEntity<GitHubAuthResponse> testAuthToken(@RequestParam(name = "token") final String token) throws IOException {
+        try {
+            return ResponseEntity.ok(gitHubService.testAuth(token));
+        } catch (Exception e) {
+            throw new AppException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 
 

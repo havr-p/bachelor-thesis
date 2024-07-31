@@ -7,11 +7,12 @@ import {NgIf} from "@angular/common";
 import {PaginatorModule} from "primeng/paginator";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputMaskModule} from "primeng/inputmask";
-import {ProjectSettings} from "../../../../../gen/model";
+import {GitHubAuthResponse, ProjectSettings} from "../../../../../gen/model";
 import {StateManager} from "../../../models/state";
-import {ProjectResourceService} from "../../../../../gen/services/project-resource";
+import {GetProjectSettingsClientResult, ProjectResourceService} from "../../../../../gen/services/project-resource";
 import {DialogModule} from "primeng/dialog";
 import {githubTokenValidator} from "../../../utils";
+import {GitHubResourceService} from "../../../../../gen/services/git-hub-resource";
 
 @Component({
   selector: 'app-settings',
@@ -47,8 +48,8 @@ import {githubTokenValidator} from "../../../utils";
         <div class="form-field">
           <label for="accessToken">VCS token</label>
           <input id="accessToken" formControlName="accessToken" pInputText />
-          <small class="p-error" *ngIf="visible && settingsForm.controls['accessToken'].invalid">
-            Please set correct GitHub access token.
+          <small class="p-error" *ngIf="visible && (settingsForm.controls['accessToken'].invalid || errorMessage)">
+            {{ errorMessage || 'Please set a correct GitHub access token.' }}
           </small>
         </div>
         <p-button label="Save" type="submit" [disabled]="settingsForm.invalid"></p-button>
@@ -64,6 +65,7 @@ export class SettingsComponent implements OnChanges {
   projectSettings!: ProjectSettings;
   projectId = 0;
 
+  errorMessage: string = '';
 
   settingsForm = this.formBuilder.group({
     name: ['', [Validators.required]],
@@ -74,6 +76,7 @@ export class SettingsComponent implements OnChanges {
   constructor(
       private formBuilder: FormBuilder,
       private projectService: ProjectResourceService,
+      private gitHubResourceService: GitHubResourceService,
       private state: StateManager
   ) {}
 
@@ -98,11 +101,29 @@ export class SettingsComponent implements OnChanges {
 
   submitForm() {
     if (this.settingsForm.valid) {
-      const formValue = this.settingsForm.getRawValue() as NonNullable<ProjectSettings>;
-      this.projectService.updateProjectSettings(this.projectId, formValue).subscribe({
-        next: () => {
-          this.state.currentProjectSettings = formValue;
-          this.closeDialog();
+      const token = String(this.settingsForm.get('accessToken')?.value);
+      this.gitHubResourceService.testAuthToken({ token: token }).subscribe({
+        next: (response: GitHubAuthResponse) => {
+          if (response.isAuthenticated) {
+            const formValue = this.settingsForm.getRawValue() as GetProjectSettingsClientResult;
+            this.projectService.updateProjectSettings(this.projectId, formValue).subscribe({
+              next: () => {
+                this.state.currentProjectSettings = formValue;
+                this.closeDialog();
+              },
+              error: (error: any) => {
+                console.log(error);
+              }
+            });
+          } else {
+            this.errorMessage = String(response.authErrors?.join(', '));
+            this.settingsForm.controls['accessToken'].setErrors({ 'invalid': true });
+          }
+        },
+        error: (error: any) => {
+          console.log(error);
+          this.errorMessage = 'Please check token scopes and expiration date';
+          this.settingsForm.controls['accessToken'].setErrors({ 'invalid': true });
         }
       });
     }

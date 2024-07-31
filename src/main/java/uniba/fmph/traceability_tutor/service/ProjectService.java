@@ -51,7 +51,7 @@ public class ProjectService {
     private final RelationshipMapper relationshipMapper;
     private final ItemMapper itemMapper;
     private final LevelMapper levelMapper;
-    private ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher eventPublisher;
 
     public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, ItemRepository itemRepository, IterationRepository iterationRepository, RelationshipRepository relationshipRepository, ProjectMapper projectMapper, SecretsManager secretsManager, UserService userService, ItemService itemService, RelationshipService relationshipService, RelationshipMapper relationshipMapper, ItemMapper itemMapper, LevelMapper levelMapper, ApplicationEventPublisher eventPublisher) {
         this.projectRepository = projectRepository;

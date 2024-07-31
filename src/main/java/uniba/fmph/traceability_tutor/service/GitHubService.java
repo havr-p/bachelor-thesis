@@ -202,4 +202,23 @@ public class GitHubService {
     public void handleCurrentProjectChanged(CurrentProjectChangedEvent event) {
         this.currentProject = event.getProject();
     }
+
+    //todo check token scope
+    public GitHubAuthResponse testAuth(String token) throws IOException {
+        gitHub = GitHub.connectUsingOAuth(token);
+        var currentUser = gitHub.getMyself();
+        if (currentUser != null) {
+            String projectRepoName = "";
+            if (currentProject != null) {
+                projectRepoName = currentProject.getRepoName();
+            }
+            var repos = currentUser.getAllRepositories();
+            if (repos.containsKey(projectRepoName)) {
+                return new GitHubAuthResponse(true, List.of());
+            } else {
+                return new GitHubAuthResponse(false, List.of("Repository not found"));
+            }
+        }
+        return new GitHubAuthResponse(false, List.of("Authentication failed"));
+    }
 }

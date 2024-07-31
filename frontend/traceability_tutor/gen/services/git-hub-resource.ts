@@ -20,7 +20,9 @@ import {
 import type {
   GetCodeItemsResponse,
   GetLoginParams,
-  JsonNode
+  GitHubAuthResponse,
+  JsonNode,
+  TestAuthTokenParams
 } from '../model'
 
 
@@ -74,6 +76,15 @@ export class GitHubResourceService {
       `/api/git/${projectId}/codeItems`,options
     );
   }
+ testAuthToken<TData = GitHubAuthResponse>(
+    params: TestAuthTokenParams, options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `/api/git/testAuth`,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
  getLogin<TData = string>(
     params: GetLoginParams, options?: HttpClientOptions
   ): Observable<TData>  {
@@ -89,4 +100,5 @@ export type TagsClientResult = NonNullable<JsonNode[]>
 export type CommitsClientResult = NonNullable<JsonNode[]>
 export type CommitClientResult = NonNullable<JsonNode[]>
 export type CodeItemsClientResult = NonNullable<GetCodeItemsResponse>
+export type TestAuthTokenClientResult = NonNullable<GitHubAuthResponse>
 export type GetLoginClientResult = NonNullable<string>

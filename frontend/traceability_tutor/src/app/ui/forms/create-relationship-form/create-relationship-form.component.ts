@@ -120,8 +120,8 @@ export class CreateRelationshipFormComponent {
         this.editorService.updateRelationship(createRelationshipDTO).then(
           () => {
             this.relationshipForm.reset();
-            this.eventService.notify('Relationship was updated successfully.', 'success');
             this.onRelationshipCreation.emit(true);
+            this.visibleChange.emit(false);
           }
         );
       }

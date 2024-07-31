@@ -21,13 +21,13 @@ public interface RelationshipMapper {
 
     @Named("startItemToEntity")
     default Item mapStartItem(JsonRelationshipDTO dto) {
-        return ((RelationshipMapperQualifier) Mappers.getMapper(RelationshipMapperQualifier.class))
+        return Mappers.getMapper(RelationshipMapperQualifier.class)
                 .internalIdToItem(dto.getStartItem(), dto.getProjectId());
     }
 
     @Named("endItemToEntity")
     default Item mapEndItem(JsonRelationshipDTO dto) {
-        return ((RelationshipMapperQualifier) Mappers.getMapper(RelationshipMapperQualifier.class))
+        return Mappers.getMapper(RelationshipMapperQualifier.class)
                 .internalIdToItem(dto.getEndItem(), dto.getProjectId());
     }
 
