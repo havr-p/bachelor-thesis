@@ -52,8 +52,8 @@ public class ItemResource {
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateItem(@PathVariable(name = "id") final Long id,
                                            @RequestBody @Valid final ItemDTO itemDTO) {
-        itemService.update(id, itemDTO);
-        return ResponseEntity.ok(id);
+        Long internalId = itemService.update(id, itemDTO);
+        return ResponseEntity.ok(internalId);
     }
 
     @Operation(security = {@SecurityRequirement(name = BEARER_SECURITY_SCHEME)})

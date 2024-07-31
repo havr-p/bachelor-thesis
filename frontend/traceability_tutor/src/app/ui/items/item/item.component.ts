@@ -64,7 +64,7 @@ export class ItemComponent implements OnChanges, OnInit {
                 //console.log('Event received:', event);
                 if (event.source === EventSource.ITEM) {
                     if (event.type === ItemEventType.UPDATE_DATA) {
-                      if (Number(this.data.id) === event.payload.itemDTO.id) {
+                      if (Number(this.data.id) == event.payload.itemDTO.internalId) {
                         this.shortLabel = event.payload.itemDTO.data.name;
                         this.backgroundColor = this.editorService.getLevelColor(event.payload.itemDTO) as string;
                       }

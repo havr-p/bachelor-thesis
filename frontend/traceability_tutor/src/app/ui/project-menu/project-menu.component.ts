@@ -109,7 +109,7 @@ export class ProjectMenuComponent implements OnInit, OnDestroy {
   }
 
     private createNewProjectFromFile() {
-        this.fileInput.nativeElement.click();
+        this.fileInput?.nativeElement.click();
     }
 
     async onFileSelected(event: any) {

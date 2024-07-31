@@ -64,7 +64,7 @@ export class CreateProjectFormComponent {
         this.projectForm = this.fb.group({
             name: ['Traceability Tutor', Validators.required],
             repoUrl: ['https://github.com/havr-p/traceability-tutor.git', Validators.required],
-            accessToken: ['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', Validators.required],
+            accessToken: ['', Validators.required],
             levels: this.fb.array([], levelsValidator())
         });
         this.setDefaultLevels();

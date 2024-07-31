@@ -156,6 +156,7 @@ export function constructCreateItemDTO(source: any): CreateItemDTO {
 }
 
 export function toItemDTO(item: Item): ItemDTO {
+  console.log("item is ", item);
     const dto: ItemDTO = {
         ...item,
         data: {},

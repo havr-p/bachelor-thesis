@@ -75,11 +75,11 @@ public class ItemService {
         return items.stream().map(itemMapper::toDto).toList();
     }
 
-    public void update(final Long id, final ItemDTO itemDTO) {
+    public Long update(final Long id, final ItemDTO itemDTO) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         updateItem(item, itemDTO);
-        itemRepository.save(item);
+        return itemRepository.save(item).getInternalId();
     }
 
     public void deleteIfExists(final Long id) {

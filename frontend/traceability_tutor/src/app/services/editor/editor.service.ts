@@ -29,7 +29,6 @@ import {RelationshipResourceService} from "../../../../gen/services/relationship
 import {GitHubResourceService} from "../../../../gen/services/git-hub-resource";
 import {IterationResourceService} from "../../../../gen/services/iteration-resource";
 import {GraphCycleValidator} from "../validation/cycleValidation";
-
 const socket = new ClassicPreset.Socket('socket');
 
 @Injectable({
@@ -71,10 +70,15 @@ export class EditorService {
     let node = new ItemNode(data);
     node.backgroundColor = lvlColor!;
     node.addOutput(node.id, new ClassicPreset.Output(socket, undefined, true));
-    await this.area.update('node', node.id);
     node.addInput(node.id, new ClassicPreset.Input(socket, undefined, true));
+    // const existingNode = await this.editor.getNode(node.id);
+    // if (existingNode) return;
+    console.log(node.id);
+    if (!await this.editor.addNode(node)) {
+      throw new Error("Error while adding node");
+    }
+
     await this.area.update('node', node.id);
-    if (!await this.editor.addNode(node)) throw new Error("Error while adding node");
   }
 
   async createItem(dto: CreateItemDTO) {
@@ -85,12 +89,13 @@ export class EditorService {
   }
 
   editItem(item: Item) {
+    console.log("item");
     const dto = toItemDTO(item);
     this.itemService.updateItem(item.id, dto).subscribe({
       next: async nodeId => {
         let node = this.editor.getNode(nodeId.toString());
         node.updateData({nodeData: item});
-        this.eventService.publishItemEvent(ItemEventType.UPDATE_DATA, {id: Number(node.id), itemDTO: dto});
+        this.eventService.publishItemEvent(ItemEventType.UPDATE_DATA, {id: Number(node.data.internalId), itemDTO: dto});
         await this.area.update('node', node.id);
         this.cdr.detectChanges();
         this.eventService.notify("Item was successfully updated.", 'success');
@@ -99,17 +104,27 @@ export class EditorService {
   }
 
   async addConnectionToEditor(relationship: RelationshipDTO) {
-    const startItem = this.editor.getNode(relationship.startItem.toString());
-    const endItem = this.editor.getNode(relationship.endItem.toString());
-    await this.editor.addConnection(
-      new Connection(startItem, startItem.id, endItem, endItem.id, relationship)
-    );
+    try {
+      const startItem = this.editor.getNode(relationship.startItemInternalId.toString());
+      const endItem = this.editor.getNode(relationship.endItemInternalId.toString());
+
+      if (!startItem || !endItem) {
+        throw new Error(`Unable to find nodes for relationship: ${relationship.id}`);
+      }
+      console.assert(startItem.data.internalId.toString() == startItem.id);
+      console.assert(endItem.data.internalId.toString() == endItem.id);
+      console.log(startItem.id, endItem.id);
+
+      const newConnection = new Connection(startItem, startItem.id, endItem, endItem.id, relationship);
+      await this.editor.addConnection(newConnection);
+    } catch (error) {
+      console.error(`Error adding connection to editor for relationship ${relationship.id}:`, error);
+      throw error; // Propagate the error to be handled in setupRelationshipsWithCodeItems
+    }
   }
 
   async addConnectionsToEditor(relationships: RelationshipDTO[]) {
-    for (const relationship of relationships) {
-      this.addConnectionToEditor(relationship);
-    }
+    await Promise.all(relationships.map(rel => this.addConnectionToEditor(rel)))
   }
 
   async createConnection(relationship: CreateRelationshipDTO) {
@@ -202,12 +217,135 @@ export class EditorService {
   }
 
   public async addItems(items: ItemDTO[]): Promise<void> {
-    for (const item of items) {
-      try {
-        await this.addItem(item);
-      } catch (error) {
-        console.error('Error adding item:', error);
+    try {
+      // Use a Set to ensure uniqueness based on item ID
+      const uniqueItems = new Set(items.map(item => JSON.stringify(item)));
+
+      await Promise.all([...uniqueItems].map(async itemString => {
+        const item = JSON.parse(itemString);
+        try {
+          const existingNode = this.editor.getNode(item.id.toString());
+          if (!existingNode) {
+            await this.addItem(item);
+            console.log(`Added item: ${item.id}`);
+          } else {
+            console.log(`Item ${item.id} already exists, skipping`);
+          }
+        } catch (error) {
+          console.error('Error adding item:', error);
+        }
+      }));
+    } catch (error) {
+      console.error('Error in addItems:', error);
+    }
+  }
+
+  private async setupCodeItems(updatedItems: ItemDTO[] | undefined) {
+    try {
+      console.log('Starting setupCodeItems');
+
+      // Get all existing nodes
+      const existingNodes = this.editor.getNodes();
+      console.log(`Existing nodes before deletion: ${JSON.stringify(existingNodes.map(n => n.id))}`);
+
+      // Delete existing CODE items
+      await this.deleteItemsByConditionFromEditor(item => item.itemType === ItemType.CODE);
+
+      // Add a small delay to ensure editor state is updated
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Check nodes after deletion
+      const nodesAfterDeletion = this.editor.getNodes();
+      console.log(`Existing nodes after deletion: ${JSON.stringify(nodesAfterDeletion.map(n => n.id))}`);
+
+      if (updatedItems && updatedItems.length > 0) {
+        console.log(`Adding ${updatedItems.length} new items`);
+        for (const item of updatedItems) {
+          await this.addItemSafely(item);
+        }
+      } else {
+        console.log('No new items to add');
       }
+
+      console.log('Finished setupCodeItems');
+    } catch (error) {
+      console.error('Error in setupCodeItems:', error);
+      throw error;
+    }
+  }
+
+  private async addItemSafely(item: ItemDTO) {
+    try {
+      // Generate a new unique ID for the node
+      const newId = item.id.toString();
+      console.log(`Attempting to add item with new ID: ${newId}`);
+
+      const existingNode = this.editor.getNode(newId);
+      if (existingNode) {
+        console.log(`Node with ID ${newId} already exists, skipping`);
+        return;
+      }
+
+      const data = mapGenericModel(item);
+      const lvlColor = this.getLevelColor(data);
+      let node = new ItemNode(data);
+      node.id = newId;  // Set the new ID
+      node.backgroundColor = lvlColor!;
+      node.addOutput(newId, new ClassicPreset.Output(socket, undefined, true));
+      node.addInput(newId, new ClassicPreset.Input(socket, undefined, true));
+
+      const addResult = await this.editor.addNode(node);
+      if (!addResult) {
+        throw new Error(`Failed to add node ${newId} to editor`);
+      }
+
+      await this.area.update('node', newId);
+      console.log(`Successfully added item with ID: ${newId}`);
+    } catch (error) {
+      console.error(`Error adding item ${item.id}:`, error);
+      console.log('Current editor nodes:', JSON.stringify(this.editor.getNodes().map(n => n.id)));
+    }
+  }
+
+  private async deleteItemsByConditionFromEditor(predicate: (item: Item) => boolean) {
+    const graph = structures(this.editor);
+    let nodesToDelete = graph.filter(node => predicate(node.data)).nodes();
+    console.log(`Deleting ${nodesToDelete.length} nodes`);
+    for (const nodeToDelete of nodesToDelete) {
+      try {
+        await this.editor.removeNode(nodeToDelete.id);
+        await this.area.update('node', nodeToDelete.id);
+        console.log(`Deleted node: ${nodeToDelete.id}`);
+      } catch (error) {
+        console.error(`Error deleting node ${nodeToDelete.id}:`, error);
+      }
+    }
+    console.log('Finished deleting nodes');
+  }
+
+  async fetchCodeItems() {
+    const projectId = this.state.currentProject?.id!;
+
+    try {
+      console.log('Starting fetchCodeItems');
+      const result = await firstValueFrom(this.githubService.codeItems(projectId));
+
+      await this.setupCodeItems(result.updatedItems);
+      await this.setupRelationshipsWithCodeItems(result.newRelationships);
+
+      if (result.unmappedInternalIds && result.unmappedInternalIds.length > 0) {
+        const message = "Internal IDs mentioned in commits, but corresponding requirements not found: \n"
+          + result.unmappedInternalIds.join(", ");
+        this.eventService.notify(message, "warning", "Mapping error");
+      }
+
+      console.log('Arranging nodes');
+      await this.arrangeNodes();
+      console.log('Finished fetchCodeItems');
+    } catch (error) {
+      //console.error('Error in fetchCodeItems:', error);
+      //this.eventService.notify("An error occurred while fetching code items. The page will refresh.", "error");
+      window.location.reload();
     }
   }
 
@@ -450,61 +588,54 @@ export class EditorService {
     });
   }
 
-  /**
-   * fixme somewhere here there is an error that occurs on this.arrangeNodes - editor tries to move non existing inputs.
-   * it may be caused because area.update was not triggered at important place
-   * more info here: https://retejs.org/docs/faq#force-update
-   */
-  async fetchCodeItems() {
-    const projectId = this.state.currentProject?.id!;
-
-    try {
-      const result = await firstValueFrom(this.githubService.codeItems(projectId));
-      await this.setupCodeItems(result.updatedItems);
-      await this.setupRelationshipsWithCodeItems(result.newRelationships);
-      if (result.unmappedInternalIds) {
-        const message = "Internal IDs mentioned in commits, but corresponding requirements not found: \n"
-        + result.unmappedInternalIds.join(", ");
-        this.eventService.notify(message, "warning", "Mapping error")
-      }
-      await this.arrangeNodes();
-    } catch (error) {
-      console.error('Error in fetchCodeItems:', error);
-      window.location.reload();
-    }
-  }
-
-  private async setupCodeItems(updatedItems: ItemDTO[] | undefined) {
-    await this.deleteItemsByConditionFromEditor(item => item.itemType === ItemType.CODE);
-    if (updatedItems) {
-      await this.addItems(updatedItems);
-    }
-  }
+  // /**
+  //  * fixme somewhere here there is an error that occurs on this.arrangeNodes - editor tries to move non existing inputs.
+  //  * it may be caused because area.update was not triggered at important place
+  //  * more info here: https://retejs.org/docs/faq#force-update
+  //  */
+  // async fetchCodeItems() {
+  //   const projectId = this.state.currentProject?.id!;
+  //
+  //   try {
+  //     const result = await firstValueFrom(this.githubService.codeItems(projectId));
+  //
+  //     await this.setupCodeItems(result.updatedItems);
+  //     await this.setupRelationshipsWithCodeItems(result.newRelationships);
+  //
+  //     if (result.unmappedInternalIds && result.unmappedInternalIds.length > 0) {
+  //       const message = "Internal IDs mentioned in commits, but corresponding requirements not found: \n"
+  //         + result.unmappedInternalIds.join(", ");
+  //       this.eventService.notify(message, "warning", "Mapping error");
+  //     }
+  //
+  //     await this.arrangeNodes();
+  //   } catch (error) {
+  //     console.error('Error in fetchCodeItems:', error);
+  //     this.eventService.notify("An error occurred while fetching code items. The page will refresh.", "error");
+  //     window.location.reload();
+  //   }
+  // }
 
   private async setupRelationshipsWithCodeItems(newRelationships: RelationshipDTO[] | undefined) {
-    const graph = structures(this.editor);
-    let existingCodeItemIds = graph.filter(node => node.data.itemType === ItemType.CODE).nodes().map(n => n.id);
+    try {
+      const graph = structures(this.editor);
+      const existingCodeItemIds = graph.filter(node => node.data.itemType === ItemType.CODE).nodes().map(n => n.id);
 
-    await this.deleteFromEditorRelationshipsByCondition(relationship =>
-      existingCodeItemIds.includes(relationship.startItem.toString()) ||
-      existingCodeItemIds.includes(relationship.endItem.toString())
-    );
+      await this.deleteFromEditorRelationshipsByCondition(relationship =>
+        existingCodeItemIds.includes(relationship.startItemInternalId.toString()) ||
+        existingCodeItemIds.includes(relationship.endItemInternalId.toString())
+      );
 
-    if (newRelationships) {
-      for (const rel of newRelationships) {
-        await this.addConnectionToEditor(rel);
+      if (newRelationships && newRelationships.length > 0) {
+        await Promise.all(newRelationships.map(rel => this.addConnectionToEditor(rel)));
       }
+    } catch (error) {
+      console.error('Error in setupRelationshipsWithCodeItems:', error);
+      throw error; // Propagate the error to be handled in fetchCodeItems
     }
   }
 
 
-  private async deleteItemsByConditionFromEditor(predicate: (item: Item) => boolean) {
-    const graph = structures(this.editor);
-    let nodesToDelete = graph.filter(node => predicate(node.data)).nodes();
-    for (const nodeToDelete of nodesToDelete) {
-      await this.deleteItemWithAllConnections(nodeToDelete.id, nodeToDelete.data['id'].toString());
-    }
-  }
 
   private async deleteFromEditorRelationshipsByCondition(predicate: (relationship: RelationshipDTO) => boolean) {
     const graph = structures(this.editor);

@@ -1,6 +1,6 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="projectForm" class="project-form">
     <div class="form-field">
-        <label for="name">Project Name:</label>
+        <label for="name">Project name:</label>
         <input class="input-text" formControlName="name" id="name" pInputText type="text">
         <p>
             <small *ngIf="form['name'].errors?.['required'] && form['name'].touched" class="text-danger">
@@ -18,7 +18,7 @@
         </p>
     </div>
     <div class="form-field">
-        <label for="accessToken">Repository Access Token:</label>
+        <label for="accessToken">Repository access token:</label>
         <input class="input-text" formControlName="accessToken" id="accessToken" pInputText type="text">
         <p>
             <small *ngIf="form['accessToken'].errors?.['required'] && form['accessToken'].touched" class="text-danger">
@@ -73,6 +73,6 @@
     </div>
     <div class="flex gap-4 justify-content-center align-content-center">
         <p-button (click)="setDefaultLevels()" [text]="true" label="Set default BABOK levels" severity="secondary"/>
-        <button class="submit-btn" type="submit">Create Project</button>
+        <button class="submit-btn" type="submit">Create project</button>
     </div>
 </form>
