@@ -131,8 +131,10 @@ public class GitHubResource {
         return gitHubService.getGetCodeItemsResponse();
     }
     @GetMapping("/testAuth")
-    public ResponseEntity<GitHubAuthResponse> testAuthToken(@RequestParam(name = "token") final String token) throws IOException {
+    public ResponseEntity<GitHubAuthResponse> testAuthToken(@RequestParam(name = "token") final String token,
+                                                            @RequestParam(name = "projectId") final Long projectId) throws IOException {
         try {
+            gitHubService.setCurrentProject(projectId);
             return ResponseEntity.ok(gitHubService.testAuth(token));
         } catch (Exception e) {
             throw new AppException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

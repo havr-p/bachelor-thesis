@@ -6,4 +6,5 @@
 
 export type TestAuthTokenParams = {
 token: string;
+projectId: number;
 };

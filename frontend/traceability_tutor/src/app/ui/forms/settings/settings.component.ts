@@ -13,6 +13,7 @@ import {GetProjectSettingsClientResult, ProjectResourceService} from "../../../.
 import {DialogModule} from "primeng/dialog";
 import {githubTokenValidator} from "../../../utils";
 import {GitHubResourceService} from "../../../../../gen/services/git-hub-resource";
+import {EventService} from "../../../services/event/event.service";
 
 @Component({
   selector: 'app-settings',
@@ -77,7 +78,8 @@ export class SettingsComponent implements OnChanges {
       private formBuilder: FormBuilder,
       private projectService: ProjectResourceService,
       private gitHubResourceService: GitHubResourceService,
-      private state: StateManager
+      private state: StateManager,
+      private eventService: EventService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -102,7 +104,9 @@ export class SettingsComponent implements OnChanges {
   submitForm() {
     if (this.settingsForm.valid) {
       const token = String(this.settingsForm.get('accessToken')?.value);
-      this.gitHubResourceService.testAuthToken({ token: token }).subscribe({
+      this.gitHubResourceService.testAuthToken(
+          { token: token, projectId: this.projectId}
+      ).subscribe({
         next: (response: GitHubAuthResponse) => {
           if (response.isAuthenticated) {
             const formValue = this.settingsForm.getRawValue() as GetProjectSettingsClientResult;
@@ -110,6 +114,7 @@ export class SettingsComponent implements OnChanges {
               next: () => {
                 this.state.currentProjectSettings = formValue;
                 this.closeDialog();
+                this.eventService.notify("Project settings was updated successfully!", 'success');
               },
               error: (error: any) => {
                 console.log(error);
