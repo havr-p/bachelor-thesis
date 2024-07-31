@@ -80,6 +80,7 @@ export async function createEditor(
             }
             if (context instanceof ItemNode) {
               const selectedNodeId = context.id;
+              const selectedNodeDataId = context.data["id"];
               const showBackwardLineage = () => {
                 const incomingConnections = graph
                   .connections()
@@ -172,7 +173,7 @@ export async function createEditor(
                             label: 'Delete item',
                             key: '6',
                             handler: () => {
-                              let payload = { item: selectedNodeId, relationships: [] as number[] };
+                              let payload = { item: selectedNodeId, itemDataId: selectedNodeDataId, relationships: [] as number[] };
                               let connections: number[] = [];
 
                               const incomingConnections = graph
@@ -216,7 +217,7 @@ export async function createEditor(
                         subitems: [
                           {
                             key: '9',
-                            label: 'ID',
+                            label: 'Internal ID',
                             handler: () => {
                               copy(context.id)
                             }

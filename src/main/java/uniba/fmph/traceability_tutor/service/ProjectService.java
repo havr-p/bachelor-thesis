@@ -362,10 +362,10 @@ public class ProjectService {
             tempCreateRelationshipDTOS = List.of();
         }
 
-        assert itemRepository.existsByInternalId(13393);
-        assert itemRepository.existsByInternalId(13406);
-        assert itemRepository.existsByInternalId(13408);
-        assert itemRepository.existsByInternalId(16177);
+        assert itemRepository.existsByInternalId(13393L);
+        assert itemRepository.existsByInternalId(13406L);
+        assert itemRepository.existsByInternalId(13408L);
+        assert itemRepository.existsByInternalId(16177L);
 
         List<Relationship> relationships = tempCreateRelationshipDTOS.stream()
                 .map(dto ->

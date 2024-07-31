@@ -84,6 +84,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
         }
       })
     );
+    this.settingsVisible = false;
   }
 
   ngAfterViewInit(): void {

@@ -45,7 +45,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Nullable
     Item findFirstByProject_IdAndItemTypeOrderByDateCreatedDesc(@NonNull Long id, ItemType itemType);
 
-    boolean existsByInternalId(int internalId);
+    boolean existsByInternalId(Long internalId);
 
     @Transactional
     @Modifying
@@ -59,4 +59,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findByInternalIdAndProject_IdAndIterationNull(Long internalId, Long id);
 
     long deleteByProject_IdAndIterationNull(Long id);
+
+    long deleteByInternalId(Long internalId);
 }

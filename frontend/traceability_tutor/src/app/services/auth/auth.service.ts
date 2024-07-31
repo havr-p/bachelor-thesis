@@ -40,7 +40,7 @@ export class AuthService {
         this.authController.login(credentials).subscribe({
             next: authResponse => {
                 this.handleAuthorization(authResponse);
-                this.eventService.notify('Login successful!', 'success');
+               // this.eventService.notify('Login successful!', 'success');
             },
             error: (err: HttpErrorResponse) => {
                 if (err.status === 400) {

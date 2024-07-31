@@ -418,13 +418,13 @@ export class EditorService {
     }
   }
 
-  async deleteItemWithConnections(payload: { item: string, relationships: number[] }) {
-    await this.deleteItemWithAllConnections(payload.item);
+  async deleteItemWithConnections(payload: { item: string, itemDataId: string, relationships: number[] }) {
+    await this.deleteItemWithAllConnections(payload.item, payload.itemDataId);
   }
 
-  async deleteItemWithAllConnections(itemId: string) {
+  async deleteItemWithAllConnections(itemId: string, itemDataId: string) {
 
-    this.itemService.deleteItem(Number(itemId)).subscribe({
+    this.itemService.deleteItem(Number(itemDataId)).subscribe({
       next: () => {
         this.editor.removeNode(itemId).then(() => {
           this.area.update('node', itemId);
@@ -502,7 +502,7 @@ export class EditorService {
     const graph = structures(this.editor);
     let nodesToDelete = graph.filter(node => predicate(node.data)).nodes();
     for (const nodeToDelete of nodesToDelete) {
-      await this.deleteItemWithAllConnections(nodeToDelete.id);
+      await this.deleteItemWithAllConnections(nodeToDelete.id, nodeToDelete.data['id'].toString());
     }
   }
 
