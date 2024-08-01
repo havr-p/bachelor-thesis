@@ -377,7 +377,7 @@ export class EditorService {
   }
 
   private isConnectionRelatedToItem(connection: ConnProps, item: Item): boolean {
-    return connection.source === item.id.toString() || connection.target === item.id.toString();
+    return connection.source === item.internalId.toString() || connection.target === item.internalId.toString();
   }
 
   relationshipExists(startItemId: string, endItemId: string): boolean {

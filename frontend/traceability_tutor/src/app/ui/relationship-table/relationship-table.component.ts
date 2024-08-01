@@ -93,11 +93,11 @@ export class RelationshipTableComponent {
   }
 
   get ingoingRelationships() {
-    return this.relationships.filter(relationship => relationship.target === this.item.id.toString());
+    return this.relationships.filter(relationship => relationship.target == this.item.internalId.toString());
   }
 
   get outgoingRelationships() {
-    return this.relationships.filter(relationship => relationship.source === this.item.id.toString());
+    return this.relationships.filter(relationship => relationship.source == this.item.internalId.toString());
   }
 
   deleteRelationship(relationship: ConnProps) {
